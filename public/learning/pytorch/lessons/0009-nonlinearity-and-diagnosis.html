@@ -1,0 +1,51 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>09 · 非线性与模型诊断</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/course.js"></script></head>
+<body><header class="hero"><div><div class="eyebrow">PyTorch Foundations · Lesson 09</div><h1>为什么堆线性层仍是线性</h1><p class="lede">当训练链路正确、loss 仍停滞时，问题可能不是优化，而是表示能力。用圆环分类看见激活函数如何改变函数族。</p></div><aside class="meta-card"><strong>胜利条件</strong>用代数证明线性层复合仍线性，并用决策边界诊断欠拟合。<strong>预计时间</strong>40–55 分钟<strong>主资料</strong><a href="https://www.learnpytorch.io/02_pytorch_classification/">LearnPyTorch 02 · Non-linearity</a></aside></header>
+<nav class="course-nav"><div><a href="#proof">代数证明</a><a href="#relu">ReLU</a><a href="#capacity">容量</a><a href="#diagnose">诊断</a><a href="#quiz">检查</a></div></nav>
+<main>
+  <section><h2>开场检索</h2><p>没有激活函数的两层线性网络 <code>f(x)=W₂(W₁x+b₁)+b₂</code> 是否比一层线性函数能表达更多形状？先写代数。</p><details><summary>答案</summary><div class="equation">f(x)=(W₂W₁)x+(W₂b₁+b₂)=W′x+b′</div><p>仍是一个仿射变换。增加参数化方式不等于增加非线性表达能力。</p></details></section>
+
+  <section id="proof"><h2>线性分类器只能画超平面</h2><p>二分类模型若 logit 为 <code>z=wᵀx+b</code>，0.5 概率阈值等价于 <code>z=0</code>，决策边界是一条直线（高维中为超平面）。同心圆、XOR 等数据不能被一条直线分开。</p>
+  <div class="callout good"><strong>诊断信号：</strong>训练和验证准确率都卡在相似的低水平，梯度正常、参数在变、不同 lr 结果相近，同时决策边界明显过于简单——这才支持“容量/函数族不足”。</div></section>
+
+  <section id="relu"><h2>ReLU 把空间切成分段线性区域</h2><div class="equation">ReLU(x)=max(0,x)</div>
+  <pre><code>class NonlinearBinaryMLP(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(2, 16),
+            nn.ReLU(),
+            nn.Linear(16, 16),
+            nn.ReLU(),
+            nn.Linear(16, 1),
+        )
+
+    def forward(self, x):
+        return self.net(x).squeeze(-1)</code></pre>
+  <p>每个 ReLU 根据 pre-activation 正负选择不同分支；多个神经元组合出许多局部线性区域，从而近似弯曲边界。输出层不加 Sigmoid，因为 <code>BCEWithLogitsLoss</code> 接 raw logits。</p>
+  <h3>亲手复刻激活函数</h3><pre><code>def manual_relu(x):
+    return torch.maximum(x, torch.tensor(0., device=x.device))
+
+z = torch.linspace(-3, 3, 7)
+torch.testing.assert_close(manual_relu(z), torch.relu(z))</code></pre></section>
+
+  <section id="capacity"><h2>“改进模型”的四个旋钮</h2><table><thead><tr><th>旋钮</th><th>改变什么</th><th>风险</th></tr></thead><tbody>
+    <tr><td>宽度</td><td>每层特征数/局部模式数量</td><td>参数和过拟合增加</td></tr>
+    <tr><td>深度</td><td>函数复合层级</td><td>优化更复杂</td></tr>
+    <tr><td>非线性</td><td>可表达函数族</td><td>不当激活/初始化影响梯度</td></tr>
+    <tr><td>训练预算/lr</td><td>能否找到好参数</td><td>不能修复错误函数族或数据</td></tr>
+  </tbody></table>
+  <p>一次只改变一个变量并记录实验；否则性能变化无法归因。固定 seed 有助于公平比较，但最好用多个 seed 判断稳健性。</p></section>
+
+  <section id="diagnose"><h2>欠拟合、过拟合还是实现错误？</h2><div class="two-col"><div class="card"><h3>实现错误</h3><p>小样本也拟合不了；梯度 None/NaN；参数不变；shape 契约异常。</p></div><div class="card"><h3>欠拟合</h3><p>链路正常；训练/验证都差且接近；增加合适容量后改善。</p></div><div class="card"><h3>过拟合</h3><p>训练很好、验证变差；差距随训练扩大。</p></div><div class="card"><h3>分布问题</h3><p>验证与训练差异来自采样、漂移或泄漏；加模型未必解决。</p></div></div>
+  <h3>推荐的调试实验：过拟合 8 个样本</h3><pre><code>X_tiny, y_tiny = X_train[:8], y_train[:8]
+# 用足够容量和合理 lr 训练，目标接近 100% train accuracy。
+# 做不到：优先检查实现、标签、loss、梯度和输入可分性。</code></pre>
+  <p>决策边界图是诊断工具，不只是装饰：它能揭示边界是否过直、是否过度曲折、是否被异常点牵引。</p></section>
+
+  <section id="quiz"><h2>出口检查</h2><div class="quiz"><h3>模型能力判断</h3>
+    <fieldset data-answer="仍是仿射函数"><legend>1. 多个 Linear 之间没有激活，整体是什么？</legend><label><input type="radio" name="q1" value="仍是仿射函数"> 仍是仿射函数</label><label><input type="radio" name="q1" value="已经变成曲线"> 已经变成曲线</label><label><input type="radio" name="q1" value="自动完成分类"> 自动完成分类</label></fieldset>
+    <fieldset data-answer="先查训练链路"><legend>2. 连 8 个样本都拟合不了，优先做什么？</legend><label><input type="radio" name="q2" value="先查训练链路"> 先查训练链路</label><label><input type="radio" name="q2" value="先加大量数据"> 先加大量数据</label><label><input type="radio" name="q2" value="先做正式部署"> 先做正式部署</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback"></p><details><summary>答案</summary><p>1：仍是仿射函数。2：先查训练链路；tiny-set overfit 是高价值 sanity check。</p></details></div></section>
+  <section class="checkpoint"><h2>本课完成标记</h2><p>用三句话解释：为何线性模型失败、ReLU 改变了什么、为何“加 epoch”不一定有用。</p><label><input type="checkbox" data-complete> 我能区分实现错误、欠拟合、过拟合和分布问题。</label><p>如果圆环模型不收敛，发送网络定义、loss、lr、曲线与 tiny-set 结果。</p></section>
+  <footer class="lesson-footer"><a href="0008-binary-classification.html">← 上一课</a><a href="0010-multiclass-and-llm-bridge.html">下一课：多分类与 LLM 桥梁 →</a></footer>
+</main></body></html>

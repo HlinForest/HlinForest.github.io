@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>单元 04：Linux、环境与故障定位</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">单元 04 · 3–4 小时</div><h1>Linux、环境与故障定位</h1><p class="lede">目标：把“玄学环境问题”变成可复现的证据链，知道如何观察文件、进程、资源、动态库和 GPU 软件栈。</p></header>
+<section class="mastery"><h2>过关标准</h2><ul><li>能正确处理 shell 引号、变量、管道与退出码。</li><li>能检查文件权限、进程、信号、CPU、内存、磁盘和端口。</li><li>能解释环境变量从父进程继承给子进程。</li><li>能区分驱动、CUDA Toolkit、CUDA Runtime 与框架自带组件。</li><li>能用固定顺序定位“代码错、环境错还是性能差”。</li></ul></section>
+
+<section><h2>1. Shell 是程序，不是魔法</h2><pre><code>pwd
+ls -lah
+rg "pattern" src/
+command_a | command_b
+echo "$?"
+</code></pre>
+<ul><li>单引号通常禁止变量展开；双引号允许变量展开但保留空格。</li><li>管道连接前一个进程的 stdout 与后一个进程的 stdin。</li><li>退出码 0 通常表示成功，非 0 表示失败；自动化脚本必须检查。</li><li>路径和变量要加引号，避免空格与通配符造成意外拆分。</li></ul></section>
+
+<section><h2>2. 权限、进程与信号</h2><pre><code>ls -l script.sh
+id
+chmod u+x script.sh
+pgrep -af train.py
+ps -ef
+kill -TERM &lt;pid&gt;
+kill -KILL &lt;pid&gt;   # 最后手段</code></pre>
+<p>对文件，r/w/x 表示读、写、执行；对目录，它们分别关系到列出名称、修改目录项和穿越目录。不要用 <code>chmod 777</code> 掩盖所有权或父目录问题。</p>
+<p><code>SIGTERM</code> 给进程保存 checkpoint、刷新日志和释放资源的机会；<code>SIGKILL</code> 无法被捕获或清理。</p></section>
+
+<section><h2>3. 资源观察矩阵</h2><table><thead><tr><th>问题</th><th>命令</th><th>你在找什么</th></tr></thead><tbody>
+<tr><td>CPU/负载</td><td><code>top</code>, <code>uptime</code>, <code>mpstat</code></td><td>单核满、系统负载、上下文切换</td></tr>
+<tr><td>主机内存</td><td><code>free -h</code>, <code>vmstat</code></td><td>可用内存、swap、页活动</td></tr>
+<tr><td>进程内存</td><td><code>pmap -x PID</code></td><td>RSS、映射、共享库</td></tr>
+<tr><td>磁盘</td><td><code>df -h</code>, <code>du -sh</code>, <code>iostat</code></td><td>容量还是 I/O 吞吐</td></tr>
+<tr><td>网络</td><td><code>ss -lntp</code>, <code>curl -v</code>, <code>nc -vz</code></td><td>监听、路由、握手、端口</td></tr>
+<tr><td>GPU</td><td><code>nvidia-smi</code></td><td>驱动、设备、显存、进程</td></tr>
+</tbody></table>
+<p>“内存不够”可能指主机 RAM、GPU 显存、<code>/dev/shm</code>、地址空间限制或磁盘。先确认资源种类。</p></section>
+
+<section><h2>4. 动态库与环境继承</h2><pre><code>which python
+type -a python
+python -c "import sys; print(sys.executable)"
+ldd build/app
+readelf -d build/app
+env | sort</code></pre>
+<p>环境变量由父进程复制给子进程。修改 shell 配置不会改变已运行的终端、IDE、服务或 Jupyter kernel。动态库搜索还受到 RPATH/RUNPATH、系统缓存与默认目录影响。</p></section>
+
+<section><h2>5. 隔离工具解决不同层次</h2><table><thead><tr><th>工具</th><th>主要隔离</th><th>不能保证</th></tr></thead><tbody><tr><td>venv</td><td>Python 包与解释器环境</td><td>系统库、GPU 驱动</td></tr><tr><td>conda</td><td>Python 与部分原生依赖</td><td>宿主内核与驱动</td></tr><tr><td>容器</td><td>用户态文件系统和依赖</td><td>宿主 GPU 驱动与硬件</td></tr></tbody></table></section>
+
+<section><h2>6. GPU 软件栈固定诊断顺序</h2><ol><li><code>nvidia-smi</code>：驱动能否看到设备？</li><li><code>which nvcc</code> 与 <code>nvcc --version</code>：Toolkit 来自哪里？</li><li><code>which python</code> 与 <code>sys.executable</code>：解释器来自哪里？</li><li><code>torch.__version__</code> 与 <code>torch.version.cuda</code>：框架是什么构建？</li><li><code>torch.cuda.is_available()</code> 与设备数：框架实际看到什么？</li><li>自定义扩展再检查编译器、ABI、目标 GPU 架构和动态库。</li></ol>
+<div class="warning"><strong>nvidia-smi 成功但没有 nvcc</strong>不等于框架不能使用 GPU。运行预编译框架通常只需要兼容驱动；编译自定义 CUDA 代码才需要 Toolkit。</div></section>
+
+<section><h2>7. 可复现问题报告</h2><p>最小报告必须包含：完整命令、完整错误、工作目录、输入规模、版本、硬件、环境来源、预期与实际结果、最小复现和最近一次变量变化。一次只改变一个变量。</p>
+<pre><code>git status --short
+git diff --check
+git diff
+git log -1 --oneline</code></pre></section>
+
+<section class="lab"><h2>实验：环境审计</h2><ol><li>运行 <a href="../labs/environment_audit.py">environment_audit.py</a>。</li><li>保存输出并标注解释器、包、GPU、编译器和动态库层。</li><li>人为切换一个 Python 环境，比较两次输出。</li><li>写出不使用“重装一切”的定位顺序。</li></ol></section>
+
+<section><h2>即时测验</h2>
+<div class="quiz" data-quiz data-why="SIGTERM 可被处理，程序有机会保存和清理；SIGKILL 没有这个机会。" data-hint="哪一种信号允许应用执行退出逻辑？"><h3>训练任务需优雅停止，优先发送？</h3><div class="answers"><button data-correct="true">发送终止请求信号</button><button>发送立即杀死信号</button><button>删除训练脚本文件</button></div><p class="feedback" aria-live="polite"></p></div>
+<div class="quiz" data-quiz data-why="驱动可用只说明设备可见；nvcc 属于 Toolkit 编译工具链。" data-hint="运行预编译代码与编译源码需要的组件不同。"><h3>nvidia-smi 成功但找不到 nvcc 表示？</h3><div class="answers"><button>显卡硬件一定损坏</button><button data-correct="true">工具包缺失或路径错</button><button>Python 语法一定错误</button></div><p class="feedback" aria-live="polite"></p></div>
+</section>
+<section class="success"><h2>过关任务</h2><p>为“PyTorch 能导入但 CUDA 不可用”写一份十步以内的诊断剧本。每一步写清命令、预期分支与下一步，不允许把“重装”放在前三步。</p></section>
+<section><h2>主要来源</h2><p><a href="https://man7.org/linux/man-pages/man7/signal.7.html">Linux signal(7)</a>；<a href="https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%B8%80-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/%E7%AC%AC1%E7%AB%A0-%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/">AIInfraGuide 编程语言基础</a>。</p></section>
+<div class="complete-action"><button data-complete="l04" aria-pressed="false">标记为已通过</button></div>
+<nav class="lesson-nav"><a href="0003-cpp-boundaries.html">← 单元 03</a><a href="../index.html">课程首页</a><a href="0005-tensor-math.html">单元 05 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

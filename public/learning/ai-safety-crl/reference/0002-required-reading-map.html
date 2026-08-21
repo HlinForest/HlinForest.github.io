@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>原书必读章节清单</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#core">主线</a><a href="#bridge">桥梁</a><a href="#second">第二遍</a></nav></div></header>
+<main class="lesson-main">
+  <section class="lesson-head"><span class="eyebrow">Printable reference 0002</span><h1>原书必读章节清单</h1><p><em>Causal Artificial Intelligence</em> Draft 0.27 的零基础阅读路线。页码为 PDF 阅读器页码。</p><div class="lesson-meta"><span class="pill">可打印</span><span class="pill">四周主线</span><span class="pill">AI safety × CRL</span></div></section>
+
+  <h2 id="core">主线必读</h2>
+  <table><thead><tr><th>完成</th><th>章节与首读范围</th><th>PDF 页</th><th>最低达标：你能……</th><th>配套课</th></tr></thead><tbody>
+    <tr><td>□</td><td>第 1 章 1.1–1.3.4</td><td>21–39</td><td>给三个问题标出观测/干预/反事实</td><td><a href="../lessons/0008-ch01-causal-intelligence.html">0008</a></td></tr>
+    <tr><td>□</td><td>第 2 章 2.1、2.2、2.4；2.3 看含义</td><td>55–99</td><td>写一个两方程 SCM，认出链/叉/碰撞</td><td><a href="../lessons/0009-ch02-scm-from-zero.html">0009</a>、<a href="../lessons/0010-ch02-causal-graphs-d-separation.html">0010</a></td></tr>
+    <tr><td>□</td><td>第 4 章 4.1–4.3、4.5</td><td>139–216</td><td>区分识别与估计，解释一个后门调整</td><td><a href="../lessons/0011-ch04-intervention-identification.html">0011</a></td></tr>
+    <tr><td>□</td><td>第 10 章全部；第 11 章 11.1–11.4 选例</td><td>703–802</td><td>画选择节点，指出哪个机制跨域变化</td><td><a href="../lessons/0012-ch10-11-generalization.html">0012</a></td></tr>
+    <tr><td>□</td><td>第 16 章 16.1–16.2</td><td>989–1018</td><td>解释等价类，走一遍 PC 的删边/定向</td><td><a href="../lessons/0013-ch16-structural-learning.html">0013</a></td></tr>
+    <tr><td>□</td><td>第 17 章 17.1–17.4</td><td>1029–1063</td><td>区分多域与干预，列出共享/变化机制</td><td><a href="../lessons/0014-ch17-multi-domain-learning.html">0014</a></td></tr>
+    <tr><td>□</td><td>第 18 章 18.1–18.3、18.5–18.6</td><td>1071–1123</td><td>用 XOR 解释重构完美仍不可识别</td><td><a href="../lessons/0015-ch18-crl-zero-base.html">0015</a></td></tr>
+  </tbody></table>
+
+  <h2 id="bridge">按研究目标加桥梁</h2>
+  <table><thead><tr><th>完成</th><th>章节</th><th>何时读</th><th>配套内容</th></tr></thead><tbody>
+    <tr><td>□</td><td>第 6 章选读</td><td>做解释、公平、安全归因</td><td rowspan="3"><a href="../lessons/0016-ch06-07-09-safety-decisions-games.html">0016</a></td></tr>
+    <tr><td>□</td><td>第 7 章 7.1–7.2</td><td>把因果效应变成行动</td></tr>
+    <tr><td>□</td><td>第 9 章 9.6</td><td>研究攻击者、竞争者与策略互动</td></tr>
+    <tr><td>□</td><td>第 13–15 章选读</td><td>做生成模型、世界模型、因果抽象</td><td><a href="../lessons/0003-yujia-zheng-identifiable-concepts.html">Yujia 专题</a></td></tr>
+    <tr><td>□</td><td>第 5 章选读</td><td>做个体反事实解释或事故归因</td><td>先掌握溯因—行动—预测</td></tr>
+  </tbody></table>
+
+  <h2 id="second">第二遍再回读</h2>
+  <ul class="checklist">
+    <li>第 4.4 节：ID 算法、q-tree/d-tree 与失败证书。</li>
+    <li>第 5 章 5.3–5.7：完整反事实识别与估计。</li>
+    <li>第 16 章 MAG / PAG / FCI：潜在混杂和选择偏差下的结构学习。</li>
+    <li>第 17–18 章：密度分解、Jacobian、ICA 与完整可识别性证明。</li>
+    <li>第 12、19、20 章：按具体研究问题补统计鲁棒性、线性效应/工具变量与高级反事实。</li>
+  </ul>
+
+  <h2>每读一节只写四行笔记</h2>
+  <div class="formula">问题：这一节想回答什么查询？
+输入：它拥有哪种数据、图或环境信息？
+假设：没有哪条假设，结论会失败？
+输出：识别到了数值、方向、等价类还是部分结构？</div>
+  <div class="source-note">草稿提醒：Example 1.3 是占位文本；第 17 章仍有 “Figure ??”；第 18 章练习基本未填。遇到这些位置可直接跳过，不把编辑缺口当成知识缺口。</div>
+  <div class="ask">打印时浏览器选择“打印背景图形”可保留颜色；不需要一次勾完。每完成一章，用自己的例子回答达标栏比抄定义更重要。</div>
+  <nav class="lesson-nav"><a href="../index.html">← 回课程首页</a><a href="../lessons/0006-zero-base-reading-map.html">打开详细阅读地图 →</a></nav>
+</main></body></html>

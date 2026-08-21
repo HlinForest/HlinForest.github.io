@@ -1,0 +1,10 @@
+---
+interface Props { nodes: string[]; note?: string }
+const { nodes, note } = Astro.props;
+---
+<figure class="flow-diagram" aria-label={note || '流程图'}>
+  <div class="flow-row">
+    {nodes.map((node) => <div class="flow-node">{node}</div>)}
+  </div>
+  {note && <figcaption class="flow-note">{note}</figcaption>}
+</figure>

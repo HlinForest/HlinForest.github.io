@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { byNewest, postUrl, publishedOnly } from '../../utils/posts';
+
+const posts = (await getCollection('blog')).filter(publishedOnly).sort(byNewest);
+const years = [...new Set(posts.map((post) => post.data.publishedAt.getFullYear()))];
+---
+<BaseLayout title="归档 | HlinForest" description="按年份浏览 HlinForest 的所有文章。">
+  <header class="page-head container"><div class="eyebrow">Archive</div><h1>归档</h1><p>按时间回看写作轨迹。</p></header>
+  <section class="container">
+    {years.map((year) => (
+      <div class="archive-year">
+        <h2>{year}</h2>
+        <div class="archive-list">
+          {posts.filter((post) => post.data.publishedAt.getFullYear() === year).map((post) => (
+            <div class="archive-item"><time>{String(post.data.publishedAt.getMonth() + 1).padStart(2, '0')} / {String(post.data.publishedAt.getDate()).padStart(2, '0')}</time><a href={postUrl(post)}>{post.data.title}</a></div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

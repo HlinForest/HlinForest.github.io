@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>单元 02：Python 工程语义与并发</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">单元 02 · 3–4 小时</div><h1>Python 工程语义与并发</h1><p class="lede">目标：读懂 AI 框架上层代码，预测对象共享与资源生命周期，并根据瓶颈选择线程、进程或异步 I/O。</p><div class="meta"><span>前置：基本 Python</span><span>实验：python_semantics_lab.py</span></div></header>
+
+<section class="mastery"><h2>过关标准</h2><ul class="checklist"><li>能用“名字绑定到对象”解释修改与重新绑定的差异。</li><li>能识别默认可变参数、浅拷贝、闭包延迟绑定和共享状态问题。</li><li>能编写生成器、装饰器和上下文管理器。</li><li>能按 I/O 密集、Python CPU 密集、原生算子密集选择并发模型。</li><li>能用计时与 profiler 找到热点，而不是凭感觉优化。</li></ul></section>
+
+<section><h2>1. 对象模型：Python 变量不是盒子</h2><p>Python 中赋值的核心是“名字绑定到对象”。对象具有身份、类型和值；可变对象的值可以原地改变。<code>is</code> 比较身份，<code>==</code> 比较值。</p>
+<pre><code>a = [1, 2]
+b = a
+b.append(3)
+assert a == [1, 2, 3]
+assert a is b
+
+def mutate(xs):
+    xs.append(4)      # 修改同一个对象
+
+def rebind(xs):
+    xs = [99]         # 只改变局部名字</code></pre>
+<p>函数参数同样是一次名字绑定。这个模型可以统一解释参数传递、缓存污染、Tensor 原地操作和多线程共享对象。</p>
+
+<h3>四个高频陷阱</h3>
+<table><thead><tr><th>陷阱</th><th>根因</th><th>稳妥做法</th></tr></thead><tbody>
+<tr><td>默认参数 <code>[]</code></td><td>定义时只创建一次</td><td>默认用 <code>None</code>，函数内创建</td></tr>
+<tr><td>浅拷贝嵌套容器</td><td>只复制外层引用</td><td>明确所有权；确需独占时深拷贝</td></tr>
+<tr><td>循环中的 lambda</td><td>闭包调用时读取外层名字</td><td>用默认参数捕获当前值</td></tr>
+<tr><td>Tensor 原地操作</td><td>共享存储且可能影响 autograd</td><td>先确认别名、梯度与生命周期</td></tr>
+</tbody></table></section>
+
+<section><h2>2. 协议比继承更重要</h2><p>Python 数据模型通过特殊方法定义协议：<code>__iter__</code> 让对象可迭代，<code>__len__</code> 接入 <code>len</code>，<code>__enter__</code>/<code>__exit__</code> 接入 <code>with</code>。框架大量依赖这种“按能力工作”的设计。</p>
+<pre><code>class Batch:
+    def __init__(self, samples):
+        self.samples = samples
+    def __len__(self):
+        return len(self.samples)
+    def __iter__(self):
+        return iter(self.samples)</code></pre>
+<p>类型标注用于静态检查和沟通，不会自动验证运行时类型。公共边界优先标注 <code>Sequence[T]</code>、<code>Iterable[T]</code>、<code>Protocol</code> 等抽象能力。</p></section>
+
+<section><h2>3. 惰性计算、调用边界与资源边界</h2>
+<h3>生成器</h3><p><code>yield</code> 让函数暂停并保留状态。峰值内存通常只与当前批次有关；代价是只能消费一次、异常会推迟到迭代时。</p>
+<pre><code>def batches(lines, size):
+    batch = []
+    for line in lines:
+        batch.append(line)
+        if len(batch) == size:
+            yield batch
+            batch = []
+    if batch:
+        yield batch</code></pre>
+<h3>装饰器</h3><p>装饰器适合横切调用边界的行为，如日志、缓存和计时。使用 <code>functools.wraps</code> 保留元信息。</p>
+<h3>上下文管理器</h3><p><code>with</code> 把获取与释放绑定到词法作用域，即使发生异常也执行清理。文件、锁、临时目录、CUDA autocast 都属于资源边界。</p>
+<pre><code>from contextlib import contextmanager
+from time import perf_counter
+
+@contextmanager
+def timer(name):
+    start = perf_counter()
+    try:
+        yield
+    finally:
+        print(name, perf_counter() - start)</code></pre></section>
+
+<section><h2>4. 并发模型选择</h2>
+<table><thead><tr><th>任务</th><th>首选</th><th>主要成本</th></tr></thead><tbody>
+<tr><td>网络、磁盘、小文件 I/O</td><td>线程或 asyncio</td><td>锁、阻塞调用卡住事件循环</td></tr>
+<tr><td>纯 Python CPU 循环</td><td>多进程或原生扩展</td><td>进程启动、序列化、数据复制</td></tr>
+<tr><td>NumPy/PyTorch/CUDA</td><td>底层线程池/GPU，Python 调度</td><td>同步、Kernel 太碎、数据搬运</td></tr>
+<tr><td>大数据跨进程</td><td>共享内存或增大任务粒度</td><td>pickle 与 IPC 吞掉收益</td></tr>
+</tbody></table>
+<p>常见 CPython 构建中的 GIL 限制同一进程内并行执行 Python 字节码，但阻塞 I/O 和许多原生扩展会释放 GIL。结论不是“线程没用”，而是先识别真正执行工作的层。</p>
+<div class="warning"><strong>CUDA 与 fork：</strong>不要在父进程初始化 CUDA 后随意 fork。遵循框架推荐的启动器与 start method。</div></section>
+
+<section><h2>5. 性能分析的最低纪律</h2><ol><li>先明确指标：端到端吞吐、单请求延迟还是某函数耗时。</li><li>预热，重复多次，报告中位数和分布。</li><li>把初始化、I/O 与核心计算分开测。</li><li>GPU 工作通常异步；需要 GPU Event 或边界同步。</li><li>只优化 profiler 证实的热点。</li></ol>
+<pre><code>python -m timeit -s "xs=list(range(1000))" "sum(xs)"
+python -m cProfile -s cumulative script.py</code></pre></section>
+
+<section class="lab"><h2>实验：对象共享与并发选择</h2><ol><li>运行 <a href="../labs/python_semantics_lab.py">python_semantics_lab.py</a>。</li><li>先不运行，写下每段代码的输出和原因。</li><li>修复默认参数、闭包和浅拷贝问题。</li><li>为 I/O 模拟与 CPU 模拟分别选择并发模型，并解释调度成本。</li></ol><p>完成标准：全部断言通过，且能口头解释“修改对象”和“重新绑定名字”的区别。</p></section>
+
+<section><h2>即时测验</h2>
+<div class="quiz" data-quiz data-why="默认参数在函数定义时创建，后续调用共享同一列表。" data-hint="考虑这个列表究竟创建了几次。"><h3>重复调用默认列表参数为何累积旧值？</h3><div class="answers"><button data-correct="true">定义阶段只创建一次</button><button>每次调用复制一次值</button><button>解释器随机缓存结果</button></div><p class="feedback" aria-live="polite"></p></div>
+<div class="quiz" data-quiz data-why="纯 Python CPU 循环受解释器执行限制，多进程能使用多个解释器进程。" data-hint="区分 Python 字节码与释放 GIL 的原生算子。"><h3>纯 Python CPU 密集循环优先尝试？</h3><div class="answers"><button>增加异步协程数量</button><button data-correct="true">使用多进程或扩展</button><button>增加日志线程数量</button></div><p class="feedback" aria-live="polite"></p></div>
+</section>
+
+<section class="success"><h2>过关任务</h2><p>提交一页说明：对“读取 10 万个小文件 → Python 解析 → PyTorch GPU 计算”设计流水线，标出线程、进程、GPU 各自负责什么，指出两个可能的数据搬运或同步瓶颈。</p></section>
+<section><h2>主要来源</h2><p><a href="https://docs.python.org/3/reference/datamodel.html">Python 官方数据模型</a>；<a href="https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%B8%80-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/%E7%AC%AC1%E7%AB%A0-%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/">AIInfraGuide 编程语言基础</a>。</p></section>
+<div class="complete-action"><button data-complete="l02" aria-pressed="false">标记为已通过</button></div>
+<nav class="lesson-nav"><a href="0001-aiinfra-foundations-map.html">← 单元 01</a><a href="../index.html">课程首页</a><a href="0003-cpp-boundaries.html">单元 03 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

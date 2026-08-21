@@ -1,0 +1,30 @@
+{
+  "name": "hlinforest-github-io",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "astro build && node scripts/check-site.mjs"
+  },
+  "dependencies": {
+    "@astrojs/check": "latest",
+    "@astrojs/mdx": "latest",
+    "@astrojs/rss": "latest",
+    "@astrojs/sitemap": "latest",
+    "astro": "latest",
+    "astro-expressive-code": "latest",
+    "katex": "latest",
+    "mermaid": "latest",
+    "rehype-autolink-headings": "latest",
+    "rehype-katex": "latest",
+    "rehype-slug": "latest",
+    "remark-gfm": "latest",
+    "remark-math": "latest",
+    "typescript": "^6.0.0"
+  },
+  "packageManager": "pnpm@11.19.0"
+}

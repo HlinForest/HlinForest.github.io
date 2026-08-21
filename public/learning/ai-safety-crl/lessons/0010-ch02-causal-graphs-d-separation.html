@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>0010｜第 2 章：因果图与 d-separation</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script></head>
+<body><header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#motifs">三种积木</a><a href="#conditioning">控制变量</a><a href="#dsep">d-separation</a></nav></div></header>
+<main class="lesson-main">
+  <section class="lesson-head"><span class="eyebrow">Lesson 0010 · Book Chapter 2B</span><h1>链、叉、碰撞点：三块因果图积木</h1><p>复杂因果图的统计行为，大多能拆回三种三节点结构。最反直觉的是碰撞点：不控制时堵路，一控制反而开路。</p><div class="lesson-meta"><span class="pill">25 min</span><span class="pill">原书 PDF 66–99</span><span class="pill">不需要图论</span></div></section>
+  <div class="objective"><strong>学完你能：</strong>辨认 chain / fork / collider，判断“控制一个变量”会堵住还是打开关联路径。</div>
+
+  <h2 id="motifs">三种积木</h2>
+  <table><thead><tr><th>结构</th><th>小图</th><th>生活故事</th><th>给定中间点后</th></tr></thead><tbody>
+    <tr><td>链 chain</td><td><span class="tiny-graph">X → M → Y</span></td><td>下雨 → 路湿 → 打滑</td><td>控制 M 会堵住这条路</td></tr>
+    <tr><td>叉 fork</td><td><span class="tiny-graph">X ← C → Y</span></td><td>高温 → 冰淇淋；高温 → 溺水</td><td>控制 C 会堵住混杂路</td></tr>
+    <tr><td>碰撞 collider</td><td><span class="tiny-graph">X → C ← Y</span></td><td>能力 → 录取 ← 关系</td><td>控制 C 反而打开路</td></tr>
+  </tbody></table>
+
+  <h3>链：中介变量传递作用</h3>
+  <div class="example"><strong>安全训练链</strong><br><span class="tiny-graph">安全微调 → 拒答倾向 → 有害输出下降</span>。若把“拒答倾向”固定在同一水平，安全微调通过这条中介路径对输出的差异会消失。注意：这只堵住这一条路，图中若有其他路径仍可能相关。</div>
+
+  <h3>叉：共同原因制造关联</h3>
+  <div class="example"><strong>原书医疗结构的简化</strong><br><span class="tiny-graph">用药 ← 严重度 → 康复</span>。重症同时更易用药、更难康复，于是用药和康复看起来负相关。若严重度被充分测量，按同一严重度比较可堵住这条后门路径。</div>
+
+  <h3>碰撞点：筛选成功者会制造关联</h3>
+  <div class="example"><strong>录取悖论</strong><br>能力和关系本来互不相关，都能提高录取率。只看已录取者：如果一个人能力一般，你会推测他关系更强；如果能力很强，则不必靠关系。因为你条件化了共同结果“录取”，原本无关的两个原因开始负相关。</div>
+
+  <h2 id="conditioning">“控制变量”不是永远正确</h2>
+  <p>统计教材常说“控制更多变量”。因果图告诉你：控制 fork 的中心有帮助，控制 collider 的中心可能有害。</p>
+  <div class="misconception"><strong>典型安全数据偏差：</strong>只分析“被安全过滤器标记的对话”。标记可能同时由真实危险度和某种写作风格造成：<span class="tiny-graph">危险度 → 被标记 ← 风格</span>。在被标记样本里，风格会与危险度产生人造关联，可能让审计员把一种口吻误当成危险原因。</div>
+
+  <h2 id="dsep">d-separation：在图上判断信息能否通行</h2>
+  <p>名字虽难，操作可以先理解为“检查 X 与 Y 的每条路径是否都被堵住”。</p>
+  <ol class="step-list">
+    <li>忽略箭头方向，列出 X 到 Y 的所有路径；箭头方向仍用于认出链/叉/碰撞。</li>
+    <li>路径上的<strong>非碰撞点</strong>若被条件化，这条路径被堵住。</li>
+    <li>路径上的<strong>碰撞点</strong>默认堵路；若条件化它或它的后代，路径反而打开。</li>
+    <li>若所有路径都堵住，就说 X 与 Y 被给定集合 Z d-separated；在满足 Markov 假设时，这预言相应条件独立。</li>
+  </ol>
+
+  <details><summary>练习 1：下雨 → 路湿 → 打滑</summary><p>不控制路湿时，下雨与打滑有关。给定路湿后，这条链被堵住：在“路面同样湿”的组内，仅通过这条路径，下雨不再提供打滑信息。</p></details>
+  <details><summary>练习 2：能力 → 录取 ← 关系</summary><p>不看录取时，路径在碰撞点自动关闭。给定“已录取”后，路径被打开；能力和关系会产生条件依赖。</p></details>
+
+  <h2>可检验含义与不能检验的方向</h2>
+  <p>图会预言一些独立关系。例如纯链 <span class="tiny-graph">X → M → Y</span> 预言 <code>X ⟂ Y | M</code>。如果数据强烈反对，图或测量假设有问题。但 <span class="tiny-graph">X → Y</span> 与 <span class="tiny-graph">X ← Y</span> 通常产生同一组独立关系，仅靠被动观测无法区分方向；这会在第 16 章成为 Markov 等价类。</p>
+
+  <div class="quiz" data-answer="b" data-correct="正确。被标记是两个原因的共同结果；只看被标记样本会打开原本关闭的碰撞路径。" data-wrong="先找箭头头部相撞的位置。碰撞点默认堵路，但筛选/控制它会开路。">
+    <h3>检索题</h3><p>图为 <span class="tiny-graph">真实危险 → 被标记 ← 使用俚语</span>。只研究“被标记”的对话，最可能发生什么？</p>
+    <label><input type="radio" name="q10" value="a"> 自动消除所有选择偏差</label>
+    <label><input type="radio" name="q10" value="b"> 危险与俚语产生人造关联</label>
+    <label><input type="radio" name="q10" value="c"> 证明俚语必然导致真实危险</label>
+    <button type="button">检查答案</button><p class="feedback" aria-live="polite"></p>
+  </div>
+  <div class="source-note">对应原书 2.3–2.4（PDF 66–99），保留 chain、common cause/fork、collider 与 d-separation 的主线。第一遍无需证明 Causal Markov Theorem，只需会用它读出图的可检验预言。</div>
+  <div class="ask">画出你手头问题的 3–5 个变量即可发给老师；老师可以和你一起找 fork、collider 以及“不该控制”的变量。</div>
+  <nav class="lesson-nav"><a href="0009-ch02-scm-from-zero.html">← 上一课：SCM</a><a href="0011-ch04-intervention-identification.html">下一课：干预与可识别性 →</a></nav>
+</main></body></html>

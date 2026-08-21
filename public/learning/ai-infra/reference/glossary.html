@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AI Infra 前置基础术语表</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">Reference</div><h1>AI Infra 前置基础术语表</h1><p class="lede">统一课程中的语言、数学、模型、框架、硬件和通信术语。</p></header>
+<section><h2>语言与系统</h2><table><tbody>
+<tr><td>Identity</td><td>Python 对象身份；<code>is</code> 比较身份而非值。</td></tr>
+<tr><td>Mutability</td><td>对象的值能否原地改变。</td></tr>
+<tr><td>RAII</td><td>资源获取即初始化；资源生命周期绑定对象生命周期。</td></tr>
+<tr><td>Ownership</td><td>谁负责保持资源存活并最终释放。</td></tr>
+<tr><td>ABI</td><td>二进制调用约定、符号、对象布局和运行库接口。</td></tr>
+<tr><td>Shared library</td><td>运行时装载和解析的动态库，如 Linux <code>.so</code>。</td></tr>
+<tr><td>Signal</td><td>内核或进程发送给进程的异步通知，如 SIGTERM。</td></tr>
+<tr><td>Process</td><td>拥有独立地址空间和系统资源的执行实例。</td></tr>
+</tbody></table></section>
+<section><h2>Tensor 与数学</h2><table><tbody>
+<tr><td>Shape</td><td>Tensor 各逻辑维度的长度。</td></tr>
+<tr><td>Stride</td><td>某维索引增加 1 时底层地址跨过的元素数。</td></tr>
+<tr><td>Layout</td><td>逻辑索引到物理存储的组织方式。</td></tr>
+<tr><td>Broadcast</td><td>按兼容维度逻辑扩展 Tensor 的规则。</td></tr>
+<tr><td>Reduction</td><td>沿某些维度聚合，如 sum、max、mean。</td></tr>
+<tr><td>GEMM</td><td>通用矩阵乘：<code>C=αAB+βC</code>。</td></tr>
+<tr><td>Tiling</td><td>把计算分块，使数据在快存储中复用。</td></tr>
+<tr><td>FLOPs</td><td>浮点操作数量；常把乘和加各计一次。</td></tr>
+<tr><td>Arithmetic intensity</td><td>每搬运一个字节完成的 FLOPs。</td></tr>
+<tr><td>Rank</td><td>矩阵独立方向数量；注意与分布式 rank 同名不同义。</td></tr>
+<tr><td>SVD</td><td>奇异值分解，用排序方向解释低秩近似。</td></tr>
+<tr><td>Logits</td><td>Softmax 前的任意实数分数。</td></tr>
+<tr><td>Cross entropy</td><td>目标分布对模型分布的负对数评分。</td></tr>
+<tr><td>Autodiff</td><td>沿计算图自动应用链式法则。</td></tr>
+</tbody></table></section>
+<section><h2>Transformer 与推理</h2><table><tbody>
+<tr><td>Token</td><td>Tokenizer 产生的离散文本单元。</td></tr>
+<tr><td>Embedding</td><td>把 token ID 映射为连续向量。</td></tr>
+<tr><td>Q/K/V</td><td>Attention 的查询、键和值投影。</td></tr>
+<tr><td>Causal mask</td><td>阻止位置看到未来 token 的上三角屏蔽。</td></tr>
+<tr><td>MHA/MQA/GQA</td><td>多头、单 KV 头、分组 KV 头 Attention。</td></tr>
+<tr><td>RoPE</td><td>通过旋转 Q/K 编码位置关系。</td></tr>
+<tr><td>RMSNorm</td><td>按均方根缩放、不减均值的归一化。</td></tr>
+<tr><td>SwiGLU</td><td>SiLU 门控的 FFN 结构。</td></tr>
+<tr><td>Prefill</td><td>并行处理整个 prompt 并建立 KV Cache。</td></tr>
+<tr><td>Decode</td><td>每步生成一个新 token 的自回归阶段。</td></tr>
+<tr><td>KV Cache</td><td>保存历史 token 在每层的 K/V，避免重复计算。</td></tr>
+<tr><td>TTFT/TPOT</td><td>首 token 时间 / 每输出 token 时间。</td></tr>
+</tbody></table></section>
+<section><h2>GPU 与通信</h2><table><tbody>
+<tr><td>SM</td><td>GPU 上调度 Warp、执行指令并拥有片上资源的处理单元。</td></tr>
+<tr><td>Warp</td><td>NVIDIA GPU 上 32 个线程的调度组。</td></tr>
+<tr><td>SIMT</td><td>单指令、多线程的执行模型。</td></tr>
+<tr><td>Tensor Core</td><td>高吞吐矩阵乘累加单元。</td></tr>
+<tr><td>Coalescing</td><td>把相邻线程的内存访问合并成较少事务。</td></tr>
+<tr><td>Occupancy</td><td>SM 活跃 Warp 相对硬件上限的比例。</td></tr>
+<tr><td>Roofline</td><td>用峰值算力和带宽×算术强度描述性能上限。</td></tr>
+<tr><td>Distributed rank</td><td>进程在通信组中的编号。</td></tr>
+<tr><td>Collective</td><td>通信组中所有 rank 共同参与的数据操作。</td></tr>
+<tr><td>AllReduce</td><td>归约所有输入，并把结果给所有 rank。</td></tr>
+<tr><td>ReduceScatter</td><td>归约后把结果分片给各 rank。</td></tr>
+<tr><td>NCCL</td><td>NVIDIA GPU 集合通信库。</td></tr>
+<tr><td>RDMA</td><td>网卡直接访问注册内存，减少 CPU 与复制参与。</td></tr>
+<tr><td>Overlap</td><td>让通信与独立计算在时间上重叠。</td></tr>
+</tbody></table></section>
+<nav class="lesson-nav"><a href="../index.html">← 课程首页</a><a href="formulas.html">公式速查 →</a></nav>
+</main></body></html>

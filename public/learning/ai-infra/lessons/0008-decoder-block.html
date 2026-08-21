@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>单元 08：Decoder Block 完整数据流</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">单元 08 · 4–5 小时</div><h1>Decoder Block 完整数据流</h1><p class="lede">目标：把 RMSNorm、RoPE、Attention、SwiGLU 与残差连接拼成一个完整可计算、可切分、可估算的 Block。</p></header>
+<section class="mastery"><h2>过关标准</h2><ul><li>能从输入 hidden state 画出 Pre-Norm Decoder Block。</li><li>能解释 RMSNorm、残差和 RoPE 的作用与 shape。</li><li>能实现 SwiGLU FFN。</li><li>能估算单个 Block 参数量和主要 FLOPs。</li><li>能指出算子融合、张量并行和流水线并行的切入点。</li></ul></section>
+
+<section><h2>1. Pre-Norm 数据流</h2>
+<pre><code>h1 = x + Attention(RMSNorm(x))
+out = h1 + FFN(RMSNorm(h1))</code></pre>
+<p>残差路径保持 shape <code>(B,S,H)</code> 不变。Pre-Norm 把归一化放在子层前，使深层网络梯度路径更稳定；残差提供接近恒等映射的直通路径。</p></section>
+
+<section><h2>2. RMSNorm</h2>
+<div class="formula">rms(x) = sqrt(mean(x²) + ε)<br>RMSNorm(x) = g ⊙ x / rms(x)</div>
+<p>RMSNorm 沿隐藏维 H 做归约，不减均值。输入输出 shape 不变。工程实现需要平方、归约、rsqrt、缩放；常与 residual add 或邻接操作融合，减少 HBM 往返。</p></section>
+
+<section><h2>3. RoPE 把相对位置写入 Q/K</h2><p>RoPE 把相邻维度视为二维坐标，根据位置旋转 Q 和 K。旋转保持 shape 和向量范数，但让 Q 与 K 的点积包含相对位置信息。</p>
+<div class="formula">[x'₂ᵢ]   [ cosθ  -sinθ ][x₂ᵢ]<br>[x'₂ᵢ₊₁]=[ sinθ   cosθ ][x₂ᵢ₊₁]</div>
+<p>RoPE 计算量相对小但调用频繁，常融合进 Q/K 准备或 Attention Kernel。长上下文扩展涉及频率缩放和外推质量，不只是把位置上限改大。</p></section>
+
+<section><h2>4. SwiGLU FFN</h2>
+<div class="formula">FFN(x) = (SiLU(xW_gate) ⊙ xW_up) W_down</div>
+<p>与两层标准 FFN 相比，SwiGLU 有 gate 与 up 两条投影，再逐元素相乘并降维。若中间维为 I：</p>
+<ul><li><code>W_gate: H×I</code></li><li><code>W_up: H×I</code></li><li><code>W_down: I×H</code></li></ul>
+<p>FFN 参数约 <code>3HI</code>，通常是 Block 参数与计算的大头之一，也是张量并行的主要切分对象。</p></section>
+
+<section><h2>5. 单 Block 参数账本</h2><p>忽略 bias，以 MHA 为例：</p>
+<table><thead><tr><th>组件</th><th>参数量</th></tr></thead><tbody><tr><td>Q/K/V 投影</td><td>3H²</td></tr><tr><td>Attention 输出投影</td><td>H²</td></tr><tr><td>SwiGLU FFN</td><td>3HI</td></tr><tr><td>两个 RMSNorm</td><td>2H</td></tr><tr><td>合计</td><td>约 4H² + 3HI</td></tr></tbody></table>
+<p>若 I≈8H/3，FFN 约 8H²，整个 Block 约 12H²。实际模型的 GQA 会减小 K/V 投影参数。</p></section>
+
+<section><h2>6. 主要性能对象</h2>
+<table><thead><tr><th>模块</th><th>常见优化</th><th>为什么</th></tr></thead><tbody>
+<tr><td>QKV/FFN GEMM</td><td>Tensor Core、张量并行</td><td>计算密集、矩阵规则</td></tr>
+<tr><td>Attention</td><td>FlashAttention、GQA</td><td>S² I/O 与 KV 带宽</td></tr>
+<tr><td>Norm/激活/残差</td><td>Kernel fusion</td><td>计算少、读写多、启动频繁</td></tr>
+<tr><td>层堆叠</td><td>流水线并行</td><td>Block 是自然阶段边界</td></tr>
+</tbody></table></section>
+
+<section><h2>7. 完整伪代码</h2>
+<pre><code>def decoder_block(x, cache=None):
+    n1 = rms_norm(x)
+    q, k, v = qkv_projection(n1)
+    q, k = apply_rope(q, k)
+    a = causal_attention(q, k, v, cache)
+    h = x + output_projection(a)
+    n2 = rms_norm(h)
+    f = silu(n2 @ W_gate) * (n2 @ W_up)
+    return h + f @ W_down</code></pre>
+<p>阅读任何优化代码时，先把它放回这张数据流图：输入是什么、输出是什么、替换了哪一段、保持哪些语义不变。</p></section>
+
+<section class="lab"><h2>实验：Block 参数量与 shape 审计</h2><ol><li>打开 <a href="../labs/decoder_block_ledger.py">decoder_block_ledger.py</a>。</li><li>输入 H、层数、Q 头、KV 头与 FFN 中间维。</li><li>计算每层与全模型参数量。</li><li>列出每个前向中间 Tensor shape。</li><li>比较 MHA 与 GQA 的参数和 KV Cache 差异。</li></ol></section>
+
+<section><h2>即时测验</h2>
+<div class="quiz" data-quiz data-why="RMSNorm 沿隐藏维归约并缩放，不改变 B、S、H。" data-hint="归一化是逐 token 的隐藏维变换。"><h3>RMSNorm 后 Tensor shape 如何变化？</h3><div class="answers"><button data-correct="true">保持原有形状不变</button><button>删除整个序列维度</button><button>增加一个注意力头</button></div><p class="feedback" aria-live="polite"></p></div>
+<div class="quiz" data-quiz data-why="Norm、激活和残差通常算术强度低，融合能减少 Kernel 启动和 HBM 往返。" data-hint="它们对每个元素做的计算相对少。"><h3>Norm 与残差为何常被融合？</h3><div class="answers"><button data-correct="true">减少启动与显存读写</button><button>增加模型参数数量</button><button>改变模型训练目标</button></div><p class="feedback" aria-live="polite"></p></div>
+</section>
+<section class="success"><h2>过关任务</h2><p>给 H=4096、I=11008、32 层、GQA（32 个 Q 头、8 个 KV 头）的 Decoder-only 模型，估算 Block 参数量并标出至少四个 Infra 优化映射点。</p></section>
+<section><h2>主要来源</h2><p><a href="https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%B8%80-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/transformer/37-transformer-decoder-block%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90/">AIInfraGuide Decoder Block</a>；<a href="https://arxiv.org/abs/1706.03762">Transformer 原始论文</a>。</p></section>
+<div class="complete-action"><button data-complete="l08" aria-pressed="false">标记为已通过</button></div>
+<nav class="lesson-nav"><a href="0007-attention.html">← 单元 07</a><a href="../index.html">课程首页</a><a href="0009-llm-inference.html">单元 09 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import { formatDate, postUrl, readingMinutes } from '../utils/posts';
+
+interface Heading { depth: number; slug: string; text: string }
+interface Props {
+  post: CollectionEntry<'blog'>;
+  headings: Heading[];
+  previous?: CollectionEntry<'blog'>;
+  next?: CollectionEntry<'blog'>;
+}
+
+const { post, headings, previous, next } = Astro.props;
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+---
+
+<BaseLayout title={`${post.data.title} | HlinForest`} description={post.data.description} image="" type="article">
+  <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
+  <div class="article-shell">
+    <aside class="article-rail" aria-label="文章操作">
+      <span>READING NOTE</span>
+      <div class="rail-line"></div>
+      <div class="rail-actions">
+        <button type="button" data-copy-link aria-label="复制文章链接" title="复制链接">⌁</button>
+        <a href={`https://github.com/HlinForest/HlinForest.github.io/issues/new?title=${encodeURIComponent(`关于：${post.data.title}`)}`} aria-label="在 GitHub 讨论" title="讨论">↗</a>
+      </div>
+    </aside>
+
+    <article class="article-main">
+      <header class="article-head">
+        <div class="eyebrow">{post.data.series || 'Essay'}</div>
+        <h1>{post.data.title}</h1>
+        <p class="article-description">{post.data.description}</p>
+        <div class="article-meta">
+          <span><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time></span>
+          <span>{readingMinutes(post.body)} 分钟阅读</span>
+          <span>Hanlin</span>
+          {post.data.updatedAt && <span>更新于 {formatDate(post.data.updatedAt)}</span>}
+        </div>
+        <div class="article-tags">{post.data.tags.map((tag) => <a class="tag" href={`/blog/?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}</div>
+      </header>
+
+      <div class="prose" data-article-body><slot /></div>
+
+      {(previous || next) && (
+        <nav class="series-nav" aria-label="上一篇与下一篇">
+          {previous ? <a href={postUrl(previous)}><small>← 上一篇</small><strong>{previous.data.title}</strong></a> : <span></span>}
+          {next ? <a href={postUrl(next)}><small>下一篇 →</small><strong>{next.data.title}</strong></a> : <span></span>}
+        </nav>
+      )}
+    </article>
+
+    {toc.length > 0 && (
+      <aside class="article-toc" aria-label="文章目录">
+        <p>On this page</p>
+        <ol>
+          {toc.map((heading) => <li class={`depth-${heading.depth}`}><a href={`#${heading.slug}`} data-toc-link={heading.slug}>{heading.text}</a></li>)}
+        </ol>
+      </aside>
+    )}
+  </div>
+
+  <script>
+    const progress = document.querySelector<HTMLElement>('[data-reading-progress]');
+    const article = document.querySelector<HTMLElement>('[data-article-body]');
+    const updateProgress = () => {
+      if (!progress || !article) return;
+      const top = article.getBoundingClientRect().top + scrollY;
+      const distance = Math.max(1, article.scrollHeight - innerHeight * 0.45);
+      const value = Math.max(0, Math.min(1, (scrollY - top + 90) / distance));
+      progress.style.width = `${value * 100}%`;
+    };
+    addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    document.querySelector('[data-copy-link]')?.addEventListener('click', async (event) => {
+      try {
+        await navigator.clipboard.writeText(location.href);
+        const button = event.currentTarget as HTMLButtonElement;
+        button.textContent = '✓';
+        setTimeout(() => button.textContent = '⌁', 1000);
+      } catch {}
+    });
+
+    const tocLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+    const sections = tocLinks.map((link) => document.getElementById(link.dataset.tocLink || '')).filter((section): section is HTMLElement => Boolean(section));
+    if ('IntersectionObserver' in window && sections.length) {
+      const observer = new IntersectionObserver((entries) => {
+        const current = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (!current) return;
+        tocLinks.forEach((link) => link.dataset.active = String(link.dataset.tocLink === current.target.id));
+      }, { rootMargin: '-15% 0px -70% 0px' });
+      sections.forEach((section) => observer.observe(section));
+    }
+  </script>
+</BaseLayout>

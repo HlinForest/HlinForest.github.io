@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>单元 12：集合通信与 NCCL</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">单元 12 · 4–5 小时</div><h1>集合通信与 NCCL</h1><p class="lede">目标：能画出每种 collective 的数据流，估算 Ring/Tree 成本，并用拓扑与时间线解释多卡扩展效率。</p></header>
+<section class="mastery"><h2>过关标准</h2><ul><li>能解释 rank、world size、process group 与点对点通信。</li><li>能区分 Broadcast、Reduce、AllReduce、AllGather、ReduceScatter、AllToAll。</li><li>能推导 Ring AllReduce 每 rank 通信量。</li><li>能比较 Ring 与 Tree 的带宽/延迟权衡。</li><li>能解释 NCCL、RDMA、拓扑和计算通信 overlap。</li></ul></section>
+
+<section><h2>1. 分布式基本坐标</h2><ul><li><strong>rank：</strong>进程在通信组中的编号。</li><li><strong>world size：</strong>组内进程数。</li><li><strong>process group：</strong>参与某组 collective 的 ranks。</li><li><strong>backend：</strong>执行通信的实现；GPU 场景常用 NCCL。</li></ul>
+<p>Send/Recv 是定向的一对一积木；Collective 是组内所有 rank 以相同语义共同参与的操作。</p></section>
+
+<section><h2>2. Collective 语义</h2>
+<table><thead><tr><th>原语</th><th>输入/输出直觉</th><th>典型用途</th></tr></thead><tbody>
+<tr><td>Broadcast</td><td>一个 rank 的数据复制给所有 rank</td><td>初始化、配置</td></tr>
+<tr><td>Reduce</td><td>所有输入归约到一个 rank</td><td>聚合到根</td></tr>
+<tr><td>AllReduce</td><td>归约结果发送给所有 rank</td><td>数据并行梯度</td></tr>
+<tr><td>AllGather</td><td>每个 rank 的分片拼到所有 rank</td><td>收集参数/激活分片</td></tr>
+<tr><td>ReduceScatter</td><td>先归约，再把结果分片给各 rank</td><td>分片梯度或参数</td></tr>
+<tr><td>AllToAll</td><td>每个 rank 向每个 rank 发送不同分片</td><td>MoE token 路由</td></tr>
+</tbody></table></section>
+
+<section><h2>3. 延迟—带宽模型</h2><div class="formula">通信时间 ≈ steps × α + bytes × β</div>
+<p>α 是每轮启动/网络延迟，β 是每字节时间。小消息更受 α 支配；大消息更受带宽支配。比较算法时必须同时看轮数与字节量。</p></section>
+
+<section><h2>4. Ring AllReduce</h2><p>把 M 字节数据切成 N 份，分两阶段：</p><ol><li><strong>ReduceScatter：</strong>N-1 轮，每轮发送 M/N，并累加收到的块。</li><li><strong>AllGather：</strong>N-1 轮，每轮发送 M/N，收集所有归约块。</li></ol>
+<div class="formula">每 rank 通信量 = 2(N-1)/N × M<br>通信轮数 = 2(N-1)</div>
+<p>N 很大时字节量趋近 2M，带宽效率好；但轮数线性增长，因此小消息和大规模 rank 下延迟可能较差。</p></section>
+
+<section><h2>5. Tree AllReduce</h2><p>树形归约再广播，轮数约 O(log N)，对小消息和延迟敏感场景更有优势。缺点是链路负载可能不如 Ring 均匀，大消息带宽利用取决于具体树和拓扑。</p>
+<table><thead><tr><th>选择</th><th>更匹配</th></tr></thead><tbody><tr><td>Ring</td><td>大消息、带宽主导、链路均衡</td></tr><tr><td>Tree</td><td>小消息、延迟主导、rank 较多</td></tr></tbody></table></section>
+
+<section><h2>6. NCCL 做了什么</h2><p>NCCL 提供 GPU collective，识别 PCIe/NVLink/NVSwitch/网络拓扑，选择通道、协议和算法，并与 CUDA stream 协作。它不会消除糟糕拓扑、错误消息粒度或不一致调用顺序。</p>
+<pre><code>NCCL_DEBUG=INFO
+NCCL_DEBUG_SUBSYS=INIT,GRAPH,NET
+nvidia-smi topo -m</code></pre>
+<p>所有 rank 必须以兼容顺序参与 collective；某个 rank 跳过或 shape 不一致，可能导致 hang 而不是漂亮报错。</p></section>
+
+<section><h2>7. RDMA 与网络路径</h2><p>RDMA 允许网卡直接读写注册内存，减少 CPU 参与与复制。InfiniBand 原生支持 RDMA；RoCE v2 在以太网上承载 RDMA，需要正确的拥塞控制与无损网络配置。上层性能仍受 GPU Direct、NIC 亲和性、NUMA 与交换拓扑影响。</p></section>
+
+<section><h2>8. 计算通信 Overlap</h2><p>只要梯度块已经计算完成，就可以在其他层继续 backward 时异步 AllReduce。有效 overlap 需要：</p><ul><li>足够大的独立计算窗口。</li><li>合适 bucket 大小：太小启动开销大，太大启动太晚。</li><li>独立 stream 与正确依赖。</li><li>计算和通信不会争用同一瓶颈资源到互相拖慢。</li></ul>
+<p>判断是否 overlap 必须看时间线，不能只因为代码用了 async API 就宣布成功。</p></section>
+
+<section><h2>9. 通信诊断顺序</h2><ol><li>单卡正确性与性能基线。</li><li>同机两卡，确认进程与 device 映射。</li><li>查看拓扑和 NCCL 初始化日志。</li><li>用 nccl-tests 测链路基线，比较 algbw 与 busbw。</li><li>检查消息大小分布与 collective 调用次数。</li><li>查看时间线中的等待、串行和 overlap。</li><li>再调算法、协议、bucket 和进程/NIC 亲和性。</li></ol></section>
+
+<section class="lab"><h2>实验：Collective 模拟器</h2><ol><li>运行 <a href="../labs/collectives_lab.py">collectives_lab.py</a>。</li><li>用四个 rank 的列表模拟 Broadcast、AllGather、ReduceScatter 与 AllReduce。</li><li>逐轮打印 Ring ReduceScatter 和 AllGather 的块移动。</li><li>用 α-β 模型比较 Ring/Tree 在小消息与大消息下的时间。</li></ol></section>
+
+<section><h2>即时测验</h2>
+<div class="quiz" data-quiz data-why="AllReduce 让每个 rank 都得到所有输入的归约结果。" data-hint="名字同时包含 Reduce 与 All。"><h3>数据并行同步梯度常用哪个原语？</h3><div class="answers"><button data-correct="true">使用全归约操作</button><button>使用单向发送操作</button><button>使用文件复制操作</button></div><p class="feedback" aria-live="polite"></p></div>
+<div class="quiz" data-quiz data-why="Ring 每 rank 字节量接近 2M，但需要 2(N-1) 轮，带宽好而延迟随 N 增长。" data-hint="区分字节量与通信轮数。"><h3>Ring AllReduce 的主要特点？</h3><div class="answers"><button data-correct="true">带宽优但轮数较多</button><button>延迟优且没有传输</button><button>只适用于单张显卡</button></div><p class="feedback" aria-live="polite"></p></div>
+</section>
+<section class="success"><h2>过关任务</h2><p>8 个 rank 对 1 GiB 梯度做 Ring AllReduce：计算每 rank 理论通信量与轮数；给出小消息时改用 Tree 的理由；最后列出三项验证真实带宽的证据。</p></section>
+<section><h2>主要来源</h2><p><a href="https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/usage/collectives.html">NCCL Collective Operations</a>；<a href="https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%B8%80-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/communication/collective-communication-primer/">AIInfraGuide 集群通信与 NCCL</a>。</p></section>
+<div class="complete-action"><button data-complete="l12" aria-pressed="false">标记为已通过</button></div>
+<nav class="lesson-nav"><a href="0011-gpu-architecture.html">← 单元 11</a><a href="../index.html">课程首页</a><a href="0013-capstone.html">毕业项目 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

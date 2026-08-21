@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>01 · 从公式到训练：路线与环境</title>
+  <link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/course.js"></script>
+</head>
+<body>
+<header class="hero">
+  <div><div class="eyebrow">PyTorch Foundations · Lesson 01</div><h1>先看全局，再按下 Run</h1><p class="lede">你不缺公式；你缺的是把数据、模型、损失、梯度、参数更新和评估连成一条可靠的软件链。本课让这条链第一次在脑中闭合。</p></div>
+  <aside class="meta-card"><strong>本课胜利条件</strong>能闭卷说出训练全过程，并完成环境自检。<strong>预计时间</strong>25–40 分钟<strong>主资料</strong><a href="https://www.learnpytorch.io/01_pytorch_workflow/">LearnPyTorch 01</a></aside>
+</header>
+<nav class="course-nav"><div><a href="#recall">开场检索</a><a href="#map">训练地图</a><a href="#state">状态</a><a href="#setup">环境</a><a href="#quiz">检查</a><a href="../reference/0001-glossary.html">术语表</a></div></nav>
+<main>
+  <section id="recall"><h2>先不看答案：把理论变成动作</h2><div class="checkpoint"><p>拿纸写下：给你一批带标签的数据，训练一个神经网络至少需要哪些对象与动作？限时 90 秒。</p><details><summary>写完再展开基准答案</summary><p>对象：输入 <code>X</code>、标签 <code>y</code>、带可学习参数的模型、损失函数、优化器。动作：前向计算、计算损失、清空旧梯度、反向传播、更新参数；验证阶段还要切换模式并禁用梯度记录。</p></details></div></section>
+
+  <section id="map"><h2>一条贯穿全课程的训练链</h2><p>深度学习训练不是某个神秘 API，而是一个重复执行的闭环。LearnPyTorch 的 workflow 章节依次讲数据、建模、训练、推理和保存；PyTorch 官方基础教程也采用相同骨架。今后模型从一条直线换成 Transformer，闭环仍在。</p>
+    <div class="flow"><div><b>1 数据</b><br><span class="dim">张量与标签</span></div><div class="arrow">→</div><div><b>2 前向</b><br><span class="dim">产生 logits</span></div><div class="arrow">→</div><div><b>3 损失</b><br><span class="dim">量化错误</span></div><div class="arrow">→</div><div><b>4 反传</b><br><span class="dim">计算梯度</span></div><div class="arrow">→</div><div><b>5 更新</b><br><span class="dim">改变参数</span></div></div>
+    <div class="contract"><div class="contract-head">数学对象 ↔ PyTorch 对象</div><div class="contract-body"><table><thead><tr><th>数学</th><th>PyTorch</th><th>训练中发生什么</th></tr></thead><tbody>
+      <tr><td>数据 X、目标 y</td><td><code>torch.Tensor</code></td><td>携带数值，还必须携带正确的 shape、dtype、device</td></tr>
+      <tr><td>函数 fθ(X)</td><td><code>nn.Module</code></td><td><code>forward()</code> 定义从输入到输出的计算</td></tr>
+      <tr><td>参数 θ</td><td><code>nn.Parameter</code></td><td>默认被 Module 注册，通常有 <code>requires_grad=True</code></td></tr>
+      <tr><td>目标函数 L</td><td><code>nn.*Loss</code></td><td>把预测和真实值压成标量或逐样本损失</td></tr>
+      <tr><td>∂L/∂θ</td><td><code>loss.backward()</code></td><td>autograd 沿计算图应用链式法则，并把梯度累积到 <code>θ.grad</code></td></tr>
+      <tr><td>θ ← θ − η∇L</td><td><code>optimizer.step()</code></td><td>优化器读取梯度并更新参数</td></tr>
+    </tbody></table></div></div>
+    <div class="callout good"><strong>与大模型的直接连接：</strong>语言模型的输入是 token ID 张量，模型输出每个位置对词表的 logits，交叉熵生成 loss，autograd 计算数十亿参数的梯度，优化器更新参数。规模变了，骨架没变。</div>
+  </section>
+
+  <section id="state"><h2>真正容易错的是“状态”</h2><p>你在笔试里常把一次梯度下降写成一行，但程序中的对象会记住状态。把下面四类状态刻进脑中：</p>
+    <div class="two-col">
+      <div class="card"><h3>参数状态</h3><p><code>model.parameters()</code> 中的值会被优化器原地更新；checkpoint 主要保存它们。</p></div>
+      <div class="card"><h3>梯度状态</h3><p><code>parameter.grad</code> 默认累积，不主动清零就会叠加多个 step。</p></div>
+      <div class="card"><h3>模式状态</h3><p><code>model.train()</code> / <code>model.eval()</code> 会改变 Dropout、BatchNorm 等层的行为。</p></div>
+      <div class="card"><h3>随机状态</h3><p>初始化、抽样、数据打乱消耗随机数生成器状态；seed 是复现实验的入口，不是绝对确定性的保证。</p></div>
+    </div>
+    <p>因此训练代码不能只问“公式对不对”，还要问：当前 tensor 在哪里？是什么 dtype？梯度是否在记录？model 是什么模式？旧梯度清了吗？</p>
+  </section>
+
+  <section id="setup"><h2>选择运行环境</h2>
+    <h3>路径 A：Google Colab（建议先用）</h3><p>打开三章页面顶部的 Colab notebook，运行一个新 cell：</p><div class="code-label">Python · 环境探针</div><pre><code>import torch
+print("torch:", torch.__version__)
+print("cuda available:", torch.cuda.is_available())
+print("default dtype:", torch.get_default_dtype())
+
+device = (
+    "cuda" if torch.cuda.is_available()
+    else "mps" if torch.backends.mps.is_available()
+    else "cpu"
+)
+print("device:", device)</code></pre>
+    <h3>路径 B：本地运行</h3><p>当前工作区检查时尚未安装 <code>torch</code>。访问 <a href="https://pytorch.org/get-started/locally/">PyTorch 官方安装选择器</a>，根据 Windows、pip 与 CPU/CUDA 版本复制命令。不要从旧文章盲抄 CUDA 命令。</p>
+    <div class="callout warn"><strong>常见误区：</strong>“有 NVIDIA 显卡”不等于当前 PyTorch 构建能用 CUDA；以 <code>torch.cuda.is_available()</code> 的结果和官方安装组合为准。本课程规模很小，CPU 完全够用。</div>
+    <h3>第一次执行</h3><pre><code>import torch
+
+x = torch.tensor([1.0, 2.0, 3.0])
+w = torch.tensor([0.1, 0.2, 0.3], requires_grad=True)
+score = x @ w
+loss = (score - 1.0) ** 2
+loss.backward()
+
+print("score:", score.item())
+print("loss:", loss.item())
+print("gradient dL/dw:", w.grad)</code></pre>
+    <p>你刚刚已经运行了一个最小计算图：<code>x,w → score → loss</code>。因为 <code>w</code> 需要梯度，autograd 记录运算；<code>backward()</code> 后，<code>w.grad</code> 保存 ∂loss/∂w。</p>
+  </section>
+
+  <section id="quiz"><h2>出口检查</h2><div class="quiz"><h3>闭环检查</h3>
+    <fieldset data-answer="清空旧梯度值"><legend>1. 反向传播前，防止梯度跨 step 叠加的动作是？</legend><label><input type="radio" name="q1" value="切换评估模式"> 切换评估模式</label><label><input type="radio" name="q1" value="清空旧梯度值"> 清空旧梯度值</label><label><input type="radio" name="q1" value="保存参数字典"> 保存参数字典</label></fieldset>
+    <fieldset data-answer="计算参数梯度"><legend>2. <code>loss.backward()</code> 的直接职责是？</legend><label><input type="radio" name="q2" value="计算参数梯度"> 计算参数梯度</label><label><input type="radio" name="q2" value="更新模型参数"> 更新模型参数</label><label><input type="radio" name="q2" value="关闭随机状态"> 关闭随机状态</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback" aria-live="polite"></p>
+    <details><summary>答案与理由</summary><p>1：清空旧梯度。PyTorch 默认累积梯度。2：计算参数梯度；真正修改参数的是 <code>optimizer.step()</code>。</p></details></div></section>
+
+  <section class="checkpoint"><h2>本课完成标记</h2><p>关闭页面，口述“数据 → 前向 → loss → 清梯度 → backward → step → 验证”。能够解释每步读写的状态，再勾选。</p><label><input type="checkbox" data-complete> 我已运行环境探针，并能闭卷口述训练链。</label><p>不清楚之处请直接问我；把报错、代码和你的预测一起发来，反馈会更精准。</p></section>
+  <footer class="lesson-footer"><span class="dim">起点：理论 → 软件状态</span><a href="0002-tensor-mental-model.html">下一课：Tensor 心智模型 →</a></footer>
+</main></body></html>

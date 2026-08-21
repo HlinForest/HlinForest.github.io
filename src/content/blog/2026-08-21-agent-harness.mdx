@@ -1,0 +1,203 @@
+---
+title: "从 Prompt 到 Harness：构建可验证的智能体系统"
+description: "把智能体从一次性演示升级为可长期运行的工程系统：状态、工具、评测、可观测性与反馈闭环。"
+publishedAt: "2026-08-21"
+tags: ["Agents", "AI Infra", "Engineering"]
+featured: true
+series: "Agent Systems"
+lang: "zh"
+---
+
+import Callout from '../../components/Callout.astro';
+import FlowDiagram from '../../components/FlowDiagram.astro';
+import ComparisonTabs from '../../components/ComparisonTabs.astro';
+
+<p class="lead">一个能回答问题的模型，不等于一个能完成工作的系统。真正的差距通常不在某条更长的 prompt，而在模型周围那层负责状态、工具、检查、恢复与学习的运行结构。</p>
+
+这层结构可以叫作 **harness**。它不神秘：把模型看成一个能力很强、但有概率犯错的计算节点；然后用软件工程的方法规定它看见什么、能做什么、怎样知道做对了，以及失败后如何继续。
+
+<Callout type="idea" title="核心判断">
+  Harness 的价值不是替模型“思考”，而是让每一步思考都处于一个**可观察、可约束、可恢复**的环境里。
+</Callout>
+
+## 1. 从一次调用到闭环系统
+
+最简单的 agent 往往只有三步：把任务发给模型、允许它调用工具、把结果返回给用户。这个结构适合演示，却很难支撑长任务。只要中间出现超时、上下文膨胀、工具返回脏数据或环境状态改变，系统就会失去继续工作的依据。
+
+一个更可靠的闭环至少需要五个阶段：
+
+<FlowDiagram nodes={['定义目标', '执行动作', '观察证据', '验证结果', '更新状态']} note="闭环不是固定次数的 retry；每一轮都要产生新的证据。" />
+
+这里最重要的变化，是把“生成答案”改写成“推进状态”。模型的输出只是候选动作；系统真正关心的是动作执行后，世界是否更接近目标。
+
+可以把第 $t$ 轮的系统状态写成：
+
+$$
+s_{t+1} = F(s_t, a_t, o_t, v_t)
+$$
+
+其中 $a_t$ 是模型选择的动作，$o_t$ 是工具或环境返回的观察，$v_t$ 是验证器产生的判断。只有当 $v_t$ 提供了足够证据，状态才应该进入“完成”。
+
+### 为什么 retry 不等于闭环
+
+如果失败后只是把相同输入再次交给模型，系统并没有获得新信息。有效的下一轮至少应改变一个变量：补充错误日志、缩小任务范围、更换验证方法，或回滚到已知稳定状态。
+
+| 机制 | 输入是否变化 | 是否保存中间状态 | 能否解释失败 | 适合场景 |
+|---|---:|---:|---:|---|
+| 直接重试 | 否 | 否 | 弱 | 偶发网络错误 |
+| 带反馈重试 | 是 | 部分 | 中 | 格式修复、单步工具失败 |
+| 状态机闭环 | 是 | 是 | 强 | 多步骤、可恢复任务 |
+| 评测驱动循环 | 是 | 是 | 很强 | 研究、代码、数据生产 |
+
+## 2. 把状态放在模型外面
+
+上下文窗口是工作记忆，不是数据库。把任务历史、全部日志和所有中间产物不断追加到 prompt，会同时造成三个问题：成本增长、注意力稀释，以及无法精确恢复。
+
+更稳健的做法是把长任务拆成三类状态：
+
+1. **权威状态**：目标、约束、当前阶段、已确认决策。
+2. **工作产物**：代码、表格、草稿、测试报告、数据切片。
+3. **轨迹摘要**：尝试了什么、为什么失败、下一轮需要什么证据。
+
+模型每轮只读取与当前决策有关的最小切片。原始轨迹仍然保留，但不默认塞回上下文。
+
+```python title="state.py" {4,8-12}
+from dataclasses import dataclass, field
+
+@dataclass
+class TaskState:
+    goal: str
+    phase: str = "plan"
+    constraints: list[str] = field(default_factory=list)
+    artifacts: dict[str, str] = field(default_factory=dict)
+    evidence: list[str] = field(default_factory=list)
+
+    def advance(self, next_phase: str, proof: str) -> None:
+        if not proof:
+            raise ValueError("state transition requires evidence")
+        self.evidence.append(proof)
+        self.phase = next_phase
+```
+
+<Callout type="warning" title="常见反模式">
+  不要让模型自己宣称“任务完成”就直接结束。完成状态应由模型外部的检查条件触发，例如测试通过、文件存在且格式合法、目标指标达到阈值。
+</Callout>
+
+## 3. 工具接口决定可控性上限
+
+工具不只是“给模型更多能力”。每个工具同时定义了一个动作空间和一个风险边界。一个设计良好的工具应满足四个条件：输入结构明确、输出容易检查、失败可区分、影响范围可限定。
+
+<ComparisonTabs tabs={[
+  {
+    label: '宽工具',
+    title: '自由度高，但验证成本也高',
+    body: '让模型直接执行任意脚本。适合受控开发环境，不适合高风险生产流程。',
+    code: 'run_shell(command: string) -> stdout',
+  },
+  {
+    label: '窄工具',
+    title: '动作面小，结果更可预测',
+    body: '把高频任务封装成带 schema 的操作，并在实现层限制路径、权限与副作用。',
+    code: 'update_record(id, patch, expected_version)',
+  },
+  {
+    label: '事务工具',
+    title: '先预览，再提交',
+    body: '将高影响动作拆成 prepare / validate / commit，使人和验证器都能在最终写入前检查。',
+    code: 'plan_change() → validate() → commit(token)',
+  },
+]} />
+
+工具返回也应该为下一步决策服务。与其返回一大段自然语言，不如返回结构化结果：状态码、变更摘要、证据位置和可重试性。
+
+```ts title="tool-result.ts"
+type ToolResult<T> = {
+  ok: boolean;
+  data?: T;
+  error?: {
+    code: 'INVALID_INPUT' | 'CONFLICT' | 'TRANSIENT' | 'FORBIDDEN';
+    message: string;
+    retryable: boolean;
+  };
+  evidence: string[];
+};
+```
+
+## 4. 验证器比评分更重要
+
+许多系统只有一个最终评分：任务成功或失败。但要改进 harness，需要知道失败发生在哪一层。
+
+可以把总成功率分解为一条条件概率链：
+
+$$
+P(\text{success}) = P(p)\,P(a\mid p)\,P(e\mid a,p)\,P(v\mid e,a,p)
+$$
+
+$p$ 表示形成了可执行计划，$a$ 表示选择并正确调用动作，$e$ 表示环境执行成功，$v$ 表示验证器正确识别了结果。这个分解不会直接给出全部因果关系，却能帮助定位“模型不会做”和“系统没让它做成”的区别。
+
+建议同时保留三层指标：
+
+- **任务层**：最终是否满足用户目标。
+- **阶段层**：规划、检索、执行、验证分别在哪里失败。
+- **动作层**：每次工具调用的输入、延迟、错误类型与重试结果。
+
+<details>
+  <summary>一个最小的失败记录应该包含什么？</summary>
+
+  至少包括任务版本、模型与配置、失败阶段、最后一个可信状态、工具错误、验证器证据、是否可恢复，以及下一次实验要改变的唯一变量。
+</details>
+
+## 5. Context engineering 是选择问题
+
+“给更多上下文”并不是稳定策略。上下文工程的本质是：在有限预算内，选择对当前动作最有价值的证据。
+
+设候选上下文片段为 $c_i$，其信息价值为 $u_i$，token 成本为 $w_i$，预算为 $B$，最简化的选择可以写成背包问题：
+
+$$
+\max_{x_i \in \{0,1\}} \sum_i u_i x_i
+\quad \text{s.t.} \quad
+\sum_i w_i x_i \le B
+$$
+
+真实系统里的 $u_i$ 会随任务阶段变化：规划时需要目标和约束；调试时需要错误、相关代码与最近的变更；验证时需要验收条件和输出证据。固定的一条“大 prompt”无法同时优化这些阶段。
+
+## 6. 可观测性：让每个改动都能被归因
+
+日志越多不代表越可观察。真正有用的可观测性要回答：**哪个组件，在什么证据下，做了什么决定，导致了什么状态变化？**
+
+我更倾向于把一次长任务记录成事件流：
+
+```json title="trace.jsonl"
+{"event":"phase_started","phase":"verify","state":"s-17"}
+{"event":"tool_called","tool":"run_tests","input_hash":"91ad…"}
+{"event":"tool_finished","ok":false,"error":"2 snapshot failures"}
+{"event":"decision","action":"inspect_diff","reason":"failure is localized"}
+{"event":"state_updated","from":"s-17","to":"s-18","evidence":"report-42"}
+```
+
+这样的轨迹既可以给人调试，也可以成为后续自动分析的数据。反过来，一整段“模型思考 + shell 输出”的文本很难稳定聚合。
+
+## 7. 设计一个最小可用 Harness
+
+如果从零开始，不需要先造一个通用平台。可以按下面的顺序增加能力：
+
+1. 明确一个任务类型和可机器检查的完成条件。
+2. 把工作状态保存在模型外，并允许从检查点恢复。
+3. 只开放完成任务所需的最小工具集。
+4. 为每个工具定义结构化错误和影响范围。
+5. 记录阶段、动作、证据与状态转移。
+6. 用真实失败样本建立回归集，再优化 prompt 或工作流。
+
+这个顺序很重要：如果还没有验证器和失败记录，过早优化 prompt 只是在凭感觉移动误差。
+
+<Callout type="note" title="一条实用原则">
+  先让系统能准确地失败，再让它更频繁地成功。可解释、可恢复的失败，是可靠自动化的起点。
+</Callout>
+
+## 结语
+
+模型能力会继续提高，但工程边界不会因此消失。只要智能体还要和文件、服务、权限、时间与人协作，状态管理、工具设计、验证、恢复和可观测性就仍然是系统的一部分。
+
+好的 harness 不应该用复杂规则遮住模型，而应该让模型的能力以更稳定、更可审计的方式抵达真实世界。
+
+[^1]: 本文中的 harness 指围绕基础模型组织执行、状态、工具、权限、评测与恢复的系统层，而不仅是一份 prompt 模板。

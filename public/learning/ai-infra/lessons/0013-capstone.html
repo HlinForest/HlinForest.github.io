@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>毕业项目：跨层诊断一个慢且不稳定的训练任务</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">毕业项目 · 8–12 小时</div><h1>跨层诊断一个慢且不稳定的训练任务</h1><p class="lede">你将面对一组故意混合了代码、数值、环境、GPU 与通信问题的证据。目标不是猜中答案，而是形成可复现、可证伪的诊断报告。</p></header>
+
+<section class="mastery"><h2>毕业标准</h2><p>总分 100，达到 80 分且“正确性”不低于 20/25 才通过。报告必须区分事实、推断和待验证假设。</p></section>
+
+<section><h2>场景</h2><p>团队把一个 12 层 Decoder-only 小模型从单卡迁移到 8 卡训练。出现以下症状：</p>
+<ul><li>有时前 200 步 loss 正常，随后变成 NaN。</li><li>8 卡吞吐只有单卡的 3.1 倍。</li><li>GPU 利用率呈锯齿，周期性跌到接近 0。</li><li>显存比估算高约 25%。</li><li>某台机器偶尔在 AllReduce 处 hang。</li><li>同一 checkpoint 在另一环境导入自定义扩展失败。</li></ul>
+<p>证据包位于 <a href="../labs/capstone_case/README.md">labs/capstone_case</a>，包括环境审计、模型配置、训练片段、profile 摘要、NCCL 日志片段和拓扑。</p></section>
+
+<section><h2>任务 1：建立问题树</h2><p>先不要给修复。把症状分到以下分支，并为每个分支写“最便宜且区分度最高的下一证据”：</p>
+<ol><li>语义/shape/layout 错误</li><li>数值稳定性</li><li>环境/ABI/动态库</li><li>CPU 与数据加载</li><li>GPU Kernel/内存</li><li>集合通信/拓扑</li></ol></section>
+
+<section><h2>任务 2：正确性与数值</h2><ol><li>检查 mask、loss、梯度清零与混合精度顺序。</li><li>定位第一个非有限 Tensor，而不是只观察最终 loss。</li><li>用 FP32 参考路径与组合 atol/rtol 做对比。</li><li>为边界 shape、非连续输入与极端 logits 设计测试。</li></ol></section>
+
+<section><h2>任务 3：内存账本</h2><p>根据模型配置估算：</p><ul><li>参数、梯度与 AdamW 状态。</li><li>主要激活与 Attention 中间量。</li><li>混合精度与 master weights。</li><li>通信 bucket、临时 workspace 与 allocator 保留。</li></ul>
+<p>解释“估算值”和 <code>nvidia-smi</code> 进程显存为何不完全相同。</p></section>
+
+<section><h2>任务 4：性能账本与时间线</h2><ol><li>从 profiler 把 step 时间分成 DataLoader、H2D、forward、backward、optimizer、collectives。</li><li>识别至少一个隐式同步和一个高频小 Kernel 模式。</li><li>为两个主要算子估算算术强度并形成 Roofline 假设。</li><li>提出优化时写清目标指标、预期变化、正确性检查与回退条件。</li></ol></section>
+
+<section><h2>任务 5：通信</h2><ol><li>根据拓扑判断跨 NUMA、跨 PCIe root 或跨机链路。</li><li>计算梯度 AllReduce 的理论每 rank 通信量。</li><li>从 NCCL 日志判断选用的网络接口、算法和可能的 rank 不一致。</li><li>从时间线判断 overlap 是否真实发生。</li><li>给出从单卡 → 同机两卡 → 同机八卡 → 两机的阶梯复现方案。</li></ol></section>
+
+<section><h2>任务 6：环境与 ABI</h2><ol><li>比较两套环境的 Python、PyTorch、CUDA 构建、编译器、C++ ABI、架构与动态库解析。</li><li>区分“驱动可见”“Toolkit 可用”“框架 CUDA 可用”“扩展 ABI 兼容”。</li><li>解释扩展导入失败属于编译、链接还是运行时装载。</li></ol></section>
+
+<section><h2>最终交付物</h2><ol><li><strong>executive-summary.md：</strong>一页结论、影响与优先级。</li><li><strong>evidence.md：</strong>每项事实及来源。</li><li><strong>hypotheses.md：</strong>假设、支持证据、反证与下一实验。</li><li><strong>ledger.md：</strong>参数/显存/FLOPs/通信账本。</li><li><strong>reproduce.md：</strong>最小复现与逐层诊断命令。</li><li><strong>patch-plan.md：</strong>按风险排序的修复与验证计划。</li></ol></section>
+
+<section><h2>评分量表</h2>
+<table class="rubric"><thead><tr><th>维度</th><th>分值</th><th>满分表现</th></tr></thead><tbody>
+<tr><td>正确性</td><td>25</td><td>找到首个错误/非有限点，参考实现与边界测试充分</td></tr>
+<tr><td>性能</td><td>20</td><td>时间线分解准确，优化与证据匹配</td></tr>
+<tr><td>显存账本</td><td>15</td><td>包含参数、状态、激活、临时与保留内存</td></tr>
+<tr><td>通信</td><td>20</td><td>通信量、拓扑、NCCL 与 overlap 分析闭环</td></tr>
+<tr><td>环境/ABI</td><td>10</td><td>分层准确，能定位装载链</td></tr>
+<tr><td>报告质量</td><td>10</td><td>事实/推断分离，可复现、可证伪、优先级清楚</td></tr>
+</tbody></table></section>
+
+<section class="warning"><h2>禁止做法</h2><ul><li>未保存原始证据就重装环境。</li><li>一次改动多个变量后宣称某项修复有效。</li><li>只看平均 GPU 利用率，不看时间线。</li><li>只报告“更快了”，不报告输入、预热、重复、分布与正确性。</li><li>用最终 loss NaN 代替寻找第一个非有限中间量。</li></ul></section>
+
+<section class="success"><h2>完成后的能力</h2><p>如果你能独立得到 80 分以上，就已经具备进入 CUDA 算子、分布式训练或推理优化模块的前置能力：不一定会立即写出最快实现，但知道要测什么、怎么算账、怎样验证和怎样缩小问题。</p></section>
+
+<nav class="lesson-nav"><a href="0012-collective-communication.html">← 单元 12</a><a href="../index.html">课程首页</a><a href="../reference/0001-aiinfra-foundations-checklist.html">诊断清单 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

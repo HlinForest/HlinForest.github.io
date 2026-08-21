@@ -1,0 +1,90 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 · nn.Module 与 Autograd</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/course.js"></script></head>
+<body><header class="hero"><div><div class="eyebrow">PyTorch Foundations · Lesson 04</div><h1>模型是函数，也是状态容器</h1><p class="lede"><code>nn.Module</code> 组织计算和可学习状态；autograd 记录前向运算并用链式法则生成梯度。理解两者的边界，训练循环才不再像仪式。</p></div><aside class="meta-card"><strong>胜利条件</strong>手算一个梯度，并解释它如何进入 Parameter.grad。<strong>预计时间</strong>40–55 分钟<strong>主资料</strong><a href="https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html">官方 Autograd 教程</a></aside></header>
+<nav class="course-nav"><div><a href="#module">Module</a><a href="#graph">计算图</a><a href="#autograd-simulator">反传模拟</a><a href="#leaf">叶子与梯度</a><a href="#modes">梯度模式</a><a href="#quiz">检查</a></div></nav>
+<main>
+  <section><h2>开场检索</h2><p>函数 <span class="equation">ŷ = wx + b，L = (ŷ − y)²</span>。若 x=2、y=5、w=1、b=0，求 ∂L/∂w 和 ∂L/∂b。</p><details><summary>答案</summary><p>ŷ=2，误差 −3。∂L/∂ŷ=2(ŷ−y)=−6；∂ŷ/∂w=x=2，故 ∂L/∂w=−12；∂ŷ/∂b=1，故 ∂L/∂b=−6。负梯度意味着一次梯度下降会增大 w、b，使预测向 5 靠近。</p></details></section>
+
+  <section id="module"><h2><code>nn.Module</code> 的三个职责</h2><div class="objectives"><div class="card"><span class="number">01</span><p><b>注册状态</b><br>子 Module 与 Parameter 会进入参数树和 <code>state_dict</code>。</p></div><div class="card"><span class="number">02</span><p><b>定义计算</b><br><code>forward()</code> 描述输入如何变成输出。</p></div><div class="card"><span class="number">03</span><p><b>传播模式/设备</b><br><code>train/eval/to</code> 递归作用于子模块与参数。</p></div></div>
+  <pre><code>import torch
+from torch import nn
+
+class LinearRegressionModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.weight = nn.Parameter(torch.randn(1))
+        self.bias = nn.Parameter(torch.randn(1))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        return self.weight * x + self.bias
+
+model = LinearRegressionModel()
+print(list(model.named_parameters()))
+print(model.state_dict())
+y_hat = model(torch.tensor([2.0]))  # 调用 model(...)，不要手调 forward</code></pre>
+  <p>通常优先组合现成层：</p><pre><code>class BetterLinearModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.linear = nn.Linear(in_features=1, out_features=1)
+
+    def forward(self, x):
+        return self.linear(x)</code></pre>
+  <div class="callout warn"><strong>注册陷阱：</strong>把普通 tensor 放在 <code>self.foo</code> 上不会自动成为可学习参数。需要学习就用 <code>nn.Parameter</code>；需要随模型保存和移动但不学习的持久 tensor，可用 <code>register_buffer</code>。</div></section>
+
+  <section id="graph"><h2>Autograd 记录的是一次实际执行</h2><p>PyTorch 使用动态计算图：Python 前向代码运行时，作用于需梯度 tensor 的运算构建图；<code>backward()</code> 从 loss 反向遍历图。</p>
+  <div class="flow"><div><b>x,w,b</b><br>叶 tensor</div><div class="arrow">→</div><div><b>ŷ = wx+b</b><br>Mul/Add</div><div class="arrow">→</div><div><b>L</b><br>Pow/Mean</div><div class="arrow">⇠</div><div><b>backward</b><br>链式法则</div></div>
+  <pre><code>x = torch.tensor([2.0])
+y = torch.tensor([5.0])
+w = torch.tensor([1.0], requires_grad=True)
+b = torch.tensor([0.0], requires_grad=True)
+
+y_hat = w * x + b
+loss = (y_hat - y).pow(2).mean()
+print(y_hat.grad_fn)  # AddBackward...
+print(loss.grad_fn)   # MeanBackward...
+
+loss.backward()
+print(w.grad, b.grad) # tensor([-12.]), tensor([-6.])</code></pre>
+  <div id="autograd-simulator" class="simulator" data-simulator="autograd">
+    <div class="simulator-head"><div><span class="simulator-kicker">流程模拟器</span><h3>一条梯度怎样回到参数</h3></div><span class="simulator-counter" data-sim-counter></span></div>
+    <div class="simulator-flow" role="group" aria-label="线性回归计算图的前向与反向流程">
+      <div class="simulator-node"><span class="node-label">叶 tensor</span><strong>x, y, w, b</strong><small data-sim-value></small></div>
+      <div class="simulator-node"><span class="node-label">前向</span><strong>ŷ = wx+b</strong><small data-sim-value></small></div>
+      <div class="simulator-node"><span class="node-label">标量目标</span><strong>L = (ŷ−y)²</strong><small data-sim-value></small></div>
+      <div class="simulator-node"><span class="node-label">局部反向</span><strong>∂L/∂ŷ</strong><small>上游梯度</small></div>
+      <div class="simulator-node"><span class="node-label">叶梯度</span><strong>w.grad, b.grad</strong><small data-sim-value></small></div>
+    </div>
+    <p class="simulator-state" data-sim-status aria-live="polite"></p>
+    <div class="simulator-controls"><button type="button" data-sim-prev>上一步</button><button type="button" data-sim-next>下一步</button><button type="button" data-sim-reset>重置</button></div>
+  </div>
+  <p>图保存了 backward 所需的中间信息。默认一次 backward 后图会释放；若无充分理由，不要加 <code>retain_graph=True</code> 来压住错误。</p></section>
+
+  <section id="leaf"><h2>叶子、非叶子与梯度累积</h2><table><thead><tr><th>对象</th><th>典型例子</th><th><code>.grad</code></th></tr></thead><tbody><tr><td>需要梯度的叶 tensor</td><td>用户创建的 w；Module Parameter</td><td>backward 后累积梯度</td></tr><tr><td>非叶 tensor</td><td><code>y_hat</code>、<code>loss</code></td><td>默认不保留；有 <code>grad_fn</code></td></tr><tr><td>不需梯度 tensor</td><td>输入 X、标签 y（通常）</td><td>不记录与自身有关的梯度</td></tr></tbody></table>
+  <pre><code>loss.backward()
+first = w.grad.clone()
+
+# 再建一张图并 backward，但没有清空 w.grad
+loss2 = ((w * x + b) - y).pow(2).mean()
+loss2.backward()
+assert torch.equal(w.grad, first * 2)  # 梯度累积</code></pre>
+  <p>累积不是 bug：梯度累积可模拟更大 batch。但常规每 step 更新一次时，必须显式清零。</p></section>
+
+  <section id="modes"><h2>三件容易混淆的事</h2><table><thead><tr><th>机制</th><th>改变什么</th><th>不改变什么</th></tr></thead><tbody>
+    <tr><td><code>model.eval()</code></td><td>Module 的训练/评估行为</td><td>不会自动关闭 autograd</td></tr>
+    <tr><td><code>torch.inference_mode()</code></td><td>关闭梯度记录并优化推理开销</td><td>不会自动调用 <code>model.eval()</code></td></tr>
+    <tr><td><code>tensor.detach()</code></td><td>返回与当前图断开的 tensor</td><td>不会把模型切换到评估模式</td></tr>
+  </tbody></table>
+  <pre><code>model.eval()
+with torch.inference_mode():
+    predictions = model(X_test)
+
+# 恢复训练时
+model.train()</code></pre>
+  <p>在线性层这个小例子中 <code>train/eval</code> 输出相同，但养成完整习惯很重要：未来含 Dropout/BatchNorm 时，模式会改变结果。</p></section>
+
+  <section id="quiz"><h2>出口检查</h2><div class="quiz"><h3>状态与图</h3>
+    <fieldset data-answer="梯度继续累积"><legend>1. 连续两次 backward 而不清零，叶参数会怎样？</legend><label><input type="radio" name="q1" value="梯度继续累积"> 梯度继续累积</label><label><input type="radio" name="q1" value="参数立即更新"> 参数立即更新</label><label><input type="radio" name="q1" value="模式自动切换"> 模式自动切换</label></fieldset>
+    <fieldset data-answer="二者必须配合"><legend>2. 正确推理通常怎样组合 eval 与 inference_mode？</legend><label><input type="radio" name="q2" value="二者必须配合"> 二者必须配合</label><label><input type="radio" name="q2" value="只用评估模式"> 只用评估模式</label><label><input type="radio" name="q2" value="只用推理模式"> 只用推理模式</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback"></p><details><summary>答案</summary><p>1：梯度继续累积。2：二者必须配合；它们管理不同状态。</p></details></div></section>
+  <section class="checkpoint"><h2>本课完成标记</h2><p>修改开场例子的 w、b，并在运行前手算梯度。若误差方向与梯度符号关系还不直觉，画一条数轴解释。</p><label><input type="checkbox" data-complete> 我能解释 Parameter、计算图、叶 tensor 和梯度累积。</label><p>如 autograd 结果与手算不符，请把完整标量公式与代码发来。</p></section>
+  <footer class="lesson-footer"><a href="0003-shape-algebra.html">← 上一课</a><a href="0005-optimization-five-steps.html">下一课：优化五步 →</a></footer>
+</main></body></html>

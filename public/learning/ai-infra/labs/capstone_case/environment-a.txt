@@ -1,0 +1,10 @@
+OS: Ubuntu 24.04 x86_64
+Python: 3.12.8 /opt/env-a/bin/python
+PyTorch: 2.8.0+cu128
+torch.version.cuda: 12.8
+CUDA available: True
+NVIDIA driver: 570.86
+nvcc: release 12.8
+g++: 13.3.0
+extension: build/fast_norm.cpython-312-x86_64-linux-gnu.so
+ldd fast_norm: libc10.so => /opt/env-a/lib/python3.12/site-packages/torch/lib/libc10.so

@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PyTorch 术语表</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><header class="hero"><div><div class="eyebrow">Reference 01 · Printable</div><h1>PyTorch 术语表</h1><p class="lede">课程中的术语以此为准。定义强调实际编程语义，不止是书面翻译。</p></div><aside class="meta-card"><strong>使用方式</strong>复习时先遮住定义自测；编码时用于统一注释语言。<strong>更新依据</strong><a href="https://docs.pytorch.org/docs/stable/">PyTorch 官方文档</a></aside></header>
+<main><table><thead><tr><th>术语</th><th>操作性定义</th><th>检查方式/例子</th></tr></thead><tbody>
+<tr><td>Tensor（张量）</td><td>同一 dtype 的多维数值容器，同时带 shape、device 和 autograd 元数据。</td><td><code>x.shape/dtype/device/requires_grad</code></td></tr>
+<tr><td>Axis / Dimension（轴/维）</td><td>索引结构中的一个方向；应赋予 batch、sequence、hidden 等语义。</td><td><code>x.ndim</code>；<code>dim=-1</code></td></tr>
+<tr><td>Shape（形状）</td><td>每条轴的长度组成的元组。</td><td><code>[B,T,H]</code>，不是元素个数</td></tr>
+<tr><td>dtype</td><td>元素数值类型，亦构成 API 语义；类别索引常为 long，网络数值常为 float。</td><td><code>torch.float32</code>, <code>torch.long</code></td></tr>
+<tr><td>device</td><td>tensor/参数所在计算设备。</td><td>cpu、cuda、mps；运算两侧须一致</td></tr>
+<tr><td>Broadcasting（广播）</td><td>从末轴对齐，利用长度 1 或缺失轴进行逻辑扩展。</td><td><code>[B,T,H]+[H]→[B,T,H]</code></td></tr>
+<tr><td>Logit</td><td>模型未归一化的 raw score；可为任意实数，通常直接送入稳定组合 loss。</td><td>二分类 [B]；多分类 [B,C]</td></tr>
+<tr><td>Probability（概率）</td><td>Sigmoid/Softmax 后的 [0,1] 数值；用于解释、阈值、采样。</td><td><code>sigmoid(z)</code>/<code>softmax(z,-1)</code></td></tr>
+<tr><td>Target / Label（目标/标签）</td><td>监督信号；dtype/shape 由 loss 契约决定。</td><td>BCE: float [B]；CE: long [B]</td></tr>
+<tr><td><code>nn.Module</code></td><td>组织 forward、子模块、参数/buffer、模式与设备迁移的基础类。</td><td><code>named_parameters()</code>, <code>state_dict()</code></td></tr>
+<tr><td><code>nn.Parameter</code></td><td>被 Module 注册的可学习 tensor，默认需要梯度。</td><td>出现在 <code>model.parameters()</code></td></tr>
+<tr><td>Buffer（缓冲）</td><td>随模型保存/移动但通常不被优化器学习的状态。</td><td><code>register_buffer</code></td></tr>
+<tr><td>Forward pass（前向）</td><td>用当前参数从输入计算输出并在需要时构建 autograd 图。</td><td><code>logits=model(X)</code></td></tr>
+<tr><td>Computational graph（计算图）</td><td>一次执行产生的运算依赖图，保存 backward 所需信息。</td><td>非叶 tensor 的 <code>grad_fn</code></td></tr>
+<tr><td>Autograd（自动微分）</td><td>按计算图与链式法则计算梯度的引擎。</td><td><code>loss.backward()</code></td></tr>
+<tr><td>Leaf tensor（叶张量）</td><td>通常由用户创建、非其他需梯度运算结果；参数是典型叶子。</td><td>梯度累积到 <code>.grad</code></td></tr>
+<tr><td>Gradient（梯度）</td><td>loss 对参数的偏导，给出局部最陡上升方向。</td><td><code>p.grad</code></td></tr>
+<tr><td>Optimizer（优化器）</td><td>读取参数梯度与内部状态，按规则更新参数。</td><td>SGD、AdamW；<code>step()</code></td></tr>
+<tr><td>Learning rate（学习率）</td><td>控制更新尺度的关键超参数。</td><td>过大振荡，过小缓慢</td></tr>
+<tr><td>Epoch</td><td>训练过程完整遍历训练集一次。</td><td>不同于一个 batch/step</td></tr>
+<tr><td>Batch / Mini-batch</td><td>一次前向/反向处理的样本集合。</td><td>首轴通常 B</td></tr>
+<tr><td>Training mode</td><td>Module 的训练行为模式。</td><td><code>model.train()</code></td></tr>
+<tr><td>Evaluation mode</td><td>Module 的评估行为模式；不会自动关梯度。</td><td><code>model.eval()</code></td></tr>
+<tr><td>Inference mode</td><td>禁用 autograd 记录的推理上下文。</td><td><code>with torch.inference_mode()</code></td></tr>
+<tr><td><code>state_dict</code></td><td>模块参数和持久 buffer 的键值映射。</td><td>推荐保存单位</td></tr>
+<tr><td>Checkpoint</td><td>用于推理或续训的持久化状态包。</td><td>可含 model/optimizer/epoch/config</td></tr>
+<tr><td>Overfitting（过拟合）</td><td>训练表现继续改善而未见数据表现恶化/不改善。</td><td>train–val gap</td></tr>
+<tr><td>Underfitting（欠拟合）</td><td>在链路正确前提下，训练集也拟合不足。</td><td>训练/验证都差且接近</td></tr>
+</tbody></table><footer class="lesson-footer"><a href="../index.html">← 学习首页</a><a href="0002-tensor-and-shape.html">Tensor 速查 →</a></footer></main></body></html>

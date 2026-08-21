@@ -1,0 +1,47 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>0029｜第18章完整讲义</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script></head><body>
+<header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#setup">问题</a><a href="#defs">全部定义</a><a href="#practice">补充题</a></nav></div></header>
+<main class="lesson-main"><section class="lesson-head"><span class="eyebrow">Full chapter notes · Chapter 18</span><h1>因果表征学习：从高维观测识别潜在机制</h1><p>完整整理 ASCM、latent selection diagram、一般可识别性、变化集合、ΔQ、Markov network、边际 LSD 与 CRID 输出。</p><div class="lesson-meta"><span class="pill">PDF 1071–1124</span><span class="pill">9 个定义</span><span class="pill">原书练习为空</span></div></section>
+<div class="objective"><strong>本章主线：</strong>观测 <code>X=f(V)</code> 只给混合后的数据；多个分布对潜变量机制施加不同变化。利用哪些密度比/因子改变，逐步识别潜在变量到允许的等价类。</div>
+<ol class="toc"><li><a href="#setup">CRL 设置</a></li><li><a href="#nonid">单分布非识别</a></li><li><a href="#defs">9 个定义</a></li><li><a href="#delta">ΔV 与 ΔQ</a></li><li><a href="#crid">CRID</a></li><li><a href="#examples">例子</a></li><li><a href="#practice">补充训练</a></li></ol>
+
+<h2 id="setup">1. ASCM 把观测层加入 SCM</h2>
+<div class="definition-box"><strong>Definition 18.2.1 — Augmented Structural Causal Model (ASCM)</strong>在潜在 SCM <code>⟨U,V,F,P(U)⟩</code> 上增加观测变量 X 与生成/混合映射 <code>X=f(V)</code>（可含额外观测噪声）。V 之间有因果结构；X 是可见高维结果。典型识别假设包括 f 可逆/可微、潜变量分布具有密度、变化机制满足结构条件。</div>
+<div class="definition-box"><strong>Definition 18.2.2 — Latent Selection Diagram (LSD)</strong>在潜在变量 V 的因果图上加入选择节点，标记不同分布中哪些潜在机制变化；观测节点 X 由混合映射连接。LSD 把“域标签”落实到不可见因果节点。</div>
+
+<h2 id="nonid">2. 一般非识别</h2>
+<p>若 f 与潜变量坐标都未知，对任意可逆 h 可定义 <code>Z=h(V)</code>、新生成器 <code>f′=f∘h⁻¹</code>，得到完全相同 X 分布。重构误差无法选择 V 或 Z。</p>
+<div class="definition-box"><strong>Definition 18.2.3 — General identifiability / disentangleability</strong>给观测分布集合、ASCM 类与允许变换类 H。若任意两个兼容模型的潜在表示之间都只相差某个 <code>h∈H</code>，则表示相对 H 可识别。H 可为置换、逐分量可逆变换、分块变换或保持图结构的因果变换；必须明确报告。</div>
+<div class="example"><strong>XOR 可逆混合</strong><br><code>Z₁=V₁,Z₂=V₁⊕V₂</code> 保留全部信息并可完美重构，却把 V₂ 与 V₁ 混合。若环境只改变 V₂，变化会同时反映到 Z₂ 与 Z₁ 的关系，从而暴露错误坐标。</div>
+
+<h2 id="defs">3. 变化集合与因子</h2>
+<div class="definition-box"><strong>Definition 18.3.1 — Changed variable set ΔV</strong>对分布 j,k，<code>ΔV^{j,k}</code> 包含潜在条件机制在两分布间不同的变量。它由干预/选择靶点的对称差及传播规则决定；下游边际变不等于其机制属于 ΔV。</div>
+<div class="theorem-box"><strong>Distribution comparison</strong>在可逆混合与正则密度条件下，观测密度比 <code>p_X^j(x)/p_X^k(x)</code> 中 Jacobian 项相消，等于对应潜在点 v 的密度比。因而跨分布比较可绕过未知 f 的体积变化。</div>
+<div class="definition-box"><strong>Definition 18.3.2 — ΔQ set</strong>把潜在联合密度按图分解成局部因子 Q；在两分布间发生变化的一组因子/对应变量形成 ΔQ。一个观测到的密度比可能只识别到因子集合，而非单个变量。</div>
+<div class="definition-box"><strong>Definition 18.3.3 — Markov network</strong>把潜在密度因子的共同出现关系转成无向图：若两个潜变量在某个局部因子/变化比中耦合，则相邻。它用于从多个 ΔQ 集合的交叠中分离变量身份。</div>
+
+<h2 id="delta">4. 取消变量与部分识别</h2>
+<p>比较不同分布的密度比时，未变化因子相消（canceled）；变化因子留下。通过多对分布得到多个 ΔQ 集合，取交、差和 Markov network 邻接，可定位某个潜变量或只能定位一个块。</p>
+<ol class="step-list"><li>对每对分布估计观测密度比。</li><li>借可逆映射把比值解释为潜在因子比。</li><li>找哪些比值共享/缺失变化，形成 ΔQ 集合族。</li><li>利用稀疏变化和图邻接拆分变量；信息不足时保留集合而非强行命名。</li></ol>
+
+<h2>5. 潜变量未全部观测/额外 nuisance</h2>
+<div class="definition-box"><strong>Definition 18.4.1 — Marginalized LSD</strong>当一部分潜变量 Z 被边际化或不可恢复时，在 LSD 上按 latent projection 连接其可见后继，得到只含目标潜变量 V 与选择节点的边际图；新增双向/有向路径表示被消去变量的影响。</div>
+<div class="definition-box"><strong>Definition 18.4.2 — Changed variable set (general)</strong>在边际 LSD 中，变化集合不仅由直接靶点，还要考虑被边际化变量的变化怎样传到可见潜在机制/因子；定义以边际模型中实际改变的 Q 因子为准。</div>
+
+<h2 id="crid">6. CRID 输出</h2>
+<div class="definition-box"><strong>Definition 18.5.1 — Causal disentanglement map</strong>映射把真实潜变量的节点/分块与学得表示对应，并保持 LSD 中可识别的因果/选择结构；允许预先声明的分量可逆变换与置换，不允许任意跨块混合。</div>
+<div class="theorem-box"><strong>Theorem 18.5.1 — CRID soundness</strong>在 LSD、干预靶点/变化集合、混合映射正则性和算法分离条件成立时，CRID 输出的 disentanglement map 不会把不可区分变量错误拆开，并恢复可由 ΔQ 集合族识别的变量/块与结构。定理保证是相对假设和等价类，不是“恢复真实语义标签”。</div>
+
+<h2 id="examples">7. 原书图例的教学含义</h2>
+<div class="example"><strong>单分布 ICA/自编码器</strong><br>不同潜坐标经改变解码器可产生同密度，展示一般非识别。</div>
+<div class="example"><strong>多分布密度比</strong><br>若一次只改变一个潜机制，正确坐标让密度比依赖少量变量；任意混合坐标通常让比值依赖多个分量。</div>
+<div class="example"><strong>部分识别</strong><br>若颜色和光照总被一起改变，数据可能只识别“外观块”；不能声称拆出颜色/光照。增加一个只改光照的域可打破对称。</div>
+<div class="research-note"><strong>Yujia Zheng 接口</strong>：研究重点是“什么变化与结构假设足以识别到什么等价类”。应用到 LLM/SAE 时，应把模型版本、数据机制或干预作为多分布信号，并检查 feature consistency，而非只看单模型 probe。</div>
+
+<h2 id="practice">8. 补充章末训练（原书练习基本为空）</h2>
+<details><summary>题 1：证明可逆混合的非识别</summary><p><strong>答：</strong>取任意双射 h，定义 Z=h(V)、f′=f∘h⁻¹。则对所有 v，f′(h(v))=f(v)，所以 X 分布完全相同。除非模型类排除 h，否则 V 与 Z 不可由 X 区分。</p></details>
+<details><summary>题 2：两个域都同时改变 V₁、V₂，能否分开？</summary><p><strong>答：</strong>一般不能；所有密度比只暴露同一 ΔQ 块。至少需要额外结构、稀疏性或第三个域产生不同的变化组合。</p></details>
+<details><summary>题 3：识别到逐分量变换意味着什么？</summary><p><strong>答：</strong>允许每个学得坐标分别作可逆重标度，如温度摄氏/华氏，但禁止把两个真实因素相互混合。变量语义对齐，数值刻度未固定。</p></details>
+<details><summary>题 4：安全研究中怎样证伪 CRL 假设？</summary><p><strong>答：</strong>增加一个假设外的联合靶点域，检查表示是否仍只在预期分量变化；或构造两个可逆混合表示都满足训练目标，比较干预生成。若替代表示同样通过，识别主张不足。</p></details>
+
+<div class="quiz" data-answer="c" data-correct="正确。应报告仍允许的等价变换；完全唯一通常不可能也没必要。" data-wrong="CRL 的结论需要写清等价类，例如置换、逐分量变换或块混合。"><h3>章末检索</h3><p>“识别到逐分量可逆变换”最准确表示：</p><label><input type="radio" name="q29" value="a"> 潜变量数值完全唯一</label><label><input type="radio" name="q29" value="b"> 任意跨变量混合都允许</label><label><input type="radio" name="q29" value="c"> 每个因素可单独重标度</label><button type="button">检查答案</button><p class="feedback"></p></div>
+<div class="source-note">主源：原书第 18 章（PDF 1071–1124）。Draft 0.27 的本章 exercises 基本为空，本页补充题明确标为课程原创。</div><div class="ask">可以把一篇 CRL/SAE 方法的假设段贴给老师，按“数据—变化—结构—等价类—反例”逐句审计。</div><nav class="lesson-nav"><a href="0028-full-ch17-multi-domain-structural-learning.html">← 第17章完整讲义</a><a href="0003-yujia-zheng-identifiable-concepts.html">Yujia专题深化 →</a></nav></main></body></html>

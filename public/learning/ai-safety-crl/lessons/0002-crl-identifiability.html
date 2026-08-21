@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>02 · 重构完美，为什么仍可能学错变量</title>
+  <link rel="stylesheet" href="../assets/course.css">
+  <script defer src="../assets/quiz.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="../index.html#route">课程</a><a href="../reference/0001-research-map.html">速查表</a></nav></div></header>
+  <main class="lesson-main">
+    <header class="lesson-head">
+      <span class="eyebrow">Lesson 02</span>
+      <h1>重构完美，为什么仍可能学错变量</h1>
+      <p>Causal representation learning 的难点不是把像素压缩得漂亮，而是说明学到的坐标在所有兼容解释中都对应我们关心的生成因素。</p>
+      <div class="lesson-meta"><span class="pill">18 分钟</span><span class="pill">核心判断：fit ≠ identify</span><span class="pill">书：PDF pp. 50, 1071-1118</span></div>
+    </header>
+
+    <div class="objective"><strong>本课胜利条件：</strong>你能亲手构造一个“完美重构但因果语义错误”的表示，并说出需要什么额外信息来排除它。</div>
+
+    <h2>CRL 到底要从哪里到哪里</h2>
+    <div class="pipeline" aria-label="CRL 数据流">
+      <div>潜在原因<br><code>V</code></div><div>混合函数<br><code>f</code></div><div>高维观测<br><code>X</code></div><div>逆映射<br><code>h</code></div><div>学得表示<br><code>V̂</code></div>
+    </div>
+    <p>图像、视频、文本、模型激活都可视为低层观测 <code>X</code>。我们希望恢复可用于干预和泛化的高层变量 <code>V</code>。但仅有 <code>X</code> 的一个分布时，存在大量同样解释数据的坐标系。</p>
+
+    <h2>一个两比特反例：XOR 表示</h2>
+    <div class="example">
+      <p>真实生成因素有两个二元变量：<code>V₁</code> 表示物体形状（圆/方），<code>V₂</code> 表示灯光（暗/亮）。假设像素 <code>X</code> 足以完整编码二者。</p>
+      <p>“语义正确”的编码器返回 <code>Z₁=V₁, Z₂=V₂</code>。但另一个编码器返回：</p>
+      <div class="formula">Z₁ = V₁ XOR V₂
+Z₂ = V₂
+
+解码时：V₂ = Z₂，V₁ = Z₁ XOR Z₂</div>
+      <p>第二个编码同样可以 <strong>零误差重构</strong>，却把形状与灯光混进 <code>Z₁</code>。当我们只改变灯光时，<code>Z₁</code> 也翻转；把它命名为“形状神经元”会直接误导干预与解释。</p>
+    </div>
+
+    <p>连续情形也是同一逻辑。对任何可逆变换 <code>q</code>：</p>
+    <div class="formula">V' = q(V)
+f' = f ∘ q⁻¹
+
+于是：X = f(V) = f'(V')</div>
+    <p>数据看不出你用了真实坐标 <code>V</code>，还是被任意扭曲的坐标 <code>V'</code>。这叫 <strong>不可识别性</strong>：不是优化器没训好，而是问题本身容许多个等价答案。</p>
+
+    <div class="misconception">
+      <p><strong>“latent 维数刚好等于真实因素数，所以自然会一一对应。”</strong></p>
+      <p>维数只限制信息容量，不限制坐标语义。旋转、XOR 或更复杂可逆变换都能保留维数和重构能力。</p>
+    </div>
+
+    <h2>多分布为什么有用：让灯光单独变化</h2>
+    <div class="example">
+      <p>现在收集三个环境：白天、夜间和红色灯光。假设物体形状机制不变，而灯光机制明显改变，并且相机混合函数 <code>f</code> 跨环境共享。</p>
+      <p>比较环境 <code>k</code> 与基线 <code>0</code> 的对数密度时，共享的混合函数 Jacobian 会抵消：</p>
+      <div class="formula">log pˣₖ(x) − log pˣ₀(x)
+= log pᵛₖ(v) − log pᵛ₀(v)</div>
+      <p>右侧只留下“哪些潜在机制发生了变化”的信号。若不同环境提供足够独立的变化方向，任意扭曲坐标的自由度就会被压缩。</p>
+    </div>
+
+    <table>
+      <thead><tr><th>额外信息</th><th>排除什么歧义</th><th>安全例子</th></tr></thead>
+      <tbody>
+        <tr><td>多环境变化</td><td>排除与变化模式不相容的混合</td><td>同一意图的多语言、多措辞激活</td></tr>
+        <tr><td>已知/部分已知干预</td><td>标记哪些机制被替换</td><td>对模型提示模板做受控改写</td></tr>
+        <tr><td>稀疏结构</td><td>偏好依赖更少的生成解释</td><td>少数风险概念影响某安全行为</td></tr>
+        <tr><td>时间结构</td><td>利用延迟与瞬时关系</td><td>agent 计划 → 工具调用 → 后果</td></tr>
+      </tbody>
+    </table>
+
+    <h2>可识别不一定要“一坐标一概念”</h2>
+    <p>原书第 18 章允许 <strong>部分 disentanglement</strong>：你可能只需证明目标组 <code>Vᵗᵃʳ</code> 不依赖某些不希望混入的变量 <code>Vᵉⁿ</code>，而目标组内部仍可混合。</p>
+    <div class="example">
+      <p>医学 EEG 中，药物、睡眠和治疗结果共同生成信号。若任务只要求把“药物相关因素”与“睡眠因素”分开，就不必声称每个 EEG latent 都有唯一生理名称。这比“我们完全恢复了大脑真实变量”更弱，却更可验证，也更适合安全关键应用。</p>
+    </div>
+
+    <div class="source-note">
+      <p>原书 Fig. 18.2 用 EEG/影像/血检说明 latent selection diagram、未知 mixing 和 causal disentanglement map；Def. 18.2.3 给出相对目标组的通用可识别/解耦定义；Algorithm 65 (CRID) 输出的是变量依赖关系的可识别性地图，不是已经训练好的 encoder。草稿算法页仍含 `??` 占位符，课程只使用其输入/输出思想，不把缺失编号当完整可实现规范。</p>
+      <p class="citation">来源：<em>book-oct11.pdf</em>, PDF pp. 1073, 1077, 1094-1098, 1118。</p>
+    </div>
+
+    <div class="quiz" data-answer="b" data-correct="正确。相同数量的同分布样本只降低估计噪声；改变灯光机制才为坐标语义提供新的结构约束。" data-wrong="关键不是样本更多，而是候选表示对环境变化给出不同预测。请选择能增加结构信息的方案。">
+      <h3>检索练习</h3>
+      <p>要排除 XOR 表示，哪种数据最直接？</p>
+      <label><input type="radio" name="q2" value="a"> 同环境多采样</label>
+      <label><input type="radio" name="q2" value="b"> 单独改变灯光</label>
+      <label><input type="radio" name="q2" value="c"> 加大编码维数</label>
+      <button type="button">检查答案</button>
+      <p class="feedback" aria-live="polite"></p>
+    </div>
+
+    <div class="ask"><strong>继续问老师：</strong>如果 XOR 反例仍不直观，可以让我用线性旋转、图像属性或 LLM 激活再演示一次；也可以请我带你推导 Jacobian 为什么抵消。</div>
+    <nav class="lesson-nav"><a href="0001-causal-lens-for-ai-safety.html">← 上一课：因果安全</a><a href="0003-yujia-zheng-identifiable-concepts.html">下一课：Yujia Zheng →</a></nav>
+  </main>
+</body>
+</html>

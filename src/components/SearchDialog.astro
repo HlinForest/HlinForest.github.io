@@ -1,0 +1,17 @@
+---
+interface Item { title: string; description: string; tags: string[]; href: string; section: string }
+interface Props { items: Item[] }
+const { items } = Astro.props;
+---
+
+<dialog class="search-dialog" data-search-dialog aria-label="全文搜索">
+  <div class="search-form">
+    <span aria-hidden="true">⌕</span>
+    <input type="search" data-search-input placeholder="输入标题、摘要或标签" autocomplete="off" />
+    <button class="search-close" type="button" data-close-search aria-label="关闭搜索">Esc</button>
+  </div>
+  <div class="search-results" data-search-results>
+    <div class="search-empty">输入关键词开始搜索</div>
+  </div>
+  <script is:inline type="application/json" data-search-index set:html={JSON.stringify(items)} />
+</dialog>

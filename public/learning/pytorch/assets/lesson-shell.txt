@@ -1,0 +1,8 @@
+Required head for every lesson:
+
+<link rel="stylesheet" href="../assets/course.css">
+<script defer src="../assets/course.js"></script>
+
+Reusable class vocabulary: hero, eyebrow, meta-card, course-nav, objectives, card,
+callout good/warn, equation, code-label, quiz, feedback, contract, flow,
+checkpoint, lesson-footer, two-col, timeline.

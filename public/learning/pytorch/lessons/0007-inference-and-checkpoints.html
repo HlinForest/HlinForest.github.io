@@ -1,0 +1,55 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 · 推理与 Checkpoint</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/course.js"></script></head>
+<body><header class="hero"><div><div class="eyebrow">PyTorch Foundations · Lesson 07</div><h1>训练结束，不等于工作结束</h1><p class="lede">可靠的模型必须能切换到推理语义、保存状态、在新进程重建，并证明重载后的输出一致。</p></div><aside class="meta-card"><strong>胜利条件</strong>保存 state_dict，重建模型，严格加载并验证预测一致。<strong>预计时间</strong>30–45 分钟<strong>主资料</strong><a href="https://www.learnpytorch.io/01_pytorch_workflow/">LearnPyTorch 01 · Save/load</a></aside></header>
+<nav class="course-nav"><div><a href="#inference">推理</a><a href="#save">保存</a><a href="#load">加载</a><a href="#checkpoint">完整检查点</a><a href="#quiz">检查</a></div></nav>
+<main>
+  <section><h2>开场检索</h2><p><code>model.eval()</code> 和 <code>torch.inference_mode()</code> 是重复的吗？各控制什么？</p><details><summary>答案</summary><p>不重复。<code>eval()</code> 切换模块行为（如关闭 Dropout、让 BatchNorm 用运行统计）；<code>inference_mode()</code> 关闭 autograd 记录并减少推理开销。可靠推理通常同时使用。</p></details></section>
+
+  <section id="inference"><h2>推理协议</h2><pre><code>model.eval()
+with torch.inference_mode():
+    logits = model(X_new.to(device))
+
+# 若交给 NumPy/绘图库
+logits_np = logits.detach().cpu().numpy()</code></pre>
+  <p>推理输入必须使用与训练一致的预处理、特征顺序、归一化、tokenizer 和类别映射。checkpoint 只保存权重而不保存这些语义时，应另存配置。</p>
+  <div class="callout warn"><strong>反例：</strong>训练使用标准化输入，部署直接输入原始数值。模型文件成功加载、代码不报错，但预测语义已损坏。这类 silent bug 比 shape error 更危险。</div></section>
+
+  <section id="save"><h2>优先保存 <code>state_dict</code></h2><pre><code>from pathlib import Path
+
+path = Path("models/linear_state.pt")
+path.parent.mkdir(parents=True, exist_ok=True)
+torch.save(model.state_dict(), path)</code></pre>
+  <p><code>state_dict</code> 是参数与持久 buffer 的键值映射。它与 Python 类定义分离，通常比序列化整个 model 对象更可移植、更明确。</p><pre><code>for key, value in model.state_dict().items():
+    print(key, tuple(value.shape), value.dtype)</code></pre></section>
+
+  <section id="load"><h2>重建架构，再加载权重</h2><pre><code>loaded_model = LinearModel().to(device)
+state = torch.load(path, map_location=device, weights_only=True)
+loaded_model.load_state_dict(state, strict=True)
+loaded_model.eval()</code></pre>
+  <p>如果当前 PyTorch 版本不支持 <code>weights_only</code> 参数，查阅当前官方文档并按版本调整。对不可信 checkpoint 要格外谨慎；不要把任意外部文件当作安全数据执行。</p>
+  <h3>最重要的验收：预测一致</h3><pre><code>model.eval()
+loaded_model.eval()
+with torch.inference_mode():
+    before = model(X_test)
+    after = loaded_model(X_test)
+
+torch.testing.assert_close(before, after)
+print("reload verified")</code></pre>
+  <p>只看到“load 成功”还不够；预测一致才证明保存—重建—加载链路闭合。</p></section>
+
+  <section id="checkpoint"><h2>恢复训练需要更完整的 checkpoint</h2><pre><code>torch.save({
+    "epoch": epoch,
+    "model_state": model.state_dict(),
+    "optimizer_state": optimizer.state_dict(),
+    "config": {"lr": 0.1, "seed": 42},
+    "train_loss": train_loss.item(),
+}, "models/train_checkpoint.pt")</code></pre>
+  <p>若要无缝续训，还可能需要 scheduler、随机数状态、混合精度 scaler、数据 sampler 状态。仅做推理时，模型权重 + 明确配置通常更轻。</p>
+  <div class="contract"><div class="contract-head">保存内容按目的选择</div><div class="contract-body"><table><thead><tr><th>目的</th><th>最低内容</th><th>加载后</th></tr></thead><tbody><tr><td>只做推理</td><td>model state + 架构/预处理配置</td><td>eval + inference_mode</td></tr><tr><td>继续训练</td><td>model + optimizer + epoch + 超参数</td><td>恢复状态后 train</td></tr><tr><td>复现实验</td><td>以上 + seed/版本/数据版本/代码版本</td><td>验证指标与预测</td></tr></tbody></table></div></div></section>
+
+  <section id="quiz"><h2>出口检查</h2><div class="quiz"><h3>保存与恢复</h3>
+    <fieldset data-answer="重建同构模型"><legend>1. 只有 state_dict 时，加载前必须先做什么？</legend><label><input type="radio" name="q1" value="重建同构模型"> 重建同构模型</label><label><input type="radio" name="q1" value="执行反向传播"> 执行反向传播</label><label><input type="radio" name="q1" value="删除全部标签"> 删除全部标签</label></fieldset>
+    <fieldset data-answer="比较加载预测"><legend>2. 验证 checkpoint 链路最有力的动作是？</legend><label><input type="radio" name="q2" value="比较加载预测"> 比较加载预测</label><label><input type="radio" name="q2" value="增加训练轮数"> 增加训练轮数</label><label><input type="radio" name="q2" value="打印文件大小"> 打印文件大小</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback"></p><details><summary>答案</summary><p>1：重建同构模型。2：比较保存前与加载后的预测。</p></details></div></section>
+  <section class="checkpoint"><h2>本课完成标记</h2><p>给 Lab 02 添加保存/重载/预测一致性断言。再回答：若改成 <code>nn.Linear(1,2)</code>，为什么 strict load 应失败？</p><label><input type="checkbox" data-complete> 我已证明重载预测一致，并知道推理与续训检查点的差别。</label><p>加载失败时把 missing keys、unexpected keys 和 shape mismatch 原文发来。</p></section>
+  <footer class="lesson-footer"><a href="0006-training-and-evaluation-loop.html">← 上一课</a><a href="0008-binary-classification.html">下一课：二分类契约 →</a></footer>
+</main></body></html>

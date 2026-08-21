@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>0016｜安全桥梁：解释、决策与博弈</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script></head>
+<body><header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#explain">解释</a><a href="#decision">决策</a><a href="#game">博弈</a></nav></div></header>
+<main class="lesson-main">
+  <section class="lesson-head"><span class="eyebrow">Lesson 0016 · Book Chapters 6, 7, 9.6</span><h1>知道原因之后，还要决定做什么</h1><p>AI safety 不是只恢复真图。你还要解释个案、选择行动，并考虑顾问和攻击者会出错或策略性反应。</p><div class="lesson-meta"><span class="pill">25 min</span><span class="pill">方向桥梁</span><span class="pill">Davin Choo 接口</span></div></section>
+  <div class="objective"><strong>学完你能：</strong>区分相关解释与反事实解释，把行动写成效用问题，并看懂“建议可能错、对手会适应”如何改变安全决策。</div>
+
+  <h2 id="explain">第 6 章桥梁：解释不是圈出相关特征</h2>
+  <p>“模型关注了 token A”是机制线索，不等于“若移除 A，这次结果会改变”。因果解释至少要说明：</p>
+  <ul>
+    <li><strong>解释对象：</strong>群体平均行为，还是这一个个案？</li>
+    <li><strong>允许改变什么：</strong>只改措辞、改身份属性，还是改整个背景？</li>
+    <li><strong>保持什么不变：</strong>语义、用户意图、模型版本或潜在背景？</li>
+    <li><strong>判定标准：</strong>必要原因、充分原因、效应大小，还是可行动建议？</li>
+  </ul>
+  <div class="example"><strong>公平性例子</strong><br>贷款模型对群体 A 拒绝更多，不自动证明直接歧视：历史收入、地区选择和测量误差形成因果路径。但把敏感属性从输入删掉也不自动公平，因为代理变量仍传递影响。应明确评估总效应、直接效应或特定路径效应；不同公平定义回答不同规范问题。</div>
+
+  <h2 id="decision">第 7 章桥梁：因果结论进入效用</h2>
+  <p>决策需要比较行动后的结果分布，再用效用/损失把多种结果汇总：</p>
+  <div class="formula">选择行动 a，使期望损失最小：
+a* = argmin_a  E[ L(Y,a) | do(a) ]</div>
+  <p>白话：对每个可选行动，问主动做它会产生哪些结果、各有多可能、代价多大；最后选平均损失最小的行动。若灾难尾部很重要，平均值可能不够，还需最坏情形或风险敏感标准。</p>
+  <div class="example"><strong>有限审计预算</strong><br>有 100 个模型组件，只能审计 10 个。顾问给出风险分数。纯按分数最高选，若顾问在新型漏洞上系统失误会很糟；完全忽略建议又浪费信息。决策问题要同时写出：建议准确到何种程度、审计成本、漏检损失、攻击者是否看到策略。</div>
+
+  <h2 id="game">第 9.6 节桥梁：环境也会反应</h2>
+  <p>普通因果决策常把环境机制当固定。博弈中，另一个行动者会观察或预期你的策略，再选择回应。</p>
+  <div class="example"><strong>原书 causal prisoner’s dilemma 的直觉</strong><br>两位行动者各选合作或背叛，结果不仅取决于相关性，还取决于决策规则是否因果影响对方。若两个程序的输出由共同代码或预测器相关，看到“我合作时对方也合作”不等于我把按钮改成合作就会导致对方合作。策略选择需区分观测关联与干预影响。</div>
+  <div class="example"><strong>安全方—攻击者 Stackelberg 式例子</strong><br>安全方先公开审计分配，攻击者观察后选择攻击位置。若永远审计顾问排名前 10 的组件，攻击者会转向第 11 名。安全方可能需要随机化，并优化“攻击者最佳回应后的最坏损失”，而非静态平均命中率。</div>
+
+  <h3>不完美建议：四种不要混在一起的保证</h3>
+  <table><thead><tr><th>目标</th><th>问题</th><th>直觉</th></tr></thead><tbody>
+    <tr><td>Consistency</td><td>建议若近乎完美，能否接近听建议的最优表现？</td><td>好顾问时别太保守</td></tr>
+    <tr><td>Robustness</td><td>建议任意错误时，最坏损失能否受控？</td><td>坏顾问时不崩盘</td></tr>
+    <tr><td>Regret</td><td>随时间学习后，比最佳基准多损失多少？</td><td>错了能修正</td></tr>
+    <tr><td>Competitive ratio</td><td>在线决策成本相对知道未来的最优者有多大？</td><td>不知道未来仍有比例保证</td></tr>
+  </tbody></table>
+
+  <div class="research-note"><strong>Davin Choo 的接口：</strong>一条自然研究链是：结构学习给候选因果图 → 顾问/模型建议下一次干预 → 决策器在建议可靠度未知时平衡一致性与稳健性 → 战略环境中考虑对手最佳回应。详细专题见 <a href="0004-davin-choo-imperfect-advice.html">0004：不完美建议与有限预算</a>。</div>
+
+  <h2>最终整合：从高维观测到安全行动</h2>
+  <div class="pipeline"><div>CRL 找候选概念</div><div>多域缩小等价类</div><div>主动干预学结构</div><div>建议器评估风险</div><div>稳健分配审计</div></div>
+  <p>每一箭头都要有失败接口：概念可能错、域变化可能没定位、干预可能不安全、建议可能失准、攻击者可能适应。研究贡献不是掩盖这些接口，而是给出可检验假设和保证。</p>
+
+  <div class="quiz" data-answer="b" data-correct="正确。稳健策略会利用建议，但必须限制建议任意错误时的最坏损失。" data-wrong="完全相信只有 consistency 倾向；完全忽略建议只有保守性。题目要求兼顾好建议收益与坏建议底线。">
+    <h3>检索题</h3><p>顾问通常很准但偶尔严重失误。最符合“consistency + robustness”的策略目标是：</p>
+    <label><input type="radio" name="q16" value="a"> 永远完全照顾问排名分配全部预算</label>
+    <label><input type="radio" name="q16" value="b"> 准时接近建议最优，错时仍有最坏情形底线</label>
+    <label><input type="radio" name="q16" value="c"> 永远忽略全部建议，只做均匀随机审计</label>
+    <button type="button">检查答案</button><p class="feedback" aria-live="polite"></p>
+  </div>
+  <div class="source-note">本课是方向桥梁：原书第 6 章（解释/公平，PDF 405 起）、第 7 章 7.1–7.2（决策，PDF 523 起）、第 9.6 节（causal game theory，PDF 669 起）。不是三章逐节摘要，而是为 AI safety 与 Davin Choo 相关方向保留的必需接口。</div>
+  <div class="ask">下一步可把你关心的安全问题发给老师，用 Input / Output / Cost / Guarantee 四格写成 mini-proposal；在你给出答案前，课程不会记录“已掌握”。</div>
+  <nav class="lesson-nav"><a href="0015-ch18-crl-zero-base.html">← 上一课：CRL</a><a href="0005-integrated-safety-research-design.html">专题深化：综合研究方案 →</a></nav>
+</main></body></html>

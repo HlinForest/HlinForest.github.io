@@ -1,0 +1,58 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>03 · Shape 代数与张量变换</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/course.js"></script></head>
+<body><header class="hero"><div><div class="eyebrow">PyTorch Foundations · Lesson 03</div><h1>先推 Shape，再写代码</h1><p class="lede">Shape error 是深度学习最常见的错误之一。真正的能力不是反复试 <code>squeeze()</code>，而是给每个轴命名、推导契约、只做有语义的变换。</p></div><aside class="meta-card"><strong>胜利条件</strong>不运行代码，推导 reshape、transpose、broadcast 和 matmul 输出。<strong>预计时间</strong>45–60 分钟<strong>主资料</strong><a href="https://www.learnpytorch.io/00_pytorch_fundamentals/">LearnPyTorch 00 · Shapes</a><strong>实践</strong><a href="../labs/01_tensor_shapes.py">Lab 01</a></aside></header>
+<nav class="course-nav"><div><a href="#names">轴名</a><a href="#transform">变形</a><a href="#broadcast">广播</a><a href="#matmul">矩阵乘</a><a href="#debug">调试</a><a href="#quiz">检查</a></div></nav>
+<main>
+  <section><h2>开场检索：只允许纸笔</h2><p>已知 <code>X:[32,128,768]</code>，代表 <code>[batch,sequence,hidden]</code>；<code>W:[768,3072]</code>。预测 <code>X @ W</code> shape。</p><details><summary>答案</summary><p><code>[32,128,3072]</code>。矩阵乘只替换末轴：hidden 768 与 W 的输入维匹配，批维 <code>[32,128]</code> 保留。这正是 Transformer 中 projection 的常见形状。</p></details></section>
+
+  <section id="names"><h2>第一原则：shape 必须带轴名</h2><p><code>[32,128,768]</code> 本身信息不足；写成 <code>[B,T,C]</code> 才能推理：</p><table><thead><tr><th>轴</th><th>意义</th><th>改变它意味着什么</th></tr></thead><tbody><tr><td>B</td><td>batch size</td><td>同时处理多少样本</td></tr><tr><td>T</td><td>sequence length</td><td>每个样本有多少 token/时间步</td></tr><tr><td>C 或 H</td><td>channel/hidden</td><td>每个位置的表示维数</td></tr></tbody></table>
+  <div class="callout good"><strong>建议：</strong>在每个关键 tensor 旁写注释，例如 <code># logits: [B, C]</code>；在模块边界用 assert 把假设变成可执行契约。</div><pre><code>def forward(self, x):
+    # x: [B, T, H]
+    assert x.ndim == 3
+    assert x.shape[-1] == self.hidden_size
+    return self.proj(x)  # [B, T, V]</code></pre></section>
+
+  <section id="transform"><h2>变形工具：每个动作回答一个问题</h2><table><thead><tr><th>操作</th><th>是否改变元素数</th><th>是否新增/删除轴</th><th>典型意图</th></tr></thead><tbody>
+    <tr><td><code>reshape(...)</code></td><td>否</td><td>可重组</td><td>合并 batch 与 time；恢复结构</td></tr>
+    <tr><td><code>view(...)</code></td><td>否</td><td>可重组</td><td>共享 storage 的 view；受连续性限制</td></tr>
+    <tr><td><code>unsqueeze(dim)</code></td><td>否</td><td>新增长度 1 轴</td><td><code>[B]→[B,1]</code></td></tr>
+    <tr><td><code>squeeze(dim)</code></td><td>否</td><td>删除指定长度 1 轴</td><td><code>[B,1]→[B]</code></td></tr>
+    <tr><td><code>transpose(a,b)</code></td><td>否</td><td>交换两轴</td><td><code>[B,T,H]→[B,H,T]</code></td></tr>
+    <tr><td><code>permute(...)</code></td><td>否</td><td>重排所有轴</td><td>显式指定新轴顺序</td></tr>
+    <tr><td><code>stack(xs,dim)</code></td><td>增加</td><td>创建新轴</td><td>N 个 <code>[H]</code> → <code>[N,H]</code></td></tr>
+    <tr><td><code>cat(xs,dim)</code></td><td>增加</td><td>不创建新轴</td><td>沿已有轴拼长</td></tr>
+  </tbody></table>
+  <pre><code>x = torch.arange(24).reshape(2, 3, 4)  # [B=2, T=3, H=4]
+flat = x.reshape(6, 4)                  # [B*T, H]
+restored = flat.reshape(2, 3, 4)       # [B, T, H]
+channels_first = x.permute(0, 2, 1)    # [B, H, T]</code></pre>
+  <div class="callout warn"><strong>不要裸用 <code>squeeze()</code>：</strong>当 batch size 恰好为 1，它会把 batch 轴也删掉。若只想去掉二分类输出的末轴，用 <code>squeeze(-1)</code>。</div></section>
+
+  <section id="broadcast"><h2>Broadcasting：从右向左对齐</h2><p>比较两个 shape 时，从末轴向前；每对轴必须相等，或其中一个为 1，或某一方没有该轴。</p><div class="equation">[B,T,H] + [H] → [B,T,H]</div><div class="equation">[B,T,H] + [T,1] → [B,T,H]</div><div class="equation">[B,T,H] + [B,H] → 通常不相容</div>
+  <p>位置编码常以 <code>[T,H]</code> 加到 token 表示 <code>[B,T,H]</code> 上：缺失的 B 轴被视作 1，然后沿 batch 广播。</p>
+  <pre><code>tokens = torch.randn(32, 128, 768)  # [B,T,H]
+pos = torch.randn(128, 768)         # [T,H]
+x = tokens + pos                    # [B,T,H]</code></pre>
+  <p>广播节省了显式复制，但也会掩盖标签 shape 错误。loss 前建议：</p><pre><code>assert logits.shape == targets.shape, (logits.shape, targets.shape)</code></pre></section>
+
+  <section id="matmul"><h2>Matmul：只盯住最后两轴</h2><p>对二维矩阵，<code>[m,n] @ [n,p] → [m,p]</code>。对更高维，最后两轴做矩阵乘，前面的轴按 batch broadcasting 处理。</p>
+  <table><thead><tr><th>表达式</th><th>结果</th><th>理由</th></tr></thead><tbody>
+    <tr><td><code>[B,I] @ [I,O]</code></td><td><code>[B,O]</code></td><td>普通批量线性层</td></tr>
+    <tr><td><code>[B,T,I] @ [I,O]</code></td><td><code>[B,T,O]</code></td><td>每个 token 共用同一投影</td></tr>
+    <tr><td><code>[B,H,T,D] @ [B,H,D,T]</code></td><td><code>[B,H,T,T]</code></td><td>attention score 的典型 shape</td></tr>
+  </tbody></table>
+  <h3>线性层的权重方向</h3><p><code>nn.Linear(I,O)</code> 的权重存储 shape 是 <code>[O,I]</code>，forward 内部效果为 <code>x @ weight.T + bias</code>，所以输入末轴仍须为 I，输出末轴为 O。</p></section>
+
+  <section id="debug"><h2>五步 Shape 调试法</h2><div class="timeline"><div><b>1. 写语义</b><br>为每个轴命名，不接受裸数字。</div><div><b>2. 写期望</b><br>在运行前推导输出 shape。</div><div><b>3. 查边界</b><br>打印/断言进入模型、离开模型、进入 loss 三处。</div><div><b>4. 找首个偏差</b><br>第一处偏离契约的位置才是根因；后续报错往往只是症状。</div><div><b>5. 做最小变换</b><br>只在你能解释轴语义时 reshape/squeeze/transpose。</div></div>
+  <pre><code>print("X", X.shape, X.dtype, X.device)
+print("logits", logits.shape, logits.dtype, logits.device)
+print("y", y.shape, y.dtype, y.device)
+assert logits.shape[0] == y.shape[0]
+assert logits.device == y.device</code></pre></section>
+
+  <section id="quiz"><h2>出口检查</h2><div class="quiz"><h3>纸笔 shape 推导</h3>
+    <fieldset data-answer="选项甲：[032,128,3072]"><legend>1. <code>[32,128,768] @ [768,3072]</code> 的结果是？</legend><label><input type="radio" name="q1" value="选项甲：[032,128,3072]"> 选项甲：[032,128,3072]</label><label><input type="radio" name="q1" value="选项乙：[032,768,3072]"> 选项乙：[032,768,3072]</label><label><input type="radio" name="q1" value="选项丙：[128,768,3072]"> 选项丙：[128,768,3072]</label></fieldset>
+    <fieldset data-answer="只删除末尾轴"><legend>2. 二分类 logits 为 <code>[B,1]</code>，最稳妥变为 <code>[B]</code>？</legend><label><input type="radio" name="q2" value="只删除末尾轴"> 只删除末尾轴</label><label><input type="radio" name="q2" value="删除所有单轴"> 删除所有单轴</label><label><input type="radio" name="q2" value="增加一个新轴"> 增加一个新轴</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback"></p><details><summary>答案与理由</summary><p>1：<code>[32,128,3072]</code>。2：<code>squeeze(-1)</code> 只删除末轴，保住可能为 1 的 batch 轴。</p></details></div></section>
+  <section class="checkpoint"><h2>动手关卡</h2><p>完成 <a href="../labs/01_tensor_shapes.py">Lab 01：Tensor shape drills</a>。不要通过乱试维度来通过 assert；先在注释中写期望 shape。</p><label><input type="checkbox" data-complete> 我已完成 Lab 01，并能解释每次变形的轴语义。</label><p>若卡住，发我题号、期望 shape、实际 shape 和你认为每个轴的含义。</p></section>
+  <footer class="lesson-footer"><a href="0002-tensor-mental-model.html">← 上一课</a><a href="0004-module-and-autograd.html">下一课：Module 与 Autograd →</a></footer>
+</main></body></html>

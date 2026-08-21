@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+---
+<BaseLayout title="关于 | HlinForest" description="关于 Hanlin 与 HlinForest。">
+  <header class="page-head container"><div class="eyebrow">About</div><h1>关于这个站</h1></header>
+  <section class="container about-grid">
+    <div class="about-copy">
+      <p>HlinForest 是我的公开学习与技术写作空间。这里主要记录 AI 系统、智能体、AI Infra、因果与安全研究，以及把复杂技术学透的过程。</p>
+      <p>我希望每篇内容都能越过“概念介绍”：给出对象与形状、资源账本、关键假设、失败模式和可验证的实验。内容会持续修订；如果你发现错误，欢迎通过 GitHub 提出。</p>
+      <p>本站的长篇学习文档按领域独立成区，Blog 则用于承载观点、阶段结论和可单独阅读的专题文章。</p>
+    </div>
+    <aside class="about-card">
+      <dl>
+        <div><dt>作者</dt><dd>{site.author}</dd></div>
+        <div><dt>关注</dt><dd>AI Systems / Agents / Safety</dd></div>
+        <div><dt>语言</dt><dd>中文 / English</dd></div>
+        <div><dt>链接</dt><dd><a href={site.github}>GitHub ↗</a></dd></div>
+      </dl>
+    </aside>
+  </section>
+</BaseLayout>

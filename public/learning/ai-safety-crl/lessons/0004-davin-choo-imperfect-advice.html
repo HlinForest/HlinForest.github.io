@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04 · Davin Choo：建议会错，预算有限</title>
+  <link rel="stylesheet" href="../assets/course.css">
+  <script defer src="../assets/quiz.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="../index.html#route">课程</a><a href="../reference/0001-research-map.html">速查表</a></nav></div></header>
+  <main class="lesson-main">
+    <header class="lesson-head">
+      <span class="eyebrow">Lesson 04</span>
+      <h1>Davin Choo：建议会错，预算有限</h1>
+      <p>当变量已经定义好，下一步不是继续训练 encoder，而是决定做哪次干预、相信多少侧信息，以及如何在最坏情形下不被坏建议拖垮。</p>
+      <div class="lesson-meta"><span class="pill">20 分钟</span><span class="pill">主动发现</span><span class="pill">imperfect advice · resource allocation</span></div>
+    </header>
+
+    <div class="objective"><strong>本课胜利条件：</strong>你能解释 consistency 与 robustness 的张力，并把一个安全监控器看作“可利用但不可盲信的建议”。</div>
+
+    <h2>先把他与 CRL 的位置分开</h2>
+    <table>
+      <thead><tr><th></th><th>CRL / Yujia 邻近线</th><th>Davin 邻近线</th></tr></thead>
+      <tbody>
+        <tr><td>输入</td><td>像素、文本、激活等高维观测</td><td>已定义变量、essential graph、样本/建议</td></tr>
+        <tr><td>核心未知</td><td>变量是什么、能识别到何种等价类</td><td>边如何定向、做哪次干预、成本多大</td></tr>
+        <tr><td>主要资源</td><td>环境变化、结构假设、时间/多模态信息</td><td>干预次数、适应轮数、样本、审计预算</td></tr>
+        <tr><td>共同接口</td><td colspan="2">CRL 产生候选变量/结构；主动算法验证它们，并管理错误建议。</td></tr>
+      </tbody>
+    </table>
+
+    <h2>三节点例子：观测数据留下多个方向</h2>
+    <div class="example">
+      <p>安全团队记录三个变量：<code>A</code> 可疑训练样本比例、<code>B</code> 监控器告警、<code>C</code> 部署后失效。观测条件独立关系可能只支持一条无碰撞点链：</p>
+      <div class="formula">A → B → C
+A ← B → C
+A ← B ← C
+
+三者可属于同一 Markov 等价类：仅凭观测不能定向全部边。</div>
+      <p>一个领域专家或预训练模型给出建议图 <code>G_adv</code>。它可能非常接近真实图，也可能系统性误解告警与失效的方向。主动学习器应先验证最能区分候选图的部分，再决定是否继续沿建议搜索。</p>
+    </div>
+
+    <h2>“带建议算法”的两个目标</h2>
+    <div class="card-grid">
+      <article class="card"><h3>Consistency</h3><p>建议接近真实时，明显少做干预、少花成本；不能因为防最坏情况而完全忽略高质量建议。</p></article>
+      <article class="card"><h3>Robustness</h3><p>建议任意错误时，性能仍接近无建议基线；不能让一次自信但错误的图把成本推到失控。</p></article>
+    </div>
+    <p>ICML 2023 的正式结果用 advice DAG 与真实 DAG 的距离 <code>ψ</code> 描述这种自适应收益，并保留与无建议方法相当的最坏情形保证。下面是为了建立直觉而设计的简化玩具，不是论文定理数值复现。</p>
+
+    <div class="lab" data-advice-lab>
+      <h3>互动：建议错多少条边？</h3>
+      <div class="lab-row"><label for="advice-error">建议图错误边数 <code>k</code></label><input id="advice-error" type="range" min="0" max="5" step="1" value="1"><output data-advice-value>1</output></div>
+      <div class="lab-output" data-advice-output></div>
+      <p class="citation">教学模型：baseline 固定 8；盲信策略会随错误迅速变贵；test-and-act 风格策略先检验冲突，达到阈值后回退。只展示形状，不代表论文复杂度界。</p>
+    </div>
+
+    <h2>安全监控器就是“不完美建议”</h2>
+    <div class="example">
+      <p>一个因果/可解释特征系统给每条模型轨迹打风险分。最危险的做法是把它当真值：只审查高分轨迹。攻击者一旦学会绕过特征，所有资源都被引向假目标。</p>
+      <p>更稳健的策略会把分数当建议：高分区加权抽查，同时保留随机覆盖、负对照与触发式回退。建议准确时节省预算；校准恶化或出现冲突时，退回与建议无关的安全基线。</p>
+    </div>
+
+    <h2>从算法建议到 Stackelberg 安全博弈</h2>
+    <p>2026 年的 <em>Incentive-Aware AI Safety</em> 把监督看成 defender 与能观察策略的 attacker/失效模式之间的战略互动。关键变化是：风险不是静态分布；对手会针对你最薄弱的覆盖。</p>
+
+    <div class="lab" data-budget-lab>
+      <h3>互动：把 10 份审计资源分给三个目标</h3>
+      <div class="lab-row"><label for="b0">训练数据投毒</label><input id="b0" type="range" min="0" max="10" value="4"><output data-budget-value="0">4</output></div>
+      <div class="lab-row"><label for="b1">越狱评测</label><input id="b1" type="range" min="0" max="10" value="3"><output data-budget-value="1">3</output></div>
+      <div class="lab-row"><label for="b2">供应链失效</label><input id="b2" type="range" min="0" max="10" value="3"><output data-budget-value="2">3</output></div>
+      <p>已用资源：<strong data-budget-total>10</strong>/10</p>
+      <div class="lab-output" data-budget-output></div>
+      <p class="citation">教学风险函数含不同影响与检测效率，并让对手选择剩余风险最高的目标。正式 SSG 还会建模混合策略、攻防收益与最优承诺。</p>
+    </div>
+
+    <div class="misconception">
+      <p><strong>“监控器 AUC 更高，所以把全部审计预算给最高分样本一定更安全。”</strong></p>
+      <p>AUC 是静态排序指标。若攻击者或失效模式会适应审计策略，确定性全押可能创造完全裸露的目标；还要考虑校准漂移、覆盖、对手最佳响应与回退保证。</p>
+    </div>
+
+    <h3>读 Davin 论文时用四卡</h3>
+    <div class="formula">Input: 已知什么？（essential graph / advice DAG / samples）
+Output: 恢复什么？（true DAG / effect / policy）
+Cost: 最小化什么？（interventions / rounds / regret / audit budget）
+Guarantee: 对什么量给界？（advice distance / worst case / estimation error）</div>
+
+    <div class="source-note">
+      <p>Davin Choo 的官方定位包括 statistical learning、causal inference、imperfect advice 与 resource-efficient algorithms。ICML 2023 论文正式研究带 advice 的主动因果结构学习；AAMAS 2026 Blue Sky 论文把 Stackelberg security games 引入训练时审计、部署前评测和多模型部署。把 CRL 特征作为 advice 输入是本课程的桥接设想，不是两篇论文已经共同证明的定理。</p>
+      <p class="citation">原始来源：<a href="https://davinchoo.com/">官方主页</a> · <a href="https://proceedings.mlr.press/v202/choo23a.html">ICML 2023 Active causal structure learning with advice</a> · <a href="https://arxiv.org/abs/2602.07259">AAMAS 2026 Incentive-Aware AI Safety</a>。</p>
+    </div>
+
+    <div class="quiz" data-answer="b" data-correct="正确。这正同时利用建议与保护最坏情形：先享受高质量排序的收益，再用随机覆盖和回退防止建议失效。" data-wrong="完全忽略建议没有 consistency；完全盲信建议没有 robustness。寻找同时保留收益与底线的策略。">
+      <h3>检索练习</h3>
+      <p>哪项最符合 learning-augmented safety 的精神？</p>
+      <label><input type="radio" name="q4" value="a"> 永远忽略建议</label>
+      <label><input type="radio" name="q4" value="b"> 加权并可回退</label>
+      <label><input type="radio" name="q4" value="c"> 永远完全相信</label>
+      <button type="button">检查答案</button>
+      <p class="feedback" aria-live="polite"></p>
+    </div>
+
+    <div class="ask"><strong>继续问老师：</strong>如果你想读定理，可以指定 intervention count、adaptivity rounds 或 advice distance；如果你偏实验，我可以把预算小游戏改成你的真实安全评测表。</div>
+    <nav class="lesson-nav"><a href="0003-yujia-zheng-identifiable-concepts.html">← 上一课：Yujia Zheng</a><a href="0005-integrated-safety-research-design.html">下一课：综合研究设计 →</a></nav>
+  </main>
+</body>
+</html>

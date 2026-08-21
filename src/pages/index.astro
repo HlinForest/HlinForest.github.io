@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import { byNewest, publishedOnly } from '../utils/posts';
+import { learningTracks } from '../utils/learning';
+
+const posts = (await getCollection('blog')).filter(publishedOnly).sort(byNewest);
+const featured = [...posts].sort((a, b) => Number(b.data.featured) - Number(a.data.featured)).slice(0, 3);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="eyebrow">Research · Systems · Notes</div>
+        <h1>把复杂系统，<br /><span>写清楚。</span></h1>
+        <p class="hero-lead">关于 AI 系统、智能体、基础设施与学习方法的长期技术写作。重视机制、证据和可以复现的工程细节。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="/blog/">开始阅读 <span aria-hidden="true">→</span></a>
+          <a class="button" href="/learning/">进入学习文档</a>
+        </div>
+      </div>
+      <aside class="now-card">
+        <div class="eyebrow"><span class="signal"></span>Now</div>
+        <h2>正在构建：可靠的 Agent 系统</h2>
+        <p>从 context engineering、评测与可观测性出发，研究能长期运行、持续校验的智能体工作流。</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div><div class="eyebrow">Featured writing</div><h2>精选文章</h2></div>
+        <a class="section-link" href="/blog/">查看全部 →</a>
+      </div>
+      <div class="post-grid">{featured.map((post) => <PostCard post={post} />)}</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div><div class="eyebrow">Learning notes</div><h2>系统学习文档</h2></div>
+        <a class="section-link" href="/learning/">打开文档库 →</a>
+      </div>
+      <div class="topic-grid">
+        {learningTracks.map((track, index) => (
+          <a class="topic-card" href={track.href}>
+            <span class="topic-index">0{index + 1} / {track.area}</span>
+            <h3>{track.title}</h3>
+            <p>{track.count}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

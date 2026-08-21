@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>0028｜第17章完整讲义</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script></head><body>
+<header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#defs">全部定义</a><a href="#algorithms">算法</a><a href="#practice">补充题</a></nav></div></header>
+<main class="lesson-main"><section class="lesson-head"><span class="eyebrow">Full chapter notes · Chapter 17</span><h1>多域结构学习：让机制变化帮助定向</h1><p>完整整理选择图、多域 Markov 性、等价类、MD-MAG/PDAG、MD-PC/FCI 与多域/干预框架的对应关系。</p><div class="lesson-meta"><span class="pill">PDF 1029–1070</span><span class="pill">13 个定义</span><span class="pill">原书无章末题</span></div></section>
+<div class="objective"><strong>本章主线：</strong>单域只给一组条件独立；多个域还给“哪些机制一起变、哪些条件关系不变”。把域差异加入图，可缩小 Markov 等价类。</div>
+<ol class="toc"><li><a href="#setup">设置</a></li><li><a href="#defs">MD定义</a></li><li><a href="#latent">潜变量</a></li><li><a href="#algorithms">算法</a></li><li><a href="#relation">与干预关系</a></li><li><a href="#practice">补充训练</a></li></ol>
+
+<h2 id="setup">1. 多域设置</h2>
+<p>有 N 个 SCM <code>M¹,…,Mᴺ</code>，共享观测变量与一套候选因果结构，但部分机制因域而异。每个域 π 产生分布 <code>P^π(V)</code>。我们可能知道每对域的变化靶点，也可能只知道域标签。</p>
+<div class="definition-box"><strong>Definition 17.1.1 — Multi-domain selection diagrams</strong>用统一选择图 <code>G_S</code> 表示 N 个 SCM 的差异：若 Vᵢ 的结构函数或外生分布在某些域不同，则相应选择节点指向 Vᵢ。选择节点的取值/组合标识域。</div>
+
+<h2 id="defs">2. MD-Markov 定义链</h2>
+<div class="definition-box"><strong>Definitions 17.2.1–17.2.4</strong><dl class="compact-defs">
+<dt>Symmetrical difference Δ</dt><dd>比较域 i,j 时，取只在其中一个域改变的机制靶点；共同改变的部分在二者比较中不产生差异信号。</dd>
+<dt>MD-Markov property</dt><dd>每个域内分布满足共享因果图的 Markov 约束；不同域之间还满足由选择图和域差异集合蕴含的机制不变/条件等式。</dd>
+<dt>MD-Markov equivalence</dt><dd>两个“选择图+域集合/变化信息”设置若对所有域分布元组蕴含完全相同的域内独立与跨域不变，则等价。</dd>
+<dt>Augmented selection diagram</dt><dd>把域/制度差异作为额外节点加入图；增强图中的 separation 统一编码 MD-Markov 约束。</dd></dl></div>
+
+<h2 id="latent">3. 有潜变量时</h2>
+<div class="definition-box"><strong>Definitions 17.2.5–17.2.6 — MD-MAG-0 与 MD-MAG</strong><dl class="compact-defs"><dt>MD-MAG-0</dt><dd>先在增强选择图上边际化潜变量，得到保留观测和选择节点分离关系的 ancestral graph。</dd><dt>MD-MAG</dt><dd>在 MD-MAG-0 上进一步 maximal 化并按多域等价规则处理边标，确保任意不相邻节点可被某集合分离。</dd></dl></div>
+<div class="theorem-box"><strong>Graphical MD-Markov characterization</strong>在相应 Markov/正则条件下，多域分布元组的全部可观测不变性可由增强选择图或 MD-MAG 的 separation 表示。两设置 MD-Markov 等价当且仅当其相应 MD-MAG 具有相同可观察结构特征。</div>
+
+<h2 id="algorithms">4. 学习定义与算法</h2>
+<div class="definition-box"><strong>Definitions 17.3.1–17.3.2</strong><dl class="compact-defs"><dt>MD-faithfulness</dt><dd>分布元组中出现的域内独立和跨域不变恰好来自选择图的 MD-separation；排除域差异参数刚好抵消。</dd><dt>MD-PDAG</dt><dd>无潜变量时代表 MD-Markov 等价类的部分有向图；只把所有相容选择图共同同意的边端定向。</dd></dl></div>
+<table><thead><tr><th>算法</th><th>允许潜变量</th><th>输出</th><th>信息增益</th></tr></thead><tbody><tr><td>MD-PC</td><td>否</td><td>MD-PDAG</td><td>用跨域不变/变化额外定向</td></tr><tr><td>MD-FCI</td><td>是</td><td>MD-PAG/MD-MAG 类</td><td>同时保留混杂不确定性</td></tr></tbody></table>
+
+<h2 id="relation">5. 多域与干预设置的对应</h2>
+<div class="definition-box"><strong>Definition 17.4.1 — Corresponding tuple of intervention sets</strong>对给定多域选择图，构造一组形式上的干预靶点，使各域间变化集合与干预集合的对称差对应；在假设成立时，可把 MD-Markov characterization 转写为 I/Ψ-Markov characterization。</div>
+<div class="definition-box"><strong>Definitions 17.5.1–17.5.2 — I-Markov 与 Ψ-Markov（本章版本）</strong>I-Markov 处理已知干预靶点的分布元组；Ψ-Markov 允许靶点集合也未知。二者与第 16 章一致，本章强调它们可由多域变化的结构条件诱导，而非宣称自然域本身就是理想干预。</div>
+
+<div class="example"><strong>两个医院</strong><br>医院 A/B 的病人构成、测量仪器和护理流程可能都变。域标签提供联合变化信号；若已知只有仪器机制变化，可更像已知靶点 I；若不知，需 Ψ/MD 方法保留多种解释。</div>
+<div class="example"><strong>多版本 LLM</strong><br>基础、指令、安全微调版本可视为域。训练日志若定位了哪些模块/损失被改，提供靶点先验；否则只把版本当自然域，不直接声称 <code>do(feature)</code>。</div>
+<div class="research-note"><strong>Yujia Zheng 接口</strong>：第 17 章默认变量节点已知；第 18 章把节点本身也设为潜变量。多域变化既可帮助定向，也可帮助选择潜在坐标。</div>
+
+<h2 id="practice">6. 补充章末训练（原书无编号习题）</h2>
+<details><summary>题 1：单域等价的 X→Y 与 X←Y 如何用多域区分？</summary><p><strong>答：</strong>构造只改变 X 机制的域。若跨域 <code>P(Y|X)</code> 稳定而 P(X) 变，更支持 X→Y；若候选 Y→X，则改变 X 的子机制通常不保证同一 <code>P(Y|X)</code>。结论依赖独立机制与充分变化。</p></details>
+<details><summary>题 2：为什么两个国家不是自动的两个干预？</summary><p><strong>答：</strong>国家差异可能同时改变多节点函数、外生分布与选择过程，且靶点不明。干预语义需要明确替换机制；自然域只提供异质性。</p></details>
+<details><summary>题 3：MD-faithfulness 失败的例子</summary><p><strong>答：</strong>两个上游机制同时改变，但对 Y 的线性作用一正一负且恰好抵消，使 <code>P(Y|Z)</code> 跨域相同；经验不变并非图分离导致，违反 MD-faithfulness。</p></details>
+
+<div class="quiz" data-answer="a" data-correct="正确。多域的新增信息是机制变化与不变模式，不只是样本量。" data-wrong="同域更多样本只减少估计误差；多域额外改变了生成机制。"><h3>章末检索</h3><p>多个域相比单域更多样本，核心新增证据是：</p><label><input type="radio" name="q28" value="a"> 机制变化和不变模式</label><label><input type="radio" name="q28" value="b"> 自动获得随机化保证</label><label><input type="radio" name="q28" value="c"> 自动消除全部潜变量</label><button type="button">检查答案</button><p class="feedback"></p></div>
+<div class="source-note">主源：原书第 17 章（PDF 1029–1070）。Draft 0.27 含 “Figure ??” 等占位，本页未把缺失图补写成作者结论；本章无编号章末习题。</div><div class="ask">把你的各个域写成“采样过程、明确改变、可能改变、应稳定”四列，老师可以据此搭选择图。</div><nav class="lesson-nav"><a href="0027-solutions-ch16.html">← 第16章答案册</a><a href="0029-full-ch18-crl.html">第18章完整讲义 →</a></nav></main></body></html>

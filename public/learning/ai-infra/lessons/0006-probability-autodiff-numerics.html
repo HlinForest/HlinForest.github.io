@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>单元 06：概率、反向传播与数值稳定</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">单元 06 · 4–5 小时</div><h1>概率、反向传播与数值稳定</h1><p class="lede">目标：理解 logits 如何变成分布、梯度如何沿图传播，以及有限精度为何让数学等式在硬件上失效。</p></header>
+<section class="mastery"><h2>过关标准</h2><ul><li>能实现稳定 Softmax、LogSumExp 和交叉熵。</li><li>能解释温度、熵与 KL 散度的含义。</li><li>能手推线性层与 Softmax 交叉熵梯度。</li><li>能解释梯度累积、消失、爆炸、裁剪、残差和归一化。</li><li>能比较 FP32、TF32、FP16、BF16、FP8 的范围与精度。</li></ul></section>
+
+<section><h2>1. 从 logits 到概率</h2><div class="formula">pᵢ = exp(zᵢ) / Σⱼ exp(zⱼ)</div>
+<p>logits 是任意实数，不是概率。Softmax 输出为正且和为 1。它对统一平移不敏感，因此稳定实现先减最大值：</p>
+<pre><code>def stable_softmax(z):
+    m = max(z)
+    exps = [math.exp(v - m) for v in z]
+    total = sum(exps)
+    return [v / total for v in exps]</code></pre>
+<p>若直接对很大的 logits 求指数，会 overflow；先减最大值把最大指数固定为 1。</p></section>
+
+<section><h2>2. 交叉熵、熵和 KL</h2>
+<div class="formula">交叉熵 H(q,p) = -Σ qᵢ log pᵢ<br>熵 H(q) = -Σ qᵢ log qᵢ<br>KL(q||p) = Σ qᵢ log(qᵢ/pᵢ)<br>H(q,p) = H(q) + KL(q||p)</div>
+<p>one-hot 标签下，交叉熵就是正确类别负对数概率。温度 <code>T</code> 通过 <code>softmax(z/T)</code> 调节分布：T 小更尖锐，T 大更平坦。</p></section>
+
+<section><h2>3. 链式法则与计算图</h2><p>若 <code>a=xy</code>、<code>b=a+x</code>、<code>L=b²</code>，则 x 有两条路径影响 L，梯度必须相加：</p>
+<div class="formula">∂L/∂x = 2b + 2by<br>∂L/∂y = 2bx</div>
+<p>反向模式自动微分不显式构造巨大 Jacobian，而是计算 vector-Jacobian product。一个 Tensor 被多条路径使用时，梯度累积是数学要求。</p></section>
+
+<section><h2>4. 线性层反向仍是 GEMM</h2>
+<div class="formula">Y = XW + b<br>G = ∂L/∂Y<br>∂L/∂X = GWᵀ<br>∂L/∂W = XᵀG<br>∂L/∂b = reduce_sum(G, batch)</div>
+<p>因此训练的反向传播并不是神秘黑盒：大量成本仍落在矩阵乘与归约上，只是 shape 和转置位置发生变化。</p></section>
+
+<section><h2>5. 梯度稳定性</h2><ul><li><strong>消失/爆炸：</strong>多层 Jacobian 连乘，奇异值长期小于或大于 1。</li><li><strong>残差连接：</strong>提供接近恒等映射的梯度路径。</li><li><strong>归一化：</strong>控制激活尺度，改善优化条件。</li><li><strong>梯度裁剪：</strong>限制范数，避免单次更新过大。</li><li><strong>初始化：</strong>让前向与反向的方差在深度上保持可控。</li></ul></section>
+
+<section><h2>6. 精度与动态范围不是一件事</h2>
+<table><thead><tr><th>格式</th><th>指数位</th><th>尾数字段</th><th>工程直觉</th></tr></thead><tbody>
+<tr><td>FP32</td><td>8</td><td>23</td><td>范围和精度较均衡</td></tr>
+<tr><td>TF32</td><td>8</td><td>10</td><td>保留 FP32 范围，用于 Tensor Core 乘法语义</td></tr>
+<tr><td>FP16</td><td>5</td><td>10</td><td>精度较细但范围较窄，常需 loss scaling</td></tr>
+<tr><td>BF16</td><td>8</td><td>7</td><td>范围接近 FP32，但舍入更粗</td></tr>
+<tr><td>FP8</td><td>4/5</td><td>3/2</td><td>需缩放、校准和高精度累加</td></tr>
+</tbody></table></section>
+
+<section><h2>7. 五类数值风险</h2>
+<ol><li><strong>overflow：</strong>绝对值超过最大有限值，变成 inf。</li><li><strong>underflow：</strong>太接近 0，进入 subnormal 或变成 0。</li><li><strong>灾难性消减：</strong>两个接近的大数相减，剩余有效位很少。</li><li><strong>非结合性：</strong><code>(a+b)+c</code> 与 <code>a+(b+c)</code> 因舍入不同。</li><li><strong>错误容差：</strong>只看相对误差会在参考值接近 0 时失真。</li></ol>
+<div class="formula">|x̂ - x| ≤ atol + rtol × |x|</div>
+<p>并行归约顺序变化可能产生小数值差异。非逐位一致不必然是 Bug，但必须落在任务允许的容差内。</p></section>
+
+<section><h2>8. 混合精度的结构</h2><p>常见做法是低精度保存或执行大部分矩阵计算，高精度累加敏感归约与参数更新。FP16 训练常用 loss scaling 把小梯度移入可表示范围；BF16 因指数范围较大，通常更少需要 scaling，但仍有舍入误差。</p></section>
+
+<section class="lab"><h2>实验：让 Softmax 崩溃再修好</h2><ol><li>运行 <a href="../labs/numerics_lab.py">numerics_lab.py</a>。</li><li>观察朴素 Softmax 对大 logits 的 overflow。</li><li>实现减最大值、LogSumExp 与交叉熵。</li><li>改变归约顺序，比较 FP32 模拟误差。</li><li>用组合 atol/rtol 验证结果。</li></ol></section>
+
+<section><h2>即时测验</h2>
+<div class="quiz" data-quiz data-why="Softmax 对统一平移不敏感，减最大值避免指数溢出。" data-hint="保持概率不变，同时降低指数输入。"><h3>稳定 Softmax 首先执行什么？</h3><div class="answers"><button data-correct="true">所有值减去最大值</button><button>所有值乘以最大值</button><button>所有值转为整数值</button></div><p class="feedback" aria-live="polite"></p></div>
+<div class="quiz" data-quiz data-why="BF16 有 8 个指数位，动态范围接近 FP32；尾数更少意味着精度较粗。" data-hint="分别看指数位和尾数位。"><h3>BF16 相比 FP16 的主要优势？</h3><div class="answers"><button>拥有更多尾数精度</button><button data-correct="true">拥有更大动态范围</button><button>占用更少存储空间</button></div><p class="feedback" aria-live="polite"></p></div>
+</section>
+<section class="success"><h2>过关任务</h2><p>手推 Softmax + one-hot 交叉熵对 logits 的梯度 <code>p-y</code>，再解释为何 fused cross entropy 可以同时改善性能和数值稳定性。</p></section>
+<section><h2>主要来源</h2><p><a href="https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%B8%80-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/%E7%AC%AC2%E7%AB%A0-%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">AIInfraGuide 数学基础</a>；<a href="https://docs.pytorch.org/tutorials/beginner/basics/autogradqs_tutorial.html">PyTorch autograd 官方教程</a>。</p></section>
+<div class="complete-action"><button data-complete="l06" aria-pressed="false">标记为已通过</button></div>
+<nav class="lesson-nav"><a href="0005-tensor-math.html">← 单元 05</a><a href="../index.html">课程首页</a><a href="0007-attention.html">单元 07 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05 · 综合课：写出一个可证伪的研究方案</title>
+  <link rel="stylesheet" href="../assets/course.css">
+  <script defer src="../assets/quiz.js"></script>
+</head>
+<body>
+  <header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="../index.html#route">课程</a><a href="../reference/0001-research-map.html">速查表</a></nav></div></header>
+  <main class="lesson-main">
+    <header class="lesson-head">
+      <span class="eyebrow">Lesson 05</span>
+      <h1>综合课：写出一个可证伪的研究方案</h1>
+      <p>把 Yujia 邻近线的“可信概念”作为 Davin 邻近线的“不完美建议”，再用主动验证与战略资源分配把它们接成安全闭环。</p>
+      <div class="lesson-meta"><span class="pill">20 分钟</span><span class="pill">Capstone</span><span class="pill">产出：mini-proposal</span></div>
+    </header>
+
+    <div class="objective"><strong>本课胜利条件：</strong>你能完成一张 Input / Output / Cost / Guarantee 四卡，并列出至少一个会推翻自己方案的结果。</div>
+
+    <h2>一个完整案例：会操作网页的 agent</h2>
+    <div class="example">
+      <p>一个 browser agent 能读取邮件、提交表单和修改账户设置。安全团队担心它在含糊授权下执行不可逆操作。仅按关键词监控“delete / transfer / send”会漏掉改写，也会误报大量正常任务。</p>
+      <p>我们希望从 agent 的轨迹与激活 <code>X</code> 中恢复几个任务相关变量：授权清晰度 <code>V₁</code>、动作可逆性 <code>V₂</code>、外部影响范围 <code>V₃</code>、规避监督倾向 <code>V₄</code>。这些变量不必解释全部心智状态，只需对安全决策足够，并尽量不混入语言、网站主题等表面因素。</p>
+    </div>
+
+    <div class="pipeline" aria-label="综合研究链">
+      <div>轨迹/激活<br><code>X</code></div><div>可识别表示<br><code>V̂</code></div><div>候选风险图<br><code>G_adv</code></div><div>主动验证<br><code>do(a)</code></div><div>审计策略<br><code>π</code></div>
+    </div>
+
+    <h2>第一步：把安全概念写成“允许的等价类”</h2>
+    <p>不要写“恢复 agent 的真实意图”这种无边界目标。写成可检验版本：</p>
+    <div class="formula">目标：恢复一个表示 V̂_auth
+要求：对授权语义敏感；对语言、礼貌程度、网页主题不敏感
+允许：单调缩放、同一安全子空间内的可逆变换
+不允许：与操作不可逆性或表面关键词发生不可控混合</div>
+
+    <h3>需要哪些环境？</h3>
+    <table>
+      <thead><tr><th>配对环境</th><th>改变</th><th>保持</th><th>用途</th></tr></thead>
+      <tbody>
+        <tr><td>同任务多语言</td><td>语言/措辞</td><td>授权与动作</td><td>排除表面 token</td></tr>
+        <tr><td>同措辞不同授权</td><td>授权范围</td><td>页面与动作描述</td><td>识别授权语义</td></tr>
+        <tr><td>可逆/不可逆版本</td><td>动作后果</td><td>目标与界面</td><td>分离风险维度</td></tr>
+        <tr><td>不同网站同操作</td><td>视觉与主题</td><td>动作语义</td><td>排除站点捷径</td></tr>
+      </tbody>
+    </table>
+
+    <h2>第二步：把学得结构当 advice，而不是真相</h2>
+    <p>假设初步数据支持候选图：</p>
+    <div class="formula">授权含糊 V̂₁ ─→ 规避确认 V̂₄ ─→ 不可逆动作 Y
+动作影响 V̂₃ ───────────────────→ Y</div>
+    <p>这张图可以指导下一次测试，但 representation error 会把边方向和节点语义一起污染。主动验证应挑“候选图分歧最大、执行风险可控”的干预，例如：</p>
+    <ul>
+      <li>在同一任务中只改变授权明确度，观察确认行为与最终动作；</li>
+      <li>把真实提交替换为 sandbox dry-run，保持规划过程但隔离外部后果；</li>
+      <li>对监控器高分与低分轨迹都做分层随机抽查，估计漏报。</li>
+    </ul>
+
+    <div class="misconception">
+      <p><strong>“只要干预特征后行为改变，就证明特征是目标概念。”</strong></p>
+      <p>特征干预可能同时改变多个 latent、破坏激活流形或引发分布外行为。还需要 specificity、负对照、跨 run 一致性与自然输入干预相互印证。</p>
+    </div>
+
+    <h2>第三步：完成研究四卡</h2>
+    <div class="card-grid">
+      <article class="card"><h3>Input</h3><p>多语言、多授权、可逆/不可逆的配对轨迹；激活；初始风险图；10% 人工审计预算。</p></article>
+      <article class="card"><h3>Output</h3><p>授权/可逆性安全子空间、候选因果图、带回退的轨迹抽查策略。</p></article>
+      <article class="card"><h3>Cost</h3><p>人工复核分钟数、受控 agent rollouts、真实环境干预风险、适应轮数。</p></article>
+      <article class="card"><h3>Guarantee</h3><p>建议准确时提高危险轨迹召回；建议失效时，漏报不劣于分层随机基线超过预设容忍度。</p></article>
+    </div>
+
+    <h2>第四步：预注册“什么结果会让我认错”</h2>
+    <ul class="checklist">
+      <li>跨 SAE 随机种子，所谓授权特征无法匹配或方向翻转。</li>
+      <li>保持授权不变、只换语言时，风险分数变化大于改变授权时。</li>
+      <li>自然语言授权干预与 activation steering 给出相反行为效果。</li>
+      <li>按监控器分配审计后，适应性红队的漏报率高于随机基线。</li>
+      <li>去掉表征模块后，简单可观测特征达到相同性能与更强稳健性。</li>
+    </ul>
+    <p>最后一条尤其重要：如果简单基线同样好，就不应因为“因果表示”听起来高级而保留复杂系统。</p>
+
+    <h2>最小可执行实验</h2>
+    <table>
+      <thead><tr><th>阶段</th><th>做法</th><th>图</th><th>通过标准</th></tr></thead>
+      <tbody>
+        <tr><td>1. 数据</td><td>构造 4 类配对环境，各 200 条轨迹</td><td>环境 × 风险标签分布</td><td>关键因素不再完全共线</td></tr>
+        <tr><td>2. 表征</td><td>训练 5 个种子的稀疏/因果表示</td><td>run × run 匹配矩阵</td><td>目标子空间稳定</td></tr>
+        <tr><td>3. 验证</td><td>做授权、可逆性与负对照干预</td><td>干预效应 + 置信区间</td><td>方向与结构预测一致</td></tr>
+        <tr><td>4. 分配</td><td>比较随机、盲信、可回退三种审计</td><td>advice error × miss rate</td><td>好建议有收益，坏建议有底线</td></tr>
+      </tbody>
+    </table>
+
+    <div class="research-note">
+      <p><strong>最值得写成论文的问题：</strong>当 latent representation 有误差、干预可能 off-target 时，如何联合选择“下一次环境/干预”与“下一批安全审计”，使表征等价类和风险漏报同时收缩，并给出相对无建议基线的最坏情形界？</p>
+    </div>
+
+    <div class="source-note">
+      <p>本课的闭环是综合推论：原书提供 PCH、CRL 与主动因果学习的语言；Yujia 邻近工作提供可识别 latent/概念的理论入口；Davin 邻近工作提供 imperfect advice、主动结构发现与 strategic resource allocation。尚无单一来源证明这条完整流水线，因此 mini-project 必须把接口误差作为研究对象。</p>
+      <p class="citation">回读：<a href="https://proceedings.mlr.press/v235/zhang24br.html">多分布 CRL</a> · <a href="https://proceedings.mlr.press/v202/choo23a.html">带 advice 主动因果发现</a> · <a href="https://arxiv.org/abs/2602.07259">incentive-aware AI safety</a>。</p>
+    </div>
+
+    <div class="quiz" data-answer="a" data-correct="正确。负结果应直接挑战方法的核心因果/稳健性主张；若简单基线同样好，复杂流水线没有被证成。" data-wrong="真正的证伪条件应触及核心主张，而不是只说明算力或排版不足。请选择会推翻方法必要性的结果。">
+      <h3>闭卷检查</h3>
+      <p>哪项最能证伪“CRL 特征改善安全审计”的核心主张？</p>
+      <label><input type="radio" name="q5" value="a"> 简单基线同样好</label>
+      <label><input type="radio" name="q5" value="b"> 训练时间较长</label>
+      <label><input type="radio" name="q5" value="c"> 图表颜色较少</label>
+      <button type="button">检查答案</button>
+      <p class="feedback" aria-live="polite"></p>
+    </div>
+
+    <div class="ask"><strong>现在轮到你。</strong>把你的目标系统、可获得数据和预算告诉老师，我可以和你共同完成第一版四卡；你的答案将决定是否创建第一条 learning record 和下一课难度。</div>
+    <nav class="lesson-nav"><a href="0004-davin-choo-imperfect-advice.html">← 上一课：Davin Choo</a><a href="../reference/0001-research-map.html">打开研究速查表 →</a></nav>
+  </main>
+</body>
+</html>
+

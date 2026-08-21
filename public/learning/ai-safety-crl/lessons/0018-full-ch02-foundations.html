@@ -1,0 +1,53 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>0018｜第2章完整讲义</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script></head><body>
+<header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#defs">全部定义</a><a href="#theorems">定理</a><a href="0019-solutions-ch02.html">34题答案</a></nav></div></header>
+<main class="lesson-main"><section class="lesson-head"><span class="eyebrow">Full chapter notes · Chapter 2</span><h1>因果 AI 基础：SCM、层级与图</h1><p>完整保留第 2 章的 17 个正式定义、主要定理条件、推理模式与原书例子；另有 34 道习题答案册。</p><div class="lesson-meta"><span class="pill">PDF 55–122</span><span class="pill">17 个正式定义</span><span class="pill">34 道习题</span></div></section>
+<div class="objective"><strong>本章主线：</strong>SCM 规定世界怎样生成；PCH 规定能问什么；图把结构假设压缩成路径；d-separation 把路径变成可检验的条件独立。</div>
+<ol class="toc"><li><a href="#scm">SCM</a></li><li><a href="#layers">三层赋值</a></li><li><a href="#defs">17 个定义</a></li><li><a href="#theorems">主要定理</a></li><li><a href="#motifs">链叉碰撞</a></li><li><a href="#ccomp">C-component</a></li><li><a href="#examples">完整例子</a></li><li><a href="0019-solutions-ch02.html">习题答案</a></li></ol>
+
+<h2 id="scm">1. SCM 的完整对象</h2>
+<div class="definition-box"><strong>Definition 2.1.1 — Structural Causal Model</strong><code>M=⟨U,V,F,P(U)⟩</code>。<br><strong>U</strong>：外生变量，模型外背景；<strong>V</strong>：内生变量；<strong>F={fᵢ}</strong>：每个 <code>Vᵢ=fᵢ(Paᵢ,Uᵢ)</code> 的结构函数；<strong>P(U)</strong>：外生变量联合分布。递归/无环 SCM 要求存在一个顺序，使每个函数只读取更早的内生变量；半 Markovian 模型允许外生变量相关，以双向虚线表示潜在混杂。</div>
+<p>给定一个外生状态 <code>u</code>，递归方程得到唯一的内生状态 <code>v(u)</code>。让 <code>u∼P(U)</code> 变化，就诱导观测分布 <code>P(V)</code>。</p>
+
+<h2 id="layers">2. 三层赋值不是三个模型</h2>
+<div class="definition-box"><strong>Definitions 2.2.1–2.2.6</strong><dl class="compact-defs">
+<dt>2.2.1 Layer-1 valuation</dt><dd>事件 <code>Y=y</code> 在 u 中为真，当且仅当按原方程求解得到 <code>Y(u)=y</code>；概率对所有满足事件的 u 求和。</dd>
+<dt>2.2.2 Submodel Mₓ</dt><dd>把 X 的方程替换为常数 x，删除指向 X 的旧机制，其他函数和 <code>P(U)</code> 不变。</dd>
+<dt>2.2.3 Potential outcome Yₓ(u)</dt><dd>在子模型 <code>Mₓ</code>、同一外生背景 u 中 Y 的解。</dd>
+<dt>2.2.4 Layer-2 valuation</dt><dd><code>P(y|do(x))=Σ_{u:Yₓ(u)=y}P(u)</code>；可以同时干预多个变量。</dd>
+<dt>2.2.5 Effectiveness</dt><dd>若干预固定 X=x，则在相应世界 <code>Xₓ=x</code> 概率为 1；更一般地，与干预赋值冲突的事件概率为 0。</dd>
+<dt>2.2.6 Layer-3 valuation</dt><dd>联合反事实概率由同一个 u 同时评价多个子模型，如 <code>P(Yₓ=y,Yₓ′=y′)</code>；共享 u 是跨世界依赖的来源。</dd></dl></div>
+
+<h2 id="defs">3. 正式定义总表</h2>
+<div class="definition-box"><strong>Definitions 2.3.1–2.3.3 — 语言、层级与坍缩</strong><dl class="compact-defs">
+<dt>L1</dt><dd>由普通事件和条件概率组成，不含 do 或潜在结果。</dd><dt>L2</dt><dd>允许单个干预世界的事件与条件，如 <code>P(Yₓ|Zₓ)</code>，但不联合不同干预世界。</dd><dt>L3</dt><dd>允许多个不同干预下潜在结果的联合/条件分布。</dd><dt>Pearl Causal Hierarchy</dt><dd>按表达能力与通常所需信息排序 L1&lt;L2&lt;L3。</dd><dt>相对 M* 的坍缩</dt><dd>若某高层全部查询都能由较低层信息在该特定真模型类中唯一决定，则高层相对该 M* 坍缩；必须量化“所有查询”和“所有低层等价模型”。</dd></dl></div>
+
+<div class="definition-box"><strong>Definitions 2.4.1–2.4.3 — 图、独立与 d-separation</strong><dl class="compact-defs">
+<dt>2.4.1 Causal diagram</dt><dd>每个内生变量为节点；若 <code>Vᵢ</code> 是 <code>fⱼ</code> 的内生参数，则画 <code>Vᵢ→Vⱼ</code>；若两个方程共享相关外生源，投影后画 <code>Vᵢ↔Vⱼ</code>。</dd>
+<dt>2.4.2 Conditional independence</dt><dd><code>X ⟂ Y | Z</code> 当且仅当在所有正概率 z 上 <code>P(x,y|z)=P(x|z)P(y|z)</code>，等价于给定 Z 后知道 X 不改变 Y 分布。</dd>
+<dt>2.4.3 d-separation</dt><dd>路径若含被条件化的非碰撞点则阻塞；若含碰撞点且该碰撞点及其后代均未被条件化也阻塞。X 与 Y 间所有路径都阻塞时，记 <code>(X ⟂ Y | Z)G</code>。</dd></dl></div>
+
+<div class="definition-box"><strong>Definitions 2.4.4–2.4.6 — 混杂组件</strong><dl class="compact-defs">
+<dt>2.4.4 Confounded component / C-component</dt><dd>在仅保留双向边的图中属于同一连通分量的一组观测节点；它们由潜在共同原因链连接。</dd>
+<dt>2.4.5 Ancestral C-component</dt><dd>对祖先集合取诱导子图后得到的 C-component；用于把全局 Markov 条件压缩为局部约束。</dd>
+<dt>2.4.6 C-component local Markov property</dt><dd>按拓扑序，对每个变量和与之相关的祖先 C-component，要求变量在给定特定局部 Markov blanket 后与更早的非相关变量独立。它与全局 Markov 性等价，但在半 Markov 图上可能更高效。</dd></dl></div>
+
+<h2 id="theorems">4. 主要定理及条件</h2>
+<div class="theorem-box"><strong>Theorem 2.3.1/2.3.3 — Causal Hierarchy Theorem</strong>在适当测度意义下，几乎所有 SCM 上 L2 不由 L1 决定，L3 不由 L2 决定。“几乎”允许退化例外，例如 X 根本不影响任何结果，或函数完全已知。证明思路是构造低层分布相同、高层查询不同的模型对。</div>
+<div class="theorem-box"><strong>Theorem 2.4.1 — Bayesian factorization</strong>对 Markovian 递归 SCM：<code>P(v)=∏ᵢP(vᵢ|paᵢ)</code>。关键条件是无环和外生独立；有潜在混杂时不能直接使用普通 DAG 因子分解。</div>
+<div class="theorem-box"><strong>Theorem 2.4.2 — d-separation 的概率含义</strong>若图中 <code>(X ⟂ Y | Z)G</code>，则每个与图兼容的分布满足 <code>X ⟂ Y | Z</code>。反向需要 faithfulness 等额外假设；参数抵消可让图上连通却统计独立。</div>
+<div class="theorem-box"><strong>Theorem 2.4.3–2.4.4 — 半 Markov 分解与局部等价</strong>有双向混杂时，联合分布可按 C-component 分解为 Q 因子；C-component 局部 Markov 条件与全局 Markov 条件等价，为第 4 章识别算法铺路。</div>
+
+<h2 id="motifs">5. 三种路径模式</h2>
+<table><thead><tr><th>模式</th><th>默认</th><th>给定中点</th><th>原书/补充例</th></tr></thead><tbody><tr><td><code>X→Z→Y</code> 链</td><td>开放</td><td>阻塞</td><td>处理→中介→结果</td></tr><tr><td><code>X←Z→Y</code> 叉</td><td>开放</td><td>阻塞</td><td>严重度→用药/康复</td></tr><tr><td><code>X→Z←Y</code> 碰撞</td><td>阻塞</td><td>打开</td><td>能力→录取←关系</td></tr></tbody></table>
+<p>条件化碰撞点的<strong>后代</strong>也会部分打开路径。复杂 d-separation 只是在所有路径上重复这三条规则。</p>
+
+<h2 id="examples">6. 原书例子与补充解释</h2>
+<div class="example"><strong>骰子 SCM</strong><br><code>X:=U₁, Y:=X+U₂</code>。给定 u 可求唯一结果；<code>do(X=6)</code> 替换第一式，Y 仍读取新的 X。展示“方程语义”而非只看图。</div>
+<div class="example"><strong>医疗 SCM</strong><br>严重度同时影响治疗和康复，形成后门。它说明条件概率和干预概率不同，也说明遗漏共同原因为何破坏因果解释。</div>
+<div class="example"><strong>Coins, Bells, Entanglement</strong><br>书中用共享外生变量展示：即使观测节点间没有直接箭头，外生关联仍能产生依赖；投影到观测图后用双向边表达。</div>
+<div class="example"><strong>安全数据选择偏差</strong><br><span class="tiny-graph">真实风险 → 被举报 ← 特殊措辞</span>。只研究举报样本相当于条件化碰撞点，特殊措辞会与真实风险产生人造关联。</div>
+
+<h2>7. 做题入口</h2><p>本章 34 道习题覆盖概率、SCM 构造、PCH、graphoid 和 d-separation。答案按“最终结论—推导—常见错法”组织。</p><a class="button" href="0019-solutions-ch02.html">打开第2章34题答案册</a>
+<div class="quiz" data-answer="c" data-correct="正确。碰撞点默认阻塞，给定它或其后代会把路径打开。" data-wrong="链和叉在给定中点后阻塞；只有碰撞点的行为相反。"><h3>章末检索</h3><p>图 <code>X→Z←Y</code> 中，给定 Z 通常会：</p><label><input type="radio" name="q18" value="a"> 删除所有因果箭头</label><label><input type="radio" name="q18" value="b"> 保持路径继续阻塞</label><label><input type="radio" name="q18" value="c"> 打开原本阻塞路径</label><button type="button">检查答案</button><p class="feedback"></p></div>
+<div class="source-note">主源：原书第 2 章（PDF 55–122）。Definition 2.3.1 的编号在草稿中重复出现一次，本页按内容保留一次。</div><div class="ask">建议先自己完成 2.1、2.4、2.10、2.20、2.27，再展开答案；这比从头浏览答案更能形成长期记忆。</div>
+<nav class="lesson-nav"><a href="0017-full-ch01-introduction.html">← 第1章完整讲义</a><a href="0019-solutions-ch02.html">第2章答案册 →</a></nav></main></body></html>

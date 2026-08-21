@@ -1,0 +1,46 @@
+---
+title: "AI Infra 学习地图：从张量语义到多卡通信"
+description: "用一条跨层调用链组织 Python、PyTorch、CUDA、GPU 与 NCCL，建立可定位性能问题的学习框架。"
+publishedAt: "2026-08-14"
+tags: ["AI Infra", "GPU", "Learning"]
+featured: true
+series: "Learning Systems"
+lang: "zh"
+---
+
+import Callout from '../../components/Callout.astro';
+import FlowDiagram from '../../components/FlowDiagram.astro';
+
+<p class="lead">学习 AI Infra 最难的地方，不是资料少，而是每一层都能独立成为一门课。有效的路线必须用同一个问题贯穿所有层：一个张量操作，最终怎样变成硬件上的数据移动与计算？</p>
+
+## 一条跨层调用链
+
+<FlowDiagram nodes={['Python API', 'PyTorch Graph', 'CUDA Kernel', 'GPU SM', 'NCCL / Network']} note="每一层都有自己的语义、成本模型和故障信号。" />
+
+当训练变慢时，“GPU 利用率低”只是现象。真正的原因可能是 Python 数据准备阻塞、shape 造成 kernel 碎片化、访存受限、同步点过多，或集合通信没有和计算重叠。
+
+## 先建立资源账本
+
+对一个矩阵乘 $C = AB$，若 $A \in \mathbb{R}^{M\times K}$、$B \in \mathbb{R}^{K\times N}$，主要浮点操作约为：
+
+$$\text{FLOPs} \approx 2MKN$$
+
+但 FLOPs 不能单独预测时间。还需要估算读写字节数，并计算算术强度：
+
+$$I = \frac{\text{FLOPs}}{\text{Bytes moved}}$$
+
+将 $I$ 与设备的带宽和峰值计算能力放进 Roofline 模型，才能判断优化目标更接近“少搬数据”还是“提高计算占用”。
+
+<Callout type="warning" title="测量纪律">
+  GPU 操作通常异步执行。计时前后的同步、预热、重复次数、dtype、batch 与序列长度，都必须写进实验记录。
+</Callout>
+
+## 学习顺序
+
+1. 用 shape、stride、broadcasting 解释张量语义。
+2. 用计算图与 autograd 解释训练阶段的状态。
+3. 用 kernel、warp、memory hierarchy 解释单卡性能。
+4. 用 collective 与拓扑解释多卡扩展。
+5. 最后用 profiler 把各层证据串成一次诊断。
+
+完整课程已经整理到本站的 [AI Infra 学习文档](/learning/ai-infra/index.html)。

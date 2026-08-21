@@ -1,0 +1,28 @@
+---
+interface Tab { label: string; title: string; body: string; code?: string }
+interface Props { tabs: Tab[]; label?: string }
+const { tabs, label = '内容对比' } = Astro.props;
+const uid = `tabs-${Math.random().toString(36).slice(2, 9)}`;
+---
+<div class="comparison-tabs" data-tabs={uid}>
+  <div class="tab-list" role="tablist" aria-label={label}>
+    {tabs.map((tab, index) => (
+      <button class="tab-button" type="button" role="tab" id={`${uid}-tab-${index}`} aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`${uid}-panel-${index}`}>{tab.label}</button>
+    ))}
+  </div>
+  {tabs.map((tab, index) => (
+    <section class="tab-panel" role="tabpanel" id={`${uid}-panel-${index}`} aria-labelledby={`${uid}-tab-${index}`} hidden={index !== 0}>
+      <h4>{tab.title}</h4><p>{tab.body}</p>{tab.code && <pre><code>{tab.code}</code></pre>}
+    </section>
+  ))}
+</div>
+<script>
+  document.querySelectorAll('[data-tabs]').forEach((root) => {
+    const buttons = [...root.querySelectorAll('[role="tab"]')];
+    const panels = [...root.querySelectorAll('[role="tabpanel"]')];
+    buttons.forEach((button, index) => button.addEventListener('click', () => {
+      buttons.forEach((item, i) => item.setAttribute('aria-selected', i === index ? 'true' : 'false'));
+      panels.forEach((panel, i) => panel.toggleAttribute('hidden', i !== index));
+    }));
+  });
+</script>

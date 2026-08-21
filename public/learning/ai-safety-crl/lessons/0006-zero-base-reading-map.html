@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>0006｜零基础必读地图</title>
+  <link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script>
+</head>
+<body>
+<header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#must">必读</a><a href="#skip">首遍跳过</a><a href="../reference/0002-required-reading-map.html">打印版</a></nav></div></header>
+<main class="lesson-main">
+  <section class="lesson-head"><span class="eyebrow">Lesson 0006 · 从这里重新开始</span><h1>1276 页，不等于要读 1276 页</h1><p>先搭一条能走通的主线，再按研究方向加桥梁。这里的“必读”是为了理解 AI safety × causal representation learning，不是为了参加全书闭卷考试。</p><div class="lesson-meta"><span class="pill">20 min</span><span class="pill">完全零基础</span><span class="pill">阅读导航</span></div></section>
+
+  <div class="objective"><strong>学完你能：</strong>知道每章为什么读、读到什么程度、哪些证明可以放心留到第二遍。</div>
+
+  <h2 id="must">第一圈：主线必读</h2>
+  <p>页码均指 PDF 阅读器显示的页码，不是书内印刷页码。第一次阅读以“能用自己的例子解释”为达标线。</p>
+  <table>
+    <thead><tr><th>章节</th><th>第一次读什么</th><th>你要带走的判断</th><th>PDF 页</th></tr></thead>
+    <tbody>
+      <tr><td><span class="reading-tag">必读</span>第 1 章</td><td>1.1–1.3.4；略读章节导览</td><td>预测、干预、反事实是三种不同问题</td><td>21–39</td></tr>
+      <tr><td><span class="reading-tag">必读</span>第 2 章</td><td>2.1、2.2、2.4；2.3 只抓定理含义</td><td>SCM 怎样生成数据，图怎样表达假设</td><td>55–99</td></tr>
+      <tr><td><span class="reading-tag">必读</span>第 4 章</td><td>4.1–4.3 与 4.5；4.4 只看输入输出</td><td>一个因果问题是否能由现有数据回答</td><td>139–216</td></tr>
+      <tr><td><span class="reading-tag">必读</span>第 10–11 章</td><td>第 10 章全部；11.1–11.4 选例子读</td><td>环境变了，哪些机制还能搬过去</td><td>703–802</td></tr>
+      <tr><td><span class="reading-tag">必读</span>第 16 章</td><td>16.1–16.2 的概念与流程</td><td>何时只能发现一组等价的图，而不是唯一真图</td><td>989–1018</td></tr>
+      <tr><td><span class="reading-tag">必读</span>第 17 章</td><td>17.1–17.4；证明后读</td><td>多个域怎样提供“哪里变、哪里不变”的线索</td><td>1029–1063</td></tr>
+      <tr><td><span class="reading-tag">必读</span>第 18 章</td><td>18.1–18.3、18.5–18.6；18.4 后读</td><td>像素背后的因果变量为何通常不可唯一恢复</td><td>1071–1123</td></tr>
+    </tbody>
+  </table>
+
+  <div class="example"><strong>为什么不是从第 18 章 CRL 直接开读？</strong><br>看到公式 <code>X=f(V)</code> 很容易以为：神经网络把图像压成几个数，就找到了真正的“物体、颜色、位置”。但如果不知道第 2 章的生成机制、第 4 章的可识别性、第 11 章的环境变化，你无法判断这些数是真因果变量，还是只在当前数据集上好用的暗号。因此路线是：语言 → 模型 → 能否识别 → 跨环境 → 学结构 → 学表征。</div>
+
+  <h2>第二圈：AI safety 桥梁</h2>
+  <table>
+    <thead><tr><th>章节</th><th>为何读</th><th>对应专题</th></tr></thead>
+    <tbody>
+      <tr><td><span class="reading-tag bridge">桥梁</span>第 6 章选读</td><td>解释和公平不是“找一个相关特征”那么简单</td><td>安全解释、偏差审计</td></tr>
+      <tr><td><span class="reading-tag bridge">桥梁</span>第 7 章 7.1–7.2</td><td>把因果知识变成行动与效用</td><td>风险决策</td></tr>
+      <tr><td><span class="reading-tag bridge">桥梁</span>第 9 章 9.6</td><td>多个行动者会策略性反应</td><td>Davin Choo、资源分配、博弈</td></tr>
+      <tr><td><span class="reading-tag bridge">桥梁</span>第 13–15 章选读</td><td>生成模型、世界模型和因果抽象</td><td>Yujia Zheng、概念与表示</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="skip">第一遍可以跳过什么</h2>
+  <ul>
+    <li><strong>第 4.4 节的完整识别算法：</strong>先知道它把“图 + 查询”变成公式或失败证明。</li>
+    <li><strong>第 5 章的大部分反事实推导：</strong>先会三步法“溯因—行动—预测”，需要解释个体案例时再深读。</li>
+    <li><strong>第 16 章 MAG/PAG 的全部边型：</strong>先掌握链、叉、碰撞点与 Markov 等价类。</li>
+    <li><strong>第 17–18 章的密度变换和定理证明：</strong>先说清假设、观测信号、可识别到什么等价范围。</li>
+  </ul>
+
+  <div class="misconception"><strong>跳过不是删掉。</strong>第一遍的任务是建立挂钩：以后看到 <em>do-calculus、PAG、Jacobian、ICA</em>，知道它属于哪道问题、为什么出现。等你真要复现算法或证明时，再把它接回主线。</div>
+
+  <h2>一条现实的 4 周路线</h2>
+  <ol class="step-list">
+    <li><strong>第 1 周：语言和小图。</strong>本课程 0007–0010；原书第 1、2 章。目标是能画出 3 个变量的链、叉、碰撞点。</li>
+    <li><strong>第 2 周：干预与迁移。</strong>本课程 0011–0012；原书第 4、10、11 章。目标是分清“多收数据”和“换一种数据”。</li>
+    <li><strong>第 3 周：从数据发现结构。</strong>本课程 0013–0014；原书第 16、17 章。目标是说清单域不确定性和多域提供的新信息。</li>
+    <li><strong>第 4 周：表征与安全决策。</strong>本课程 0015–0016；原书第 18 章和安全桥梁。目标是写出一个带假设、干预、失败标准的 mini-proposal。</li>
+  </ol>
+
+  <div class="source-note">本地图根据 <em>Causal Artificial Intelligence</em> Draft 0.27 编排。它仍是草稿：例如 Example 1.3 是占位文本，第 17 章有 “Figure ??”。这些不是你没看懂；本课程会明确绕开草稿缺口，并补上可运行的例子。</div>
+
+  <div class="quiz" data-answer="c" data-correct="正确。先补生成机制、图和可识别性，CRL 才不会变成只记术语。" data-wrong="再看一次主线：第 18 章依赖第 2、4、11、16–17 章提供的语言和判断工具。">
+    <h3>检索题</h3><p>零基础读者想理解“为何自编码器学到的潜变量不一定是真因果因素”，最合理的顺序是：</p>
+    <label><input type="radio" name="q6" value="a"> 直接背第 18 章定理，再补概率</label>
+    <label><input type="radio" name="q6" value="b"> 先读全部反事实证明，再看图</label>
+    <label><input type="radio" name="q6" value="c"> 先学 SCM、识别和环境变化，再读 CRL</label>
+    <button type="button">检查答案</button><p class="feedback" aria-live="polite"></p>
+  </div>
+  <div class="ask">卡住时可以直接问老师：“用一个早餐店例子解释第 4 章识别”，或把你不懂的公式贴出来。无需先学会正确术语。</div>
+  <nav class="lesson-nav"><a href="../index.html">← 回到课程首页</a><a href="0007-probability-language-from-zero.html">下一课：概率语言从零开始 →</a></nav>
+</main>
+</body></html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>单元 05：张量、GEMM 与性能账本</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">单元 05 · 4–5 小时</div><h1>张量、GEMM 与性能账本</h1><p class="lede">目标：看到公式时立即回答 shape 是否正确、计算和存储代价多大、内存布局是否友好。</p></header>
+<section class="mastery"><h2>过关标准</h2><ul><li>能推导广播、矩阵乘与 batched matmul 的输出 shape。</li><li>能从 shape 和 stride 判断连续性与线性偏移。</li><li>能解释 GEMM tiling 为什么数学等价、工程上为何更快。</li><li>能估算参数量、激活量、FLOPs、最小访存量和算术强度。</li><li>能解释秩、SVD 与 LoRA 的压缩直觉。</li></ul></section>
+
+<section><h2>1. Tensor 不只是多维数组</h2><div class="formula">Tensor = data pointer + shape + stride + dtype + device + layout</div>
+<p>shape 描述逻辑索引空间；stride 描述每个维度前进 1 步时，底层地址跨过多少元素。两者相同的 Tensor 可能拥有不同布局。</p>
+<pre><code># shape = (2, 3), row-major stride = (3, 1)
+offset(i, j) = i * 3 + j
+
+# 转置视图 shape = (3, 2), stride = (1, 3)
+# 通常不复制，但最后一维不再连续</code></pre>
+<p><code>view</code> 要求现有布局能直接解释成新 shape；<code>reshape</code> 必要时可以复制；<code>permute</code> 通常只改元数据；<code>contiguous</code> 会物化连续副本。</p></section>
+
+<section><h2>2. 广播：从尾部维度对齐</h2><p>从最后一维向前比较，每对维度必须相等、至少一个为 1，或某一方没有该维度。</p>
+<div class="formula">(B, S, H) + (H,) → (B, S, H)<br>(B, 1, H) + (1, S, 1) → (B, S, H)</div>
+<p>广播通常是逻辑扩展，不先复制完整数据；但错误 shape 也可能“恰好能广播”，产生不报错的语义 Bug。</p></section>
+
+<section><h2>3. 矩阵乘法：归约内维</h2>
+<div class="formula">A ∈ R^(M×K), B ∈ R^(K×N)<br>C = A @ B ∈ R^(M×N)<br>C[i,j] = Σₖ A[i,k]B[k,j]<br>FLOPs ≈ 2MKN</div>
+<p>记法：中间的 K 被归约，外侧 M、N 保留。多头 Attention 中：</p>
+<div class="formula">Q: (B, Nh, Sq, Dh)<br>Kᵀ: (B, Nh, Dh, Sk)<br>QKᵀ: (B, Nh, Sq, Sk)</div>
+<p>前面的维度是批处理维，最后两维做矩阵乘。</p></section>
+
+<section><h2>4. Tiling：少搬数据，不少算结果</h2><p>把 A、B 分成小块，输出块仍满足：</p>
+<div class="formula">Cᵢⱼ = Σₖ Aᵢₖ Bₖⱼ</div>
+<p>每次将 A 和 B 的 tile 搬到更快的局部存储，复用后再加载下一块。FLOPs 仍近似 2MKN，但对慢速 HBM 的访问可显著减少。Tiling 的本质是改变数据移动与复用，不改变数学。</p>
+<ol><li>选择输出 tile。</li><li>沿 K 维分段加载 A/B tile。</li><li>在寄存器或共享内存中反复使用。</li><li>累加局部结果并最终写回。</li></ol></section>
+
+<section><h2>5. 性能账本</h2>
+<table><thead><tr><th>账本</th><th>计算方法</th><th>用途</th></tr></thead><tbody>
+<tr><td>参数量</td><td>所有权重元素数之和</td><td>模型存储与优化器状态</td></tr>
+<tr><td>激活量</td><td>保存的中间 Tensor 元素数</td><td>训练峰值显存</td></tr>
+<tr><td>FLOPs</td><td>乘法和加法通常各计一次</td><td>计算工作量</td></tr>
+<tr><td>Bytes</td><td>读取 + 写入元素 × dtype 字节</td><td>数据移动下界</td></tr>
+<tr><td>算术强度</td><td>FLOPs / Bytes</td><td>判断带宽或算力瓶颈</td></tr>
+</tbody></table>
+<p>Roofline 上限可粗略写为：</p><div class="formula">可达性能 ≤ min(峰值算力, 算术强度 × 峰值带宽)</div>
+<p>如果算术强度低，提高更多计算单元通常没用；应优先减少读写、增加复用或融合中间结果。</p></section>
+
+<section><h2>6. 一个 GEMM 算例</h2><p>设 M=N=K=4096，BF16 输入和输出，按最理想情况各读取 A/B 一次、写 C 一次：</p>
+<ul><li>FLOPs ≈ <code>2 × 4096³ ≈ 137.4 GFLOPs</code>。</li><li>最低数据量 ≈ <code>(A+B+C) × 2 bytes ≈ 96 MiB</code>。</li><li>理想算术强度约 <code>1430 FLOPs/byte</code>。</li></ul>
+<p>真实实现还会受 cache、tile、累加 dtype、读写 C、对齐和边界块影响。账本是下界与方向，不是对实际性能的保证。</p></section>
+
+<section><h2>7. 秩、SVD 与 LoRA</h2><p>秩可以理解为独立方向的数量。若大矩阵可由低秩因子近似：</p>
+<div class="formula">W ≈ U V, U∈R^(M×r), V∈R^(r×N), r≪min(M,N)<br>参数量：MN → r(M+N)</div>
+<p>SVD 给出按奇异值排序的方向；LoRA 冻结原权重，只训练低秩更新 <code>ΔW = (α/r)BA</code>。工程问题仍然是 shape、参数量、额外 GEMM 与是否合并权重。</p></section>
+
+<section class="lab"><h2>实验：Tensor 账本</h2><ol><li>运行 <a href="../labs/tensor_math_lab.py">tensor_math_lab.py</a>。</li><li>手算每个 shape、stride、FLOPs 和字节数，再与程序输出核对。</li><li>比较朴素矩阵乘与分块矩阵乘的结果。</li><li>对给定算子判断 compute-bound 或 memory-bound，并说明假设。</li></ol></section>
+
+<section><h2>即时测验</h2>
+<div class="quiz" data-quiz data-why="最后两维相乘，Dh 被归约，Sq 和 Sk 保留。" data-hint="中间相同的维度被归约。"><h3>(B,H,S,D) @ (B,H,D,T) 输出？</h3><div class="answers"><button data-correct="true">形状为 B H S T</button><button>形状为 B S D T</button><button>形状为 H S D T</button></div><p class="feedback" aria-live="polite"></p></div>
+<div class="quiz" data-quiz data-why="低算术强度表示每搬一个字节只做少量计算，带宽更容易成为上限。" data-hint="Roofline 比较算力上限和带宽乘算术强度。"><h3>低算术强度通常意味着？</h3><div class="answers"><button>更可能受算力限制</button><button data-correct="true">更可能受带宽限制</button><button>一定受网络所限制</button></div><p class="feedback" aria-live="polite"></p></div>
+</section>
+<section class="success"><h2>过关任务</h2><p>为 <code>X(B,S,H) @ W(H,4H)</code> 写一页账本：输出 shape、FLOPs、输入/权重/输出最低字节数、BF16 与 FP32 的差异，以及两个可能导致额外复制的布局操作。</p></section>
+<section><h2>主要来源</h2><p><a href="https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%B8%80-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/%E7%AC%AC2%E7%AB%A0-%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">AIInfraGuide 数学基础</a>；<a href="https://docs.nvidia.com/cuda/cuda-c-best-practices-guide/">CUDA Best Practices Guide</a>。</p></section>
+<div class="complete-action"><button data-complete="l05" aria-pressed="false">标记为已通过</button></div>
+<nav class="lesson-nav"><a href="0004-linux-environments.html">← 单元 04</a><a href="../index.html">课程首页</a><a href="0006-probability-autodiff-numerics.html">单元 06 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

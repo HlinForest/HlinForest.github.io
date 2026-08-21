@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>0009｜第 2 章：SCM 从零开始</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script></head>
+<body><header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#parts">四零件</a><a href="#dice">骰子</a><a href="#medicine">医疗</a></nav></div></header>
+<main class="lesson-main">
+  <section class="lesson-head"><span class="eyebrow">Lesson 0009 · Book Chapter 2A</span><h1>SCM：一台会生成世界的机器</h1><p>结构因果模型不是一张相关性图。它写清哪些量由哪些量生成、外部噪声从哪里进来，以及干预时要替换哪条规则。</p><div class="lesson-meta"><span class="pill">25 min</span><span class="pill">原书 PDF 55–72</span><span class="pill">可手算</span></div></section>
+  <div class="objective"><strong>学完你能：</strong>读懂 SCM 的四个零件，用两个方程生成一条样本，并把干预写成“替换方程”。</div>
+
+  <h2 id="parts">SCM 的四个零件</h2>
+  <div class="formula">M = ⟨U, V, F, P(U)⟩
+
+U：外生变量——模型外带进来的背景/噪声
+V：内生变量——模型要解释、由方程生成的量
+F：结构方程——每个 V 是怎样由父变量和 U 算出来的
+P(U)：背景在人群中如何分布</div>
+  <p>不要先背字母。把 SCM 想成游戏关卡生成器：<code>U</code> 是随机种子，<code>F</code> 是规则，<code>V</code> 是生成出的地图、敌人和得分；<code>P(U)</code> 描述哪些随机种子更常出现。</p>
+
+  <h2 id="dice">原书骰子例子：从噪声到结果</h2>
+  <p>设 <code>U₁,U₂</code> 是两枚独立骰子的点数。定义：</p>
+  <div class="formula">X := U₁
+Y := X + U₂</div>
+  <ol class="step-list">
+    <li>世界先抽到 <code>U₁=2, U₂=5</code>。</li>
+    <li>第一条规则给出 <code>X=2</code>。</li>
+    <li>第二条规则读取 <code>X</code> 与 <code>U₂</code>，给出 <code>Y=7</code>。</li>
+  </ol>
+  <p>图是 <span class="tiny-graph">X → Y</span>，因为 Y 的规则读取 X。箭头不是“它们时间上挨着”，而是“改写 X 的生成值可能沿该规则改变 Y”。</p>
+
+  <h3>干预不是条件筛选，而是换零件</h3>
+  <p>做 <code>do(X=6)</code>，把原来的 <code>X:=U₁</code> 整条规则替换为常数：</p>
+  <div class="formula">do(X=6) 后：
+X := 6           ← 不再听 U₁
+Y := X + U₂      ← 其余规则保留</div>
+  <p>如果仍取 <code>U₂=5</code>，那么 Y 变为 11。这个“切断旧父节点、保留其余机制”的动作叫手术式干预。</p>
+
+  <h2 id="medicine">医疗例子：为什么要保留背景变量</h2>
+  <p>令 <code>S</code> 表示病情严重度，<code>T</code> 表示是否服药，<code>R</code> 表示是否康复：</p>
+  <div class="formula">S := U_S
+T := 1[S + U_T > 阈值]       医生更常给重症者用药
+R := 1[药物收益 - 病情伤害 + U_R > 0]</div>
+  <p><code>1[条件]</code> 表示：条件为真时取 1，否则取 0。这里无需计算；重要的是看见 <code>S</code> 同时进入 T 和 R 的规则。</p>
+  <div class="pipeline"><div>严重度 S</div><div>影响用药 T</div><div>观测人群分组</div><div>影响康复 R</div><div>产生混杂</div></div>
+  <p>图上是 <span class="tiny-graph">T ← S → R</span>，同时可能有 <span class="tiny-graph">T → R</span>。只比较服药组与未服药组，会把“药的作用”和“两组原本病情不同”混在一起。</p>
+
+  <div class="example"><strong>AI 版 SCM：提示风格与拒答</strong><br><code>D</code> 是任务真实危险度，<code>W</code> 是警示词，<code>R</code> 是模型拒答。部署数据里危险任务更常含警示词，所以 <span class="tiny-graph">W ← D → R</span>；模型也可能真的把警示词当捷径，因此还有 <span class="tiny-graph">W → R</span>。想测后一个箭头，就要在保持危险度不变时干预措辞。</div>
+
+  <h2>概率因果层级（PCH）放在哪里</h2>
+  <p>一个 SCM 同时支持三类查询：按原规则采样得到观测分布；替换某条方程得到干预分布；锁定某个案的背景 <code>U</code> 后替换方程，得到反事实。因此 SCM 像底层生成器，三层问题是对它的三种调用方式。</p>
+
+  <div class="misconception"><strong>结构方程不必是线性的，也不等于真实世界全部细节。</strong>它可以是逻辑规则、神经网络或物理方程；但结论只在模型边界和假设内成立。漏掉共同原因，图再漂亮也会给出错误答案。</div>
+
+  <div class="quiz" data-answer="a" data-correct="正确。干预把 X 的旧方程替换为常数，Y 的方程继续使用新的 X。" data-wrong="do 操作不是挑选 X=6 的旧记录；它切断 X 的旧生成规则。">
+    <h3>手算题</h3><p>模型 <code>X:=U₁, Y:=2X+U₂</code>。若 <code>U₂=3</code>，执行 <code>do(X=4)</code> 后 Y 是多少？</p>
+    <label><input type="radio" name="q9" value="a"> 11，因为 Y=2×4+3</label>
+    <label><input type="radio" name="q9" value="b"> 7，因为只需把 4 和 3 相加</label>
+    <label><input type="radio" name="q9" value="c"> 无法计算，因为 U₁ 没有给出</label>
+    <button type="button">检查答案</button><p class="feedback" aria-live="polite"></p>
+  </div>
+  <div class="source-note">对应原书第 2.1–2.2 节（PDF 56–65），保留骰子与医疗 SCM 的核心教学功能；符号被压缩为可手算版本。</div>
+  <div class="ask">如果四元组仍抽象，请给老师一个你熟悉的系统（考试、游戏或聊天机器人），老师会陪你填出 U / V / F / P(U)。</div>
+  <nav class="lesson-nav"><a href="0008-ch01-causal-intelligence.html">← 上一课：三层问题</a><a href="0010-ch02-causal-graphs-d-separation.html">下一课：三种小图 →</a></nav>
+</main></body></html>

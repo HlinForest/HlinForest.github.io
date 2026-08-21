@@ -1,0 +1,20 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>0022｜第10章完整讲义</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/quiz.js"></script></head><body>
+<header class="topbar"><div class="shell"><a class="brand" href="../index.html">因果安全学习室</a><nav class="navlinks"><a href="#defs">定义</a><a href="#examples">例子</a><a href="0023-solutions-ch10.html">4题答案</a></nav></div></header>
+<main class="lesson-main"><section class="lesson-head"><span class="eyebrow">Full chapter notes · Chapter 10</span><h1>选择图：把“环境不同”画到机制上</h1><p>第 10 章很短，却是第 11、17、18 章的共同语言。本页保留两项正式定义、构图规则与四道习题入口。</p><div class="lesson-meta"><span class="pill">PDF 703–710</span><span class="pill">2 个定义</span><span class="pill">4 道习题</span></div></section>
+<div class="objective"><strong>本章任务：</strong>给两个域的 SCM，不只说分布不同，而是找出哪些结构函数或外生分布不同，并用选择节点标出来。</div>
+
+<h2 id="defs">1. 两个正式定义</h2>
+<div class="definition-box"><strong>Definition 10.1.1 — Domain discrepancy set</strong>给域 <code>πᵃ,πᵇ</code> 及 SCM <code>Mᵃ,Mᵇ</code>。差异集合 <code>Δ^{a,b}</code> 包含所有内生变量 Vᵢ，只要其结构函数 <code>fᵢ</code> 或对应外生机制/分布在两域间不同。它定位“哪个节点的生成模块变了”，不是简单列出边际分布不同的变量；上游变化会让下游分布变，但下游节点不一定属于 Δ。</div>
+<div class="definition-box"><strong>Definition 10.1.2 — Selection diagram</strong>以一个域的因果图 G 为骨架；对每个 <code>Vᵢ∈Δ</code> 增加选择节点 <code>Sᵢ→Vᵢ</code>。选择节点表示域索引可能改变 Vᵢ 的机制。普通有向/双向边仍表示域内因果结构；S 箭头不表示可操作的处理。</div>
+
+<h2>2. 构图算法</h2><ol class="step-list"><li>先列两个域共享的变量与因果边；若结构本身不同，把差异归到受影响节点的机制。</li><li>逐节点比较结构函数：父变量相同但函数参数不同，也属于 Δ。</li><li>比较每个节点相关外生分布；背景噪声改变同样属于该节点机制差异。</li><li>为每个差异节点增加 S→V；不要因为 V 的边际分布变化就机械加 S。</li><li>用 d-separation 检查 <code>S ⟂ Y | Z</code>；若成立，Y 的条件分布在给定 Z 后可直接运输。</li></ol>
+
+<h2 id="examples">3. 丰富例子</h2>
+<div class="example"><strong>仓库重量</strong><br>源仓库与目标仓库的货物重量 X 分布不同，过载规律 <code>Y=f_Y(X,U_Y)</code> 相同。只画 <code>S_X→X→Y</code>。虽然 Y 的边际率随 X 变化，Y 不进 Δ；给定 X 后 <code>S_X⟂Y|X</code>。</div>
+<div class="example"><strong>医院护理</strong><br>若目标医院护理流程直接改变同一病情下康复概率，则 <code>S_Y→Y</code>。年龄重加权无法修复 Y 机制差异；需要目标域标签、实验或其他可运输分解。</div>
+<div class="example"><strong>LLM 版本</strong><br>基础模型到安全微调模型可能同时改变内部特征 B 和输出 Y 的机制。版本标签不是 <code>do(B)</code>；应画 <code>S_B→B</code>、<code>S_Y→Y</code> 等候选，再用日志和数据排除。</div>
+<div class="misconception"><strong>选择节点不是域分类器特征。</strong>让表示无法预测 S，并不能保证目标机制稳定；它可能把有用的因果信息一起抹去。</div>
+
+<h2>4. 做题入口</h2><a class="button" href="0023-solutions-ch10.html">打开第10章4题答案册</a>
+<div class="quiz" data-answer="b" data-correct="正确。S 指向机制真正变化的节点；下游边际变化不自动获得 S。" data-wrong="区分机制变化与其传播结果：选择节点标前者。"><h3>章末检索</h3><p>X 的生成变了，并经 X→Y 使 Y 边际也变，但 Y 机制稳定。应画：</p><label><input type="radio" name="q22" value="a"> 同时画 S→X 与 S→Y</label><label><input type="radio" name="q22" value="b"> 只需要画 S→X</label><label><input type="radio" name="q22" value="c"> 完全不画选择节点</label><button type="button">检查答案</button><p class="feedback"></p></div>
+<div class="source-note">主源：原书第 10 章（PDF 703–710）。</div><div class="ask">给老师两个环境的具体差别，老师会帮你区分“哪个机制变”与“哪个变量的分布跟着变”。</div><nav class="lesson-nav"><a href="0021-solutions-ch04.html">← 第4章答案册</a><a href="0023-solutions-ch10.html">第10章答案册 →</a></nav></main></body></html>

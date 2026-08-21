@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>11 · ARENA Fundamentals 导学与诊断</title>
+  <link rel="stylesheet" href="../assets/course.css">
+  <script defer src="../assets/course.js"></script>
+</head>
+<body>
+<header class="hero">
+  <div><div class="eyebrow">ARENA Fundamentals · Lesson 01</div><h1>先看系统，<br>再学零件</h1><p class="lede">Chapter 0 的六节共同组成一个训练系统。今天不追求背概念，只建立因果链并定位你该从哪里开始。</p></div>
+  <aside class="meta-card"><strong>胜利条件</strong>能解释六节为何按这个顺序出现，并完成起点诊断。<strong>预计时间</strong>25–35 分钟<strong>官方主线</strong><a href="https://learn.arena.education/chapter0_fundamentals/">ARENA Chapter 0</a><strong>配套</strong><a href="../reference/0006-arena-fundamentals-map.html">全景地图</a></aside>
+</header>
+<nav class="course-nav"><div><a href="#retrieve">先答</a><a href="#system">系统</a><a href="#chapters">六节</a><a href="#diagnostic">诊断</a><a href="#quiz">终检</a><a href="#route">分流</a></div></nav>
+<main>
+  <section id="retrieve"><h2>开场检索：先别查资料</h2><p>用你现在的理解，各写一句话：</p><ol><li>模型训练时，数据怎样最终改变一个 weight？</li><li>为什么把很多 Linear 层叠起来仍需要 activation？</li><li>训练 loss 下降，能否证明模型已经学会泛化？</li></ol><details><summary>写完后再看判断标准</summary><p>合格答案应出现这条链：数据 → forward → logits/prediction → loss → backward 得到 gradient → optimizer 更新 parameter；多层纯线性变换仍可合并为一个线性变换；训练集 loss 只说明对已见数据的拟合，还需要独立验证、正确模式与可复现实验证据。</p></details></section>
+
+  <section id="system"><h2>整章其实在搭一台机器</h2>
+    <div class="flow"><div><b>表示数据</b><br>Tensor 与轴</div><div class="arrow">→</div><div><b>组织计算</b><br>Module / CNN</div><div class="arrow">→</div><div><b>定义误差</b><br>Loss</div><div class="arrow">→</div><div><b>传回责任</b><br>Backprop</div><div class="arrow">→</div><div><b>改变参数</b><br>Optimizer</div></div>
+    <p>训练的最小闭环并不神秘：模型用参数做前向计算，损失把预测与目标压成一个标量，自动微分算出每个参数对损失的局部影响，优化器再依据这些梯度更新参数。ARENA 的安排让你从会调用这台机器，逐渐走到能拆开并重做它。</p>
+    <div class="callout good"><strong>贯穿课程的五个检查词：</strong>shape、state、gradient、mode、evidence。以后遇到 bug，先按这五类定位，而不是立刻换模型或乱调学习率。</div>
+  </section>
+
+  <section id="chapters"><h2>0.0–0.5 各自解决什么</h2>
+    <table><thead><tr><th>章节</th><th>核心问题</th><th>必须留下的能力</th></tr></thead><tbody>
+      <tr><td>0.0 Prerequisites</td><td>怎样准确表达批量数值计算？</td><td>用轴名推 shape；会 broadcasting、indexing、einops/einsum 与稳定 softmax。</td></tr>
+      <tr><td>0.1 Ray Tracing</td><td>怎样消除 Python 循环并处理全部组合？</td><td>把几何条件写成 batched linear algebra，并处理奇异与边界情形。</td></tr>
+      <tr><td>0.2 CNNs &amp; ResNets</td><td>怎样组织参数并第一次可靠训练视觉模型？</td><td>Module、卷积、BatchNorm、残差、train/eval、迁移学习。</td></tr>
+      <tr><td>0.3 Optimization</td><td>有了梯度后怎样稳定更新、比较并扩展实验？</td><td>SGD/RMSprop/AdamW 的 state，日志、超参搜索与分布式概念。</td></tr>
+      <tr><td>0.4 Backpropagation</td><td><code>loss.backward()</code> 内部究竟做什么？</td><td>计算图、局部导数、逆拓扑遍历、梯度累加与 unbroadcast。</td></tr>
+      <tr><td>0.5 VAEs &amp; GANs</td><td>怎样让模型不只分类，还能生成？</td><td>潜变量、重参数化、ELBO、对抗目标、双优化器和不稳定诊断。</td></tr>
+    </tbody></table>
+    <p>0.1 看似离深度学习最远，却专门训练最常见的底层瓶颈：批量维、广播、数值边界和调试。0.4 放在优化之后也有意为之：先观察框架怎样用 gradient，再亲手实现 gradient 怎样被算出来。</p>
+  </section>
+
+  <section id="diagnostic"><h2>起点诊断：只标“独立能做”</h2><p>不要按“看过/听懂”打勾；只有不查模板也能解释或实现，才算通过。</p>
+    <div class="two-col">
+      <div class="card"><b>A · 张量语言</b><p>能预测 <code>[B,T,D] @ [D,H]</code> 的输出；能解释 broadcast；能用 einsum 写 batch dot product。</p></div>
+      <div class="card"><b>B · 训练闭环</b><p>能从空文件写 Dataset/DataLoader、Module、loss、optimizer、train/eval 与 checkpoint。</p></div>
+      <div class="card"><b>C · 梯度机制</b><p>能画计算图，用 chain rule 求导，并解释共享变量的梯度为何相加。</p></div>
+      <div class="card"><b>D · 实验证据</b><p>能区分 train/validation/test，固定随机性，并由曲线判断欠拟合、过拟合或发散。</p></div>
+    </div>
+    <div class="callout warn"><strong>按你的已知背景，默认从 B 的训练闭环开始。</strong>你会 Python、能做理论推导，但还没有独立训练经验。最近发展区不是先啃完整数学书，而是先让一条训练链可靠跑通，再用 0.0 与 0.4 把 shape 和 gradient 理解补实。</div>
+  </section>
+
+  <section id="quiz"><h2>五分钟终检</h2><div class="quiz"><h3>六节是否已经连起来？</h3>
+    <fieldset data-answer="批量张量与数值边界"><legend>1. 光线追踪最主要迁移到模型训练的能力是什么？</legend><label><input type="radio" name="q1" value="批量张量与数值边界"> 批量张量与数值边界</label><label><input type="radio" name="q1" value="三维场景艺术设计"> 三维场景艺术设计</label><label><input type="radio" name="q1" value="图片标签人工整理"> 图片标签人工整理</label></fieldset>
+    <fieldset data-answer="参数更新的内部状态"><legend>2. Adam 相比裸 SGD 额外维护的关键是什么？</legend><label><input type="radio" name="q2" value="参数更新的内部状态"> 参数更新的内部状态</label><label><input type="radio" name="q2" value="模型输出的类别名称"> 模型输出的类别名称</label><label><input type="radio" name="q2" value="数据加载的文件后缀"> 数据加载的文件后缀</label></fieldset>
+    <fieldset data-answer="沿广播轴求和还原"><legend>3. broadcasting 的反向核心动作是什么？</legend><label><input type="radio" name="q3" value="沿广播轴求和还原"> 沿广播轴求和还原</label><label><input type="radio" name="q3" value="沿全部轴随机重排"> 沿全部轴随机重排</label><label><input type="radio" name="q3" value="沿类别轴取得最大"> 沿类别轴取得最大</label></fieldset>
+    <fieldset data-answer="分布正则与对抗信号"><legend>4. VAE 与 GAN 的生成约束分别主要来自哪里？</legend><label><input type="radio" name="q4" value="分布正则与对抗信号"> 分布正则与对抗信号</label><label><input type="radio" name="q4" value="相同的分类准确率"> 相同的分类准确率</label><label><input type="radio" name="q4" value="固定的几何交点"> 固定的几何交点</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback"></p><details><summary>答案与理由</summary><p>1：光追是 batched tensor 训练场。2：moment estimates 等 optimizer state。3：广播复制了一条影响路径，反向要沿这些轴累加。4：VAE 用 reconstruction + KL，GAN 用 discriminator 提供的对抗训练信号。</p></details></div>
+  </section>
+
+  <section id="route" class="checkpoint"><h2>你的下一步</h2><p><b>先做一次真实训练，再正式进入 0.0。</b>如果不能闭卷写训练循环，按顺序完成 <a href="0004-module-and-autograd.html">Module 与 Autograd</a>、<a href="0005-optimization-five-steps.html">优化五步</a>、<a href="0006-training-and-evaluation-loop.html">训练与验证循环</a>；如果三节诊断都能独立完成，则直接按 <a href="../ARENA-STUDY-PLAN.md">ARENA 学习计划</a>进入 0.0 tensor manipulation。</p><label><input type="checkbox" data-complete> 我已完成开场检索和四项诊断，并能用自己的话说出六节的依赖关系。</label></section>
+  <footer class="lesson-footer"><a href="../index.html">← 课程首页</a><a href="../reference/0006-arena-fundamentals-map.html">继续：全章地图 →</a></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>08 · 二分类：Logits 到标签</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/course.js"></script></head>
+<body><header class="hero"><div><div class="eyebrow">PyTorch Foundations · Lesson 08</div><h1>Logit 不是概率</h1><p class="lede">二分类最重要的不是网络层数，而是把 raw logit、概率、标签和 loss 的接口严格分开。这个习惯会直接迁移到语言模型的词表 logits。</p></div><aside class="meta-card"><strong>胜利条件</strong>写出二分类四件套的 shape/dtype 契约，并正确选择阈值。<strong>预计时间</strong>45–60 分钟<strong>主资料</strong><a href="https://www.learnpytorch.io/02_pytorch_classification/">LearnPyTorch 02</a></aside></header>
+<nav class="course-nav"><div><a href="#contract">契约</a><a href="#logits">Logits</a><a href="#loss">稳定损失</a><a href="#loop">循环</a><a href="#metrics">指标</a><a href="#quiz">检查</a></div></nav>
+<main>
+  <section><h2>开场检索</h2><p>模型对 4 个样本输出 <code>[-2.0, 0.0, 1.2, 3.0]</code>。哪些是概率？阈值 0.5 时标签是什么？</p><details><summary>答案</summary><p>这些都是 logits，不是概率。Sigmoid 后约为 <code>[0.119,0.5,0.769,0.953]</code>；若规则是概率 ≥ 0.5 判 1，则标签为 <code>[0,1,1,1]</code>。等价地，logit ≥ 0 判 1。</p></details></section>
+
+  <section id="contract"><h2>先写二分类契约</h2><div class="contract"><div class="contract-head">Binary classification contract</div><div class="contract-body"><table><thead><tr><th>对象</th><th>shape</th><th>dtype/范围</th></tr></thead><tbody><tr><td>输入 X</td><td><code>[B,F]</code></td><td>float</td></tr><tr><td>raw logits</td><td><code>[B]</code></td><td>任意实数 float</td></tr><tr><td>target y</td><td><code>[B]</code></td><td>float，0 或 1</td></tr><tr><td>probability</td><td><code>[B]</code></td><td>float，[0,1]</td></tr><tr><td>predicted label</td><td><code>[B]</code></td><td>0 或 1</td></tr></tbody></table></div></div>
+  <pre><code>class BinaryMLP(nn.Module):
+    def __init__(self, in_features):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, 16),
+            nn.ReLU(),
+            nn.Linear(16, 1),
+        )
+
+    def forward(self, x):
+        return self.net(x).squeeze(-1)  # [B,1] -> [B]</code></pre>
+  <div class="callout warn"><strong>只 squeeze 最后一轴：</strong>若用裸 <code>squeeze()</code> 且最后一个 batch 只有一个样本，输出可能从 <code>[1,1]</code> 变成标量 <code>[]</code>，破坏 batch 契约。</div></section>
+
+  <section id="logits"><h2>三种表示，三个用途</h2><div class="flow"><div><b>logit z</b><br>(−∞,+∞)</div><div class="arrow">→ sigmoid</div><div><b>概率 p</b><br>[0,1]</div><div class="arrow">→ threshold</div><div><b>标签 ŷ</b><br>{0,1}</div></div>
+  <div class="equation">σ(z) = 1 / (1 + e<sup>−z</sup>)</div>
+  <pre><code>logits = model(X)                    # 给 loss
+probs = torch.sigmoid(logits)        # 给解释/校准/阈值
+preds = (probs &gt;= 0.5).float()       # 给准确率/混淆矩阵
+
+# 等价分类边界（阈值恰为 0.5 时）
+preds_fast = (logits &gt;= 0).float()</code></pre>
+  <p>阈值不一定永远是 0.5。类别不平衡或误判成本不同，应在验证集上根据 precision/recall 等目标选择，而不是在测试集上挑到最好看。</p></section>
+
+  <section id="loss"><h2>为什么用 <code>BCEWithLogitsLoss</code></h2><p>二元交叉熵为：</p><div class="equation">L = −[y log σ(z) + (1−y) log(1−σ(z))]</div>
+  <p><a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html">官方文档</a>指出，<code>BCEWithLogitsLoss</code> 把 Sigmoid 与 BCE 合并，利用 log-sum-exp 技巧提升数值稳定性。因此：</p><pre><code>loss_fn = nn.BCEWithLogitsLoss()
+logits = model(X_train)
+loss = loss_fn(logits, y_train)   # 正确：传 raw logits</code></pre>
+  <pre><code># 错误组合：重复 sigmoid
+loss = loss_fn(torch.sigmoid(logits), y_train)</code></pre>
+  <p>重复 Sigmoid 不仅接口错，还压缩了输入范围和梯度。记忆规则：<b>loss 名称里有 WithLogits，就给 logits。</b></p>
+  <div class="callout"><strong>类别不平衡：</strong><code>pos_weight</code> 可提高正类损失权重，但它不是“万能修复”。仍要明确采样分布、指标、阈值和真实业务代价。</div></section>
+
+  <section id="loop"><h2>二分类训练循环</h2><pre><code>loss_fn = nn.BCEWithLogitsLoss()
+optimizer = torch.optim.AdamW(model.parameters(), lr=1e-3)
+
+for epoch in range(epochs):
+    model.train()
+    logits = model(X_train)
+    assert logits.shape == y_train.shape
+    loss = loss_fn(logits, y_train)
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+    model.eval()
+    with torch.inference_mode():
+        val_logits = model(X_val)
+        val_loss = loss_fn(val_logits, y_val)
+        val_pred = (val_logits &gt;= 0).float()
+        val_acc = (val_pred == y_val).float().mean()</code></pre>
+  <p>训练指标的预测转换不参与反传；真正梯度路径是 <code>logits → BCEWithLogitsLoss</code>。阈值/round 是不可导的，也无需进入 loss。</p></section>
+
+  <section id="metrics"><h2>Accuracy 不够时</h2><table><thead><tr><th>指标</th><th>关心什么</th><th>适用提醒</th></tr></thead><tbody><tr><td>Precision</td><td>判为正的有多少真是正</td><td>假阳性昂贵</td></tr><tr><td>Recall</td><td>真实正类有多少被找出</td><td>漏报昂贵</td></tr><tr><td>F1</td><td>precision/recall 调和平均</td><td>需兼顾二者</td></tr><tr><td>ROC-AUC / PR-AUC</td><td>跨阈值排序表现</td><td>严重不平衡时关注 PR 曲线</td></tr></tbody></table>
+  <p>先把 confusion matrix 的四格 TP/FP/TN/FN 算对，再使用库函数。指标必须在未用于更新参数的数据上计算。</p></section>
+
+  <section id="quiz"><h2>出口检查</h2><div class="quiz"><h3>二分类接口</h3>
+    <fieldset data-answer="直接传入原始值"><legend>1. BCEWithLogitsLoss 应接收什么？</legend><label><input type="radio" name="q1" value="直接传入原始值"> 直接传入原始值</label><label><input type="radio" name="q1" value="先转预测概率值"> 先转预测概率值</label><label><input type="radio" name="q1" value="先转离散标签值"> 先转离散标签值</label></fieldset>
+    <fieldset data-answer="最后一轴删掉"><legend>2. 输出 [B,1] 变 [B] 的稳妥办法？</legend><label><input type="radio" name="q2" value="最后一轴删掉"> 最后一轴删掉</label><label><input type="radio" name="q2" value="所有单轴删掉"> 所有单轴删掉</label><label><input type="radio" name="q2" value="最前一轴删掉"> 最前一轴删掉</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback"></p><details><summary>答案</summary><p>1：直接传入 raw logits。2：<code>squeeze(-1)</code>。</p></details></div></section>
+  <section class="checkpoint"><h2>本课完成标记</h2><p>闭卷画出 logits → loss 与 logits → probability → label 两条分叉路径，并标注每个节点的 shape/range。</p><label><input type="checkbox" data-complete> 我能写出二分类完整契约，并解释 WithLogits 的数值稳定意义。</label><p>若你的 BCE 出现 shape warning，把 logits 与 target 的实际 shape/dtype 发我。</p></section>
+  <footer class="lesson-footer"><a href="0007-inference-and-checkpoints.html">← 上一课</a><a href="0009-nonlinearity-and-diagnosis.html">下一课：非线性与诊断 →</a></footer>
+</main></body></html>

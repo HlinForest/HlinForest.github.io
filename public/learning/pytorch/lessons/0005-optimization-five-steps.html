@@ -1,0 +1,79 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 · 优化五步与顺序</title><link rel="stylesheet" href="../assets/course.css"><script defer src="../assets/course.js"></script></head>
+<body><header class="hero"><div><div class="eyebrow">PyTorch Foundations · Lesson 05</div><h1>训练 Step 的五个动词</h1><p class="lede">forward、loss、zero、backward、step。关键不在背诵，而在准确说出每一步读取什么、写入什么，以及顺序错了会发生什么。</p></div><aside class="meta-card"><strong>胜利条件</strong>闭卷重写一次参数更新，并跟踪 parameter/value/grad 状态。<strong>预计时间</strong>35–50 分钟<strong>主资料</strong><a href="https://www.learnpytorch.io/01_pytorch_workflow/">LearnPyTorch 01 · Train model</a></aside></header>
+<nav class="course-nav"><div><a href="#five">五步</a><a href="#trace">状态追踪</a><a href="#optimizer-simulator">五步模拟</a><a href="#loss">Loss</a><a href="#optimizer">Optimizer</a><a href="#quiz">检查</a></div></nav>
+<main>
+  <section><h2>开场检索</h2><p>先闭卷写五行训练核心。提示：第一行产生预测，最后一行改变参数。</p><details><summary>答案</summary><pre><code>y_pred = model(X)
+loss = loss_fn(y_pred, y)
+optimizer.zero_grad()
+loss.backward()
+optimizer.step()</code></pre><p><code>zero_grad()</code> 放在 backward 之前即可；常见写法是每个 step 的开始。不能放在 backward 与 step 之间，否则优化器读到的是空梯度。</p></details></section>
+
+  <section id="five"><h2>五步不是咒语，是数据流</h2><table><thead><tr><th>步</th><th>读取</th><th>写入/产生</th><th>若漏掉</th></tr></thead><tbody>
+    <tr><td>1 <code>model(X)</code></td><td>X、当前 θ</td><td>预测/计算图</td><td>没有模型输出</td></tr>
+    <tr><td>2 <code>loss_fn(...)</code></td><td>预测、y</td><td>标量 loss/计算图</td><td>无优化目标</td></tr>
+    <tr><td>3 <code>zero_grad()</code></td><td>旧 <code>θ.grad</code></td><td>清空/设 None</td><td>梯度跨 step 累积</td></tr>
+    <tr><td>4 <code>loss.backward()</code></td><td>计算图</td><td><code>θ.grad += ∂L/∂θ</code></td><td>没有新梯度</td></tr>
+    <tr><td>5 <code>optimizer.step()</code></td><td>θ、<code>θ.grad</code>、优化器状态</td><td>更新 θ 与可能的动量状态</td><td>参数永不学习</td></tr>
+  </tbody></table>
+  <div class="callout good"><strong>一句话：</strong>backward 计算“往哪走、多陡”；optimizer 决定“怎样走、多远”。</div></section>
+
+  <section id="trace"><h2>对一次 SGD 做状态追踪</h2><p>设 w=1，梯度 ∂L/∂w=−12，学习率 η=0.1：</p><div class="equation">w_new = w_old − η·grad = 1 − 0.1×(−12) = 2.2</div>
+  <pre><code>w = torch.tensor([1.0], requires_grad=True)
+optimizer = torch.optim.SGD([w], lr=0.1)
+
+loss = (w * 2 - 5).pow(2).mean()
+optimizer.zero_grad()
+loss.backward()
+print("before step:", w.item(), w.grad.item())  # 1.0, -12.0
+optimizer.step()
+print("after step:", w.item(), w.grad.item())   # 2.2, -12.0</code></pre>
+  <div id="optimizer-simulator" class="simulator" data-simulator="optimizer">
+    <div class="simulator-head"><div><span class="simulator-kicker">流程模拟器</span><h3>观察五步各自读写什么</h3></div><span class="simulator-counter" data-sim-counter></span></div>
+    <div class="simulator-flow" role="group" aria-label="一次随机梯度下降训练步骤">
+      <div class="simulator-node"><span class="node-label">1</span><strong>forward</strong><small>读 X、w</small></div>
+      <div class="simulator-node"><span class="node-label">2</span><strong>loss</strong><small>写标量目标</small></div>
+      <div class="simulator-node"><span class="node-label">3</span><strong>zero_grad</strong><small>清旧梯度</small></div>
+      <div class="simulator-node"><span class="node-label">4</span><strong>backward</strong><small>写 w.grad</small></div>
+      <div class="simulator-node"><span class="node-label">5</span><strong>step</strong><small>更新 w</small></div>
+    </div>
+    <div class="simulator-values" aria-label="当前训练状态">
+      <div class="simulator-value"><span>parameter w</span><strong data-sim-value></strong></div>
+      <div class="simulator-value"><span>w.grad</span><strong data-sim-value></strong></div>
+      <div class="simulator-value"><span>prediction ŷ</span><strong data-sim-value></strong></div>
+      <div class="simulator-value"><span>loss L</span><strong data-sim-value></strong></div>
+    </div>
+    <p class="simulator-state" data-sim-status aria-live="polite"></p>
+    <div class="simulator-controls"><button type="button" data-sim-prev>上一步</button><button type="button" data-sim-next>下一步</button><button type="button" data-sim-reset>重置</button></div>
+  </div>
+  <div class="callout"><strong>观察：</strong><code>step()</code> 更新参数，但不会自动清掉梯度。下一轮的 <code>zero_grad()</code> 负责清理。现代 PyTorch 常把 grad 设为 None，而非填零；语义仍是阻止意外累积。</div>
+  <h3>为什么不能在 step 前清梯度？</h3><pre><code>loss.backward()
+optimizer.zero_grad()  # 把刚算好的梯度清掉
+optimizer.step()       # 无梯度可读，参数不更新</code></pre></section>
+
+  <section id="loss"><h2>选择 Loss 是定义任务接口</h2><table><thead><tr><th>任务</th><th>模型输出</th><th>标签</th><th>常用 loss</th></tr></thead><tbody>
+    <tr><td>回归</td><td><code>[B,1]</code> 或 <code>[B]</code> float</td><td>同 shape float</td><td><code>MSELoss</code>/<code>L1Loss</code></td></tr>
+    <tr><td>二分类</td><td><code>[B]</code> raw logits</td><td><code>[B]</code> float 0/1</td><td><code>BCEWithLogitsLoss</code></td></tr>
+    <tr><td>单标签多分类</td><td><code>[B,C]</code> raw logits</td><td><code>[B]</code> long 类别索引</td><td><code>CrossEntropyLoss</code></td></tr>
+  </tbody></table>
+  <p>Loss 通常直接接 raw logits，因为组合实现更数值稳定。展示概率与计算 loss 是两条不同路径：loss 路径保留 logits；解释预测时才 Sigmoid/Softmax。</p></section>
+
+  <section id="optimizer"><h2>优化器与学习率</h2><p><code>torch.optim.SGD</code> 足以理解训练；Adam/AdamW 会维护一阶、二阶动量状态，但仍读取 <code>.grad</code> 并更新参数。</p><pre><code>loss_fn = nn.L1Loss()
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+
+for epoch in range(100):
+    model.train()
+    y_pred = model(X_train)
+    loss = loss_fn(y_pred, y_train)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()</code></pre>
+  <div class="two-col"><div class="card"><h3>学习率过大</h3><p>loss 振荡、爆炸或变 NaN；参数跨过谷底。</p></div><div class="card"><h3>学习率过小</h3><p>loss 下降极慢；有限训练预算内像“学不会”。</p></div></div>
+  <p>调参前先确认基本链路正确：数据/标签对应、shape、loss 契约、参数已注册、梯度非 None、step 后参数确实改变。</p></section>
+
+  <section id="quiz"><h2>故障判断</h2><div class="quiz"><h3>训练为何不动</h3>
+    <fieldset data-answer="梯度已经清空"><legend>1. backward 后立刻 zero_grad，再 step；参数不变的原因？</legend><label><input type="radio" name="q1" value="梯度已经清空"> 梯度已经清空</label><label><input type="radio" name="q1" value="模型仍在训练"> 模型仍在训练</label><label><input type="radio" name="q1" value="标签仍在设备"> 标签仍在设备</label></fieldset>
+    <fieldset data-answer="梯度默认累积"><legend>2. 每轮都 backward 但从不 zero_grad，发生什么？</legend><label><input type="radio" name="q2" value="梯度默认累积"> 梯度默认累积</label><label><input type="radio" name="q2" value="参数默认冻结"> 参数默认冻结</label><label><input type="radio" name="q2" value="模型默认评估"> 模型默认评估</label></fieldset>
+    <button data-check>检查答案</button><p class="feedback"></p><details><summary>答案</summary><p>1：梯度已经清空。2：梯度默认累积。</p></details></div></section>
+  <section class="checkpoint"><h2>本课完成标记</h2><p>从空白编辑器写五步，然后在每行末尾注释“读/写哪个状态”。能做到才勾选。</p><label><input type="checkbox" data-complete> 我能闭卷写五步，并解释任意换序的后果。</label><p>如果 loss 不降，发我五步代码和第一/最后一次 loss，不要先盲目加 epoch。</p></section>
+  <footer class="lesson-footer"><a href="0004-module-and-autograd.html">← 上一课</a><a href="0006-training-and-evaluation-loop.html">下一课：完整训练/验证循环 →</a></footer>
+</main></body></html>

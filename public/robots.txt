@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hlinforest.github.io/sitemap-index.xml

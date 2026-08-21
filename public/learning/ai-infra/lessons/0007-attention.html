@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>单元 07：Token、Embedding 与 Self-Attention</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main>
+<header><div class="eyebrow">单元 07 · 4–5 小时</div><h1>Token、Embedding 与 Self-Attention</h1><p class="lede">目标：从文本一路推到 Attention 输出，能标注每一步 shape、复杂度和主要数据移动。</p></header>
+<section class="mastery"><h2>过关标准</h2><ul><li>能解释 tokenization、词表与 embedding lookup。</li><li>能从输入 X 推导 Q/K/V、scores、probabilities 与输出 shape。</li><li>能解释缩放、causal mask、Softmax 和多头的必要性。</li><li>能估算 Attention 的计算与显存复杂度。</li><li>能解释 MHA、MQA、GQA 的 KV Cache 权衡。</li></ul></section>
+
+<section><h2>1. 文本先变成离散 ID</h2><p>Tokenizer 把文本映射为 token ID；Embedding 矩阵 <code>E∈R^(V×H)</code> 通过索引取出每个 token 的 H 维向量。输入形状：</p>
+<div class="formula">token_ids: (B,S)<br>X = E[token_ids]: (B,S,H)</div>
+<p>词表越大，序列可能更短，但 embedding 与输出投影更大；词表越小，序列可能更长，Attention 和 KV Cache 成本增加。Tokenizer 选择会传导到系统成本。</p></section>
+
+<section><h2>2. Q、K、V 是三种视角</h2><p>对输入 X 做三次线性投影：</p>
+<div class="formula">Q = XWq, K = XWk, V = XWv<br>X: (B,S,H), W*: (H,H)<br>Q,K,V: (B,S,H)</div>
+<p>直觉上：Query 表示当前 token 要找什么，Key 表示每个 token 可被怎样匹配，Value 是被加权汇总的内容。</p></section>
+
+<section><h2>3. 缩放点积 Attention</h2>
+<div class="formula">Attention(Q,K,V) = softmax((QKᵀ + mask)/√Dh)V</div>
+<ol><li>reshape 为 <code>(B,Nh,S,Dh)</code>。</li><li><code>QKᵀ → (B,Nh,S,S)</code>，得到每个 Query 对所有 Key 的分数。</li><li>除以 <code>√Dh</code>，避免维度增大时点积方差过大、Softmax 过饱和。</li><li>加入 causal mask，未来位置置为负无穷。</li><li>每行 Softmax 得到概率。</li><li>概率乘 V，输出 <code>(B,Nh,S,Dh)</code>，拼回 <code>(B,S,H)</code>。</li></ol></section>
+
+<section><h2>4. Causal Mask</h2><p>Decoder-only 模型训练时一次处理整段序列，但位置 i 只能看到 <code>≤i</code> 的 token。Mask 是上三角屏蔽：</p>
+<pre><code>[0, -∞, -∞, -∞]
+[0,  0, -∞, -∞]
+[0,  0,  0, -∞]
+[0,  0,  0,  0]</code></pre>
+<p>Mask 在 Softmax 前加入；被屏蔽位置的概率应为 0。错误 mask 会造成数据泄漏、NaN 或错误生成。</p></section>
+
+<section><h2>5. 多头为什么存在</h2><p>单头在一个表示子空间中匹配；多头把 H 拆成 <code>Nh × Dh</code>，让不同头并行学习不同关系。总投影规模仍约为 H。</p>
+<div class="formula">H = Nh × Dh<br>(B,S,H) → (B,Nh,S,Dh)</div>
+<p>工程上，多头维度也是张量并行的天然切分点；但头数、head_dim 与 Tensor Core 对齐会影响实际性能。</p></section>
+
+<section><h2>6. 复杂度与瓶颈</h2>
+<table><thead><tr><th>阶段</th><th>主要计算</th><th>中间量</th></tr></thead><tbody>
+<tr><td>QKV 投影</td><td>约 6BSH² FLOPs</td><td>Q/K/V：O(BSH)</td></tr>
+<tr><td>QKᵀ 与 PV</td><td>约 4BS²H FLOPs</td><td>scores/probs：O(BNhS²)</td></tr>
+<tr><td>输出投影</td><td>约 2BSH² FLOPs</td><td>输出：O(BSH)</td></tr>
+</tbody></table>
+<p>长序列时 S² 中间矩阵成为显存和 I/O 问题。FlashAttention 的关键不是近似 Attention，而是通过分块与在线 Softmax 避免把完整 S×S 矩阵反复写入 HBM。</p></section>
+
+<section><h2>7. MHA、MQA 与 GQA</h2>
+<table><thead><tr><th>结构</th><th>Q 头</th><th>KV 头</th><th>主要权衡</th></tr></thead><tbody>
+<tr><td>MHA</td><td>Nh</td><td>Nh</td><td>表达能力强，KV Cache 最大</td></tr>
+<tr><td>MQA</td><td>Nh</td><td>1</td><td>KV Cache 最小，多个 Q 头共享 KV</td></tr>
+<tr><td>GQA</td><td>Nh</td><td>Ng</td><td>在质量与缓存/带宽之间折中</td></tr>
+</tbody></table>
+<p>MLA 进一步压缩 KV 表示，但需要理解具体模型的投影与解码路径；本阶段先掌握“减少 KV 头或维度就是在换取更小缓存与更低带宽”。</p></section>
+
+<section class="lab"><h2>实验：从零实现单头 Attention</h2><ol><li>运行 <a href="../labs/attention_lab.py">attention_lab.py</a>。</li><li>实现矩阵乘、缩放、causal mask 与稳定 Softmax。</li><li>检查每一行 Attention 权重和为 1，未来位置为 0。</li><li>改变 head_dim，观察不缩放时分布变尖。</li><li>记录每个中间量 shape 与元素数。</li></ol></section>
+
+<section><h2>即时测验</h2>
+<div class="quiz" data-quiz data-why="点积方差随 Dh 增长，除以平方根使尺度更稳定，避免 Softmax 饱和。" data-hint="考虑高维随机向量点积的方差。"><h3>QKᵀ 为什么除以 √Dh？</h3><div class="answers"><button data-correct="true">控制分数尺度稳定</button><button>改变输出张量形状</button><button>减少词表元素数量</button></div><p class="feedback" aria-live="polite"></p></div>
+<div class="quiz" data-quiz data-why="GQA 让多个 Query 头共享较少的 KV 头，直接减少缓存元素。" data-hint="Decode 时长期保存的是 K 和 V。"><h3>GQA 主要减少哪项推理开销？</h3><div class="answers"><button>输入词表存储开销</button><button data-correct="true">键值缓存存储开销</button><button>优化器状态存储量</button></div><p class="feedback" aria-live="polite"></p></div>
+</section>
+<section class="success"><h2>过关任务</h2><p>对 B=2、S=1024、H=4096、Nh=32、BF16 的 MHA，写出 Q/K/V、scores 和输出 shape，并估算 scores 元素数与字节数。再说明 GQA=8 个 KV 头如何改变 KV Cache。</p></section>
+<section><h2>主要来源</h2><p><a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a>；<a href="https://caomaolufei.github.io/AIInfraGuide/guides/%E6%A8%A1%E5%9D%97%E4%B8%80-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86/transformer/33-self-attention%E6%9C%BA%E5%88%B6%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3/">AIInfraGuide Self-Attention</a>。</p></section>
+<div class="complete-action"><button data-complete="l07" aria-pressed="false">标记为已通过</button></div>
+<nav class="lesson-nav"><a href="0006-probability-autodiff-numerics.html">← 单元 06</a><a href="../index.html">课程首页</a><a href="0008-decoder-block.html">单元 08 →</a></nav>
+</main><script src="../assets/lesson.js"></script></body></html>

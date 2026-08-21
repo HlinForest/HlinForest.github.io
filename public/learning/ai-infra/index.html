@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Infra 前置基础完整课程</title>
+  <link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Mastery Track · 12 单元 · 约 35–50 小时</div>
+    <h1>AI Infra 前置基础完整课程</h1>
+    <p class="lede">目标不是“看过”，而是能手算、能实现、能测量、能诊断。课程覆盖编程语言、工程数学、Transformer、PyTorch、GPU 与集合通信，并以跨层综合项目收尾。</p>
+    <div class="meta"><span>建议周期：4–6 周</span><span>每周：6–10 小时</span><span>先修：基本 Python</span></div>
+  </header>
+
+  <section class="mastery">
+    <h2>什么叫“学会”</h2>
+    <p>只有同时满足下面四项，才把一个单元标记为通过：</p>
+    <ol>
+      <li>不看材料，能解释核心模型和关键权衡。</li>
+      <li>即时测验正确率至少 80%。</li>
+      <li>完成单元实验，并能解释每一行关键结果。</li>
+      <li>完成过关任务，输出可检查的代码、计算过程或诊断证据。</li>
+    </ol>
+  </section>
+
+  <section data-course-progress>
+    <h2>课程进度</h2>
+    <progress value="0" max="12" aria-label="课程完成进度"></progress>
+    <p data-progress-label>0 / 12 单元已通过</p>
+  </section>
+
+  <section>
+    <h2>阶段 A：语言、系统与可观察性</h2>
+    <div class="course-grid">
+      <article class="course-item" data-course-item="l01"><span class="tag">单元 01</span><h3><a href="lessons/0001-aiinfra-foundations-map.html">跨层地图与诊断方法</a></h3><p>建立 Python → PyTorch → C++ → CUDA → GPU → 通信的调用链。</p></article>
+      <article class="course-item" data-course-item="l02"><span class="tag">单元 02</span><h3><a href="lessons/0002-python-systems.html">Python 工程语义与并发</a></h3><p>对象、引用、可变性、协议、生成器、资源管理、线程/进程/异步与 profiling。</p></article>
+      <article class="course-item" data-course-item="l03"><span class="tag">单元 03</span><h3><a href="lessons/0003-cpp-boundaries.html">C++ 内存、构建与跨语言边界</a></h3><p>指针、生命周期、RAII、智能指针、编译链接、ABI、CMake 与 pybind11 思维。</p></article>
+      <article class="course-item" data-course-item="l04"><span class="tag">单元 04</span><h3><a href="lessons/0004-linux-environments.html">Linux、环境与故障定位</a></h3><p>文件、权限、进程、信号、动态库、容器、GPU 软件栈、Git 与证据链。</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>阶段 B：数学与模型</h2>
+    <div class="course-grid">
+      <article class="course-item" data-course-item="l05"><span class="tag">单元 05</span><h3><a href="lessons/0005-tensor-math.html">张量、GEMM 与性能账本</a></h3><p>shape、stride、广播、矩阵乘、tiling、FLOPs、访存量与算术强度。</p></article>
+      <article class="course-item" data-course-item="l06"><span class="tag">单元 06</span><h3><a href="lessons/0006-probability-autodiff-numerics.html">概率、反向传播与数值稳定</a></h3><p>Softmax、交叉熵、链式法则、梯度、FP16/BF16/FP8 与稳定计算。</p></article>
+      <article class="course-item" data-course-item="l07"><span class="tag">单元 07</span><h3><a href="lessons/0007-attention.html">Token、Embedding 与 Self-Attention</a></h3><p>Q/K/V、缩放点积、多头、Mask、复杂度和 MHA/MQA/GQA。</p></article>
+      <article class="course-item" data-course-item="l08"><span class="tag">单元 08</span><h3><a href="lessons/0008-decoder-block.html">Decoder Block 完整数据流</a></h3><p>RMSNorm、RoPE、SwiGLU、残差、参数量、激活量与并行切分点。</p></article>
+      <article class="course-item" data-course-item="l09"><span class="tag">单元 09</span><h3><a href="lessons/0009-llm-inference.html">自回归生成与 KV Cache</a></h3><p>采样、Prefill/Decode、KV Cache 账本、吞吐/延迟与推理优化入口。</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>阶段 C：框架、硬件与通信</h2>
+    <div class="course-grid">
+      <article class="course-item" data-course-item="l10"><span class="tag">单元 10</span><h3><a href="lessons/0010-pytorch-engineering.html">PyTorch 训练与性能工程</a></h3><p>Tensor 元数据、autograd、Module、训练循环、混合精度、显存与 profiler。</p></article>
+      <article class="course-item" data-course-item="l11"><span class="tag">单元 11</span><h3><a href="lessons/0011-gpu-architecture.html">GPU 架构、存储与 Roofline</a></h3><p>SM、Warp、Tensor Core、存储层次、Occupancy、拓扑与架构演进。</p></article>
+      <article class="course-item" data-course-item="l12"><span class="tag">单元 12</span><h3><a href="lessons/0012-collective-communication.html">集合通信与 NCCL</a></h3><p>Broadcast、AllReduce、AllGather、ReduceScatter、Ring/Tree、拓扑与 overlap。</p></article>
+    </div>
+  </section>
+
+  <section class="callout">
+    <h2>毕业项目</h2>
+    <p><a href="lessons/0013-capstone.html">完成“一个慢且不稳定的 Transformer 训练任务”跨层诊断</a>：从环境、shape、数值、PyTorch profile、GPU Roofline 到多卡通信，提交可复现报告。该项目是最终验收，不计入 12 个知识单元进度。</p>
+  </section>
+
+  <section>
+    <h2>速查与实验</h2>
+    <ul>
+      <li><a href="reference/0001-aiinfra-foundations-checklist.html">跨层诊断清单</a></li>
+      <li><a href="reference/glossary.html">术语表</a></li>
+      <li><a href="reference/formulas.html">公式与账本速查</a></li>
+      <li><a href="labs/README.md">实验目录与运行方式</a></li>
+      <li><a href="RESOURCES.md">课程来源与延伸阅读</a></li>
+      <li><a href="COVERAGE.md">原教程覆盖矩阵</a></li>
+    </ul>
+  </section>
+
+  <footer>课程进度保存在当前浏览器本地。换浏览器或清理站点数据后会重置。</footer>
+</main>
+<script src="assets/lesson.js"></script>
+</body>
+</html>

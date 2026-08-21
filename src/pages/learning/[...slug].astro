@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import LearningLayout from '../../layouts/LearningLayout.astro';
+import { learningUrl } from '../../utils/learning';
+
+export async function getStaticPaths() {
+  const rank = (id: string) => {
+    if (/\/readme$/i.test(id)) return '00';
+    if (id.includes('/chapters/')) return `10-${id}`;
+    if (id.includes('/labs/')) return `20-${id}`;
+    if (id.includes('/appendices/')) return `30-${id}`;
+    return `40-${id}`;
+  };
+  const entries = (await getCollection('learning')).sort((a, b) => rank(a.id).localeCompare(rank(b.id), 'zh-CN', { numeric: true }));
+  return entries.map((entry, index) => ({
+    params: { slug: learningUrl(entry).replace(/^\/learning\//, '').replace(/\/$/, '') },
+    props: { entry, entries, previous: entries[index - 1], next: entries[index + 1] },
+  }));
+}
+
+const { entry, entries, previous, next } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+<LearningLayout entry={entry} entries={entries} headings={headings} previous={previous} next={next}><Content /></LearningLayout>

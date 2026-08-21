@@ -1,0 +1,12 @@
+node0 rank0 NCCL INFO NET/IB : Using mlx5_0:1
+node0 rank1 NCCL INFO NET/IB : Using mlx5_0:1
+node0 rank2 NCCL INFO NET/IB : Using mlx5_0:1
+node0 rank3 NCCL INFO NET/IB : Using mlx5_0:1
+node0 rank4 NCCL INFO NET/IB : Using mlx5_0:1
+node0 rank5 NCCL INFO NET/IB : Using mlx5_0:1
+node0 rank6 NCCL INFO NET/IB : Using mlx5_0:1
+node0 rank7 NCCL INFO NET/IB : Using mlx5_0:1
+node1 rank6 NCCL WARN NET/IB : Got completion with error 12, vendor err 129
+node1 rank6 NCCL WARN communicator aborted
+application trace: rank6 skipped backward after local non-finite loss
+application trace: ranks0-5,7 entered all_reduce(bucket_11)
