@@ -1,16 +1,18 @@
 export const site = {
   name: 'HlinForest',
-  title: 'HlinForest — AI Systems, Research & Engineering',
-  description: '关于 AI 系统、智能体、基础设施与学习方法的长期技术写作。',
+  title: 'Hanlin — AI Systems, Agents & Causal Learning',
+  description: 'Hanlin 的个人学术主页：研究 AI 系统、可靠智能体、AI Infra、因果表征学习与 AI Safety。',
   author: 'Hanlin',
+  role: 'AI Systems · Agents · Causal Learning',
+  portrait: '/portrait.svg',
   url: 'https://hlinforest.github.io',
   github: 'https://github.com/HlinForest',
   email: '',
   nav: [
     { label: '首页', href: '/' },
-    { label: '文章', href: '/blog/' },
-    { label: '学习', href: '/learning/' },
-    { label: '归档', href: '/archive/' },
+    { label: '研究', href: '/research/' },
+    { label: '写作', href: '/blog/' },
+    { label: '文档', href: '/learning/' },
     { label: '关于', href: '/about/' },
   ],
 };

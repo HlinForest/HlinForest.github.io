@@ -8,27 +8,27 @@ const active = (href: string) => href === '/' ? path === '/' : path.startsWith(h
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label={`${site.name} 首页`}>
-      <span class="brand-mark" aria-hidden="true">HF</span>
-      <span>{site.name}</span>
+      <span class="brand-name">Hanlin</span>
+      <span class="brand-role">AI systems & research notes</span>
     </a>
-    <button class="search-trigger" type="button" data-open-search aria-label="打开全文搜索">
-      <span aria-hidden="true">⌕</span>
-      <span>搜索文章与学习文档…</span>
-      <kbd>⌘ K</kbd>
-    </button>
     <div class="header-actions">
       <nav class="desktop-nav" aria-label="主导航">
         {site.nav.map((item) => (
           <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
         ))}
       </nav>
+      <button class="search-trigger compact" type="button" data-open-search aria-label="搜索文章与学习文档" title="搜索">
+        <span aria-hidden="true">⌕</span>
+        <span>搜索</span>
+        <kbd>⌘ K</kbd>
+      </button>
       <button class="icon-button" type="button" data-theme-toggle aria-label="切换深浅主题" title="切换主题">◐</button>
     </div>
   </div>
 </header>
 
 <nav class="mobile-nav" aria-label="移动端导航">
-  {site.nav.slice(0, 4).map((item) => (
+  {site.nav.map((item) => (
     <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
   ))}
 </nav>
