@@ -60,7 +60,7 @@ const searchItems = [
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     {imageUrl && <meta name="twitter:image" content={imageUrl} />}
-    <meta name="theme-color" content="#159455" />
+    <meta name="theme-color" content="#81d8d0" />
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('theme');
@@ -76,7 +76,7 @@ const searchItems = [
     <main id="main-content"><slot /></main>
     <footer class="site-footer">
       <div class="container footer-inner">
-        <span>© {new Date().getFullYear()} {site.author}. Built for careful thinking.</span>
+        <span>© {new Date().getFullYear()} {site.author}</span>
         <div class="footer-links">
           <a href="/rss.xml">RSS</a>
           <a href={site.github} rel="me">GitHub</a>

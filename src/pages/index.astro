@@ -2,149 +2,81 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
+import { learningTracks } from '../utils/learning';
 import { byNewest, formatDate, postUrl, publishedOnly } from '../utils/posts';
 
-const posts = (await getCollection('blog')).filter(publishedOnly).sort(byNewest);
-const latest = posts.slice(0, 3);
-
-const interests = [
-  {
-    index: '01',
-    title: 'Reliable Agent Systems',
-    zh: '可靠智能体系统',
-    question: '如何让模型在长任务中保持可观察、可验证、可恢复？',
-    detail: '关注 harness、context engineering、tool use、evaluation，以及模型外部的状态与证据管理。',
-    tags: ['Agents', 'Evaluation', 'Context'],
-  },
-  {
-    index: '02',
-    title: 'AI Infrastructure & LLM Systems',
-    zh: 'AI 基础设施与大模型系统',
-    question: '如何从张量语义一路解释到 GPU、通信与推理性能？',
-    detail: '研究训练与推理系统的跨层机制：模型结构、数值、内核、内存、并行策略与集群通信。',
-    tags: ['LLM Systems', 'GPU', 'Distributed'],
-  },
-  {
-    index: '03',
-    title: 'Causal Learning & AI Safety',
-    zh: '因果学习与 AI 安全',
-    question: '结构、表征与环境变化之间，哪些关系能够被识别并用于安全决策？',
-    detail: '关注因果表征学习、分布外泛化、可识别性与安全研究中的实验设计。',
-    tags: ['Causality', 'Representation', 'Safety'],
-  },
-];
-
-const selectedWork = [
-  {
-    type: 'Research essay',
-    year: '2026',
-    title: '从 Prompt 到 Harness：构建可验证的智能体系统',
-    description: '状态、工具、验证器、可观测性与反馈闭环的系统化分析。',
-    href: '/blog/2026-08-21-agent-harness/',
-  },
-  {
-    type: 'Course notes',
-    year: '2026',
-    title: 'CS336 · Language Modeling from Scratch',
-    description: '从 tokenizer、Transformer、训练系统，到 scaling、后训练与推理的中文深度笔记。',
-    href: '/learning/cs336/',
-  },
-  {
-    type: 'Research curriculum',
-    year: '2026',
-    title: 'AI Safety × Causal Representation Learning',
-    description: '把因果基础、结构学习、表征识别与安全问题组织为可学习、可实验的研究路线。',
-    href: '/learning/ai-safety-crl/index.html',
-  },
-];
+const notes = (await getCollection('blog')).filter(publishedOnly).sort(byNewest).slice(0, 3);
 ---
 
 <BaseLayout>
-  <section class="portfolio-hero container">
+  <section class="portfolio-hero container minimal-hero">
     <figure class="portrait-panel">
-      <div class="portrait-frame"><img src={site.portrait} alt="Hanlin" width="720" height="900" /></div>
+      <div class="portrait-frame">
+        <img src={site.portrait} alt={site.portraitAlt} width="901" height="1356" />
+      </div>
       <figcaption>
-        <span>Hanlin</span>
-        <span>Researching in public</span>
+        <span>Visual reference</span>
+        <span class="photo-credit">
+          <a href={site.portraitSource}>Khalil Fong, 2007 · Verity</a>
+          · <a href={site.portraitLicense}>CC BY-SA 2.0</a>
+        </span>
       </figcaption>
     </figure>
 
-    <div class="portfolio-intro">
-      <div class="eyebrow">Independent research · technical writing</div>
-      <h1>Hanlin</h1>
-      <p class="portfolio-role">{site.role}</p>
-      <p class="portfolio-bio">
-        我关注如何把能力强但会犯错的模型，构建成可靠、可验证的系统；也研究支撑大模型训练与推理的基础设施，以及因果表征学习与 AI Safety 的交叉问题。
-      </p>
-      <p class="portfolio-bio secondary">
-        这个网站是我的学术 Portfolio 与公开研究工作台：记录研究问题、技术文章、系统课程和可以复现的实验，而不只是存放零散笔记。
-      </p>
+    <div class="portfolio-intro minimal-intro">
+      <h1>Spike</h1>
       <div class="portfolio-actions">
-        <a class="text-action primary" href="/research/">Research agenda <span aria-hidden="true">↗</span></a>
+        <a class="text-action primary" href="/learning/">Notes <span aria-hidden="true">→</span></a>
         <a class="text-action" href={site.github}>GitHub <span aria-hidden="true">↗</span></a>
-        <a class="text-action" href="/about/">About / 联系</a>
       </div>
-      <dl class="profile-facts">
-        <div><dt>Focus</dt><dd>Agents · Systems · Causality</dd></div>
-        <div><dt>Working style</dt><dd>Mechanism · Evidence · Reproduction</dd></div>
-        <div><dt>Languages</dt><dd>中文 / English</dd></div>
-      </dl>
     </div>
   </section>
 
-  <section class="academic-section container" id="research">
-    <div class="academic-section-head">
-      <div><div class="eyebrow">Research interests</div><h2>我正在追问的问题</h2></div>
-      <p>不是宽泛的关键词列表，而是可以被拆成假设、实验和证据的长期问题。</p>
+  <section class="academic-section container empty-academic-section" id="research">
+    <div class="academic-section-head single">
+      <div><div class="eyebrow">Research interests</div><h2>Research interests</h2></div>
     </div>
-    <div class="interest-list">
-      {interests.map((item) => (
-        <article class="interest-item">
-          <span class="interest-index">{item.index}</span>
-          <div class="interest-title"><h3>{item.title}</h3><span>{item.zh}</span></div>
-          <div class="interest-copy"><strong>{item.question}</strong><p>{item.detail}</p><div class="interest-tags">{item.tags.map((tag) => <span>{tag}</span>)}</div></div>
-        </article>
-      ))}
-    </div>
+    <div class="empty-field" aria-hidden="true"></div>
   </section>
 
-  <section class="academic-section selected-section">
+  <section class="academic-section selected-section empty-academic-section">
     <div class="container">
-      <div class="academic-section-head inverse">
-        <div><div class="eyebrow">Selected work</div><h2>代表工作</h2></div>
-        <p>当前以研究型文章、课程笔记与可复现实验为主；后续论文与软件会进入同一索引。</p>
+      <div class="academic-section-head inverse single">
+        <div><div class="eyebrow">Selected work</div><h2>Papers</h2></div>
       </div>
-      <div class="selected-list">
-        {selectedWork.map((work, index) => (
-          <a class="selected-item" href={work.href}>
-            <span class="selected-number">0{index + 1}</span>
-            <div><span class="selected-type">{work.type} · {work.year}</span><h3>{work.title}</h3><p>{work.description}</p></div>
-            <span class="selected-arrow" aria-hidden="true">↗</span>
+      <div class="empty-field inverse" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="academic-section container notes-section">
+    <div class="academic-section-head single">
+      <div><div class="eyebrow">Notes</div><h2>Notes</h2></div>
+    </div>
+
+    <div class="notes-block">
+      <div class="notes-block-head"><span>Writing</span><a href="/blog/">All notes →</a></div>
+      <div class="academic-writing-list">
+        {notes.map((note) => (
+          <a href={postUrl(note)}>
+            <time datetime={note.data.publishedAt.toISOString()}>{formatDate(note.data.publishedAt)}</time>
+            <div><h3>{note.data.title}</h3><p>{note.data.description}</p></div>
+            <span aria-hidden="true">→</span>
           </a>
         ))}
       </div>
     </div>
-  </section>
 
-  <section class="academic-section container">
-    <div class="academic-section-head">
-      <div><div class="eyebrow">Latest writing</div><h2>近期写作</h2></div>
-      <a class="section-link" href="/blog/">全部文章与分类 →</a>
+    <div class="notes-block collections-block">
+      <div class="notes-block-head"><span>Collections</span><a href="/learning/">All collections →</a></div>
+      <div class="notes-collections">
+        {learningTracks.map((track, index) => (
+          <a href={track.href}>
+            <span>0{index + 1} · {track.area}</span>
+            <h3>{track.title}</h3>
+            <small>{track.count}</small>
+          </a>
+        ))}
+      </div>
     </div>
-    <div class="academic-writing-list">
-      {latest.map((post) => (
-        <a href={postUrl(post)}>
-          <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
-          <div><h3>{post.data.title}</h3><p>{post.data.description}</p></div>
-          <span aria-hidden="true">→</span>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <section class="academic-section container portfolio-cta">
-    <div><div class="eyebrow">Open notebook</div><h2>完整学习与研究文档</h2></div>
-    <p>CS336、AI Infra、PyTorch / ARENA，以及 AI Safety × 因果表征学习，已经按领域独立成区。</p>
-    <a class="text-action primary" href="/learning/">进入文档库 <span aria-hidden="true">→</span></a>
   </section>
 </BaseLayout>

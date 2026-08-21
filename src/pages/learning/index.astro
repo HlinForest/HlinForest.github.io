@@ -2,11 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { learningTracks } from '../../utils/learning';
 ---
-<BaseLayout title="学习文档 | HlinForest" description="按领域组织的系统学习文档、课程与实验笔记。">
+<BaseLayout title="学习笔记 | Spike" description="Spike 的学习笔记与课程文档。">
   <header class="page-head container">
-    <div class="eyebrow">Learning library</div>
-    <h1>学习文档</h1>
-    <p>不是零散收藏，而是按先修关系、知识单元与实验组织的长期学习系统。</p>
+    <div class="eyebrow">Learning notes</div>
+    <h1>学习笔记</h1>
   </header>
   <section class="container">
     <div class="learning-grid">
@@ -14,11 +13,9 @@ import { learningTracks } from '../../utils/learning';
         <a class="learning-card" href={track.href}>
           <span class="learning-area">{track.area}</span>
           <h2>{track.title}</h2>
-          <p>{track.description}</p>
           <span class="learning-count">{track.count} · 打开文档 →</span>
         </a>
       ))}
     </div>
-    <p class="learning-note">CS336 已原生接入本站的文档阅读器，支持跨章节导航、全文搜索、公式、代码与 Mermaid 图。其余三套课程先保留现有成熟门户，后续可逐步迁移为统一阅读体验。</p>
   </section>
 </BaseLayout>

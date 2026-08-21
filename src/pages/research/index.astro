@@ -1,51 +1,23 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const areas = [
-  {
-    number: '01',
-    title: 'Reliable Agent Systems',
-    subtitle: '从模型调用到可验证的执行系统',
-    thesis: '把智能体视为处在状态、工具、权限和验证器之中的概率性计算节点。可靠性来自闭环结构，而不是更长的 prompt。',
-    questions: ['长任务的权威状态应如何表示与恢复？', '评测怎样区分模型失败、工具失败和验证失败？', '上下文选择如何随任务阶段动态变化？'],
-    output: { label: 'Representative essay', title: '从 Prompt 到 Harness', href: '/blog/2026-08-21-agent-harness/' },
-  },
-  {
-    number: '02',
-    title: 'AI Infrastructure & LLM Systems',
-    subtitle: '跨越模型、运行时、GPU 与集群的系统解释',
-    thesis: '性能问题很少只属于单一层。研究重点是建立从张量语义到硬件执行的可检查资源账本与诊断方法。',
-    questions: ['模型结构如何转化为 FLOPs、显存和通信量？', '训练与推理瓶颈如何跨层归因？', '哪些实验最能验证并行与内核优化的真实收益？'],
-    output: { label: 'Course & experiments', title: 'AI Infra 前置基础', href: '/learning/ai-infra/index.html' },
-  },
-  {
-    number: '03',
-    title: 'Causal Learning & AI Safety',
-    subtitle: '结构、表征、泛化与安全决策',
-    thesis: '因果对象只有在假设与干预语义清楚时才有研究价值。关注可识别性、环境变化和安全问题之间可被实验检验的连接。',
-    questions: ['什么条件下潜在因果因素可以从观测中识别？', '多环境数据如何帮助区分稳定结构与偶然相关？', '因果表征能为 AI Safety 提供哪些可证伪预测？'],
-    output: { label: 'Research curriculum', title: 'AI Safety × CRL', href: '/learning/ai-safety-crl/index.html' },
-  },
-];
 ---
 
-<BaseLayout title="Research | Hanlin" description="Hanlin 的研究方向、问题与代表工作。">
-  <header class="research-hero container">
-    <div class="eyebrow">Research agenda</div>
-    <h1>围绕可靠性、系统机制与因果结构开展研究。</h1>
-    <p>以下不是固定标签，而是一组持续修订的研究问题。每个方向都通过技术写作、课程构建、代码实验和代表工作公开推进。</p>
+<BaseLayout title="Research | Spike" description="Spike 的研究页面。">
+  <header class="research-hero container sparse-research-hero">
+    <div class="eyebrow">Research</div>
+    <h1>Research</h1>
   </header>
 
-  <main class="container research-areas">
-    {areas.map((area) => (
-      <article class="research-area">
-        <header><span>{area.number}</span><div><h2>{area.title}</h2><p>{area.subtitle}</p></div></header>
-        <div class="research-area-body">
-          <p class="research-thesis">{area.thesis}</p>
-          <div><h3>Current questions</h3><ol>{area.questions.map((question) => <li>{question}</li>)}</ol></div>
-          <a class="research-output" href={area.output.href}><span>{area.output.label}</span><strong>{area.output.title}</strong><b aria-hidden="true">↗</b></a>
-        </div>
-      </article>
-    ))}
+  <main class="container sparse-research-page">
+    <section>
+      <div class="eyebrow">Research interests</div>
+      <h2>Research interests</h2>
+      <div class="empty-field" aria-hidden="true"></div>
+    </section>
+    <section>
+      <div class="eyebrow">Selected work</div>
+      <h2>Papers</h2>
+      <div class="empty-field" aria-hidden="true"></div>
+    </section>
   </main>
 </BaseLayout>

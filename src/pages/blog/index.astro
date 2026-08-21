@@ -8,11 +8,10 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 const sections = [...new Set(posts.map((post) => post.data.series || '随笔'))].sort();
 ---
 
-<BaseLayout title="文章 | HlinForest" description="AI 系统、Agent、AI Infra 与工程实践文章。">
+<BaseLayout title="笔记 | Spike" description="Spike 的长篇笔记。">
   <header class="page-head container">
-    <div class="eyebrow">Writing</div>
-    <h1>文章</h1>
-    <p>长篇分析、工程笔记与研究阅读。每篇文章都尽量交代问题、机制、证据与可验证的结论。</p>
+    <div class="eyebrow">Notes</div>
+    <h1>笔记</h1>
   </header>
   <section class="container">
     <div class="filter-toolbar">

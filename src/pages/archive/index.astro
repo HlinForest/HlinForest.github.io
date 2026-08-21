@@ -6,7 +6,7 @@ import { byNewest, postUrl, publishedOnly } from '../../utils/posts';
 const posts = (await getCollection('blog')).filter(publishedOnly).sort(byNewest);
 const years = [...new Set(posts.map((post) => post.data.publishedAt.getFullYear()))];
 ---
-<BaseLayout title="归档 | HlinForest" description="按年份浏览 HlinForest 的所有文章。">
+<BaseLayout title="归档 | Spike" description="按年份浏览 Spike 的所有笔记。">
   <header class="page-head container"><div class="eyebrow">Archive</div><h1>归档</h1><p>按时间回看写作轨迹。</p></header>
   <section class="container">
     {years.map((year) => (

@@ -3,49 +3,25 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../data/site';
 ---
 
-<BaseLayout title="About Hanlin" description="Hanlin 的个人简介、研究兴趣与联系方式。">
+<BaseLayout title="About Spike" description="About Spike.">
   <header class="academic-page-head container">
     <div class="eyebrow">About</div>
-    <h1>Bio & research interests</h1>
+    <h1>Spike</h1>
   </header>
 
-  <section class="container bio-layout">
+  <section class="container bio-layout sparse-bio">
     <aside class="bio-portrait">
-      <img src={site.portrait} alt="Hanlin" width="720" height="900" />
-      <dl>
-        <div><dt>Name</dt><dd>Hanlin</dd></div>
-        <div><dt>Focus</dt><dd>AI Systems / Agents / Causality</dd></div>
-        <div><dt>Languages</dt><dd>中文 / English</dd></div>
-        <div><dt>Online</dt><dd><a href={site.github}>GitHub ↗</a></dd></div>
-      </dl>
+      <img src={site.portrait} alt={site.portraitAlt} width="901" height="1356" />
+      <p class="standalone-photo-credit">
+        Visual reference: <a href={site.portraitSource}>Khalil Fong, 2007 · Verity</a><br />
+        <a href={site.portraitLicense}>CC BY-SA 2.0</a>
+      </p>
     </aside>
 
-    <div class="bio-copy prose-like">
-      <section>
-        <h2>Bio</h2>
-        <p>我是 Hanlin。我的工作与学习位于机器学习系统、智能体工程和因果学习的交叉地带。我尤其关心一个朴素但困难的问题：如何让复杂模型在真实环境里产生可以验证、解释和复现的结果。</p>
-        <p>这也是 HlinForest 的出发点。这里既是个人学术主页，也是公开研究工作台。Blog 用于形成可单独阅读的技术论证；Learning Library 用于沉淀成体系的课程、实验和参考材料；Research 页面则维护正在推进的问题与代表工作。</p>
-      </section>
-
-      <section>
-        <h2>Research interests</h2>
-        <p>在智能体系统方向，我关注模型外部的状态管理、工具接口、评测、可观测性与恢复机制。在 AI Infra 方向，我希望把模型结构、数值计算、GPU 内存、并行策略和集群通信连接成一条可诊断的跨层路径。</p>
-        <p>在因果学习与 AI Safety 方向，我关注表征的可识别性、分布变化下的结构稳定性，以及如何把这些理论对象转化为更严格的安全研究设计。</p>
-      </section>
-
-      <section>
-        <h2>Working principles</h2>
-        <ul>
-          <li>先写清楚研究对象、假设与失败条件，再讨论结论。</li>
-          <li>将形状、资源、状态和证据放进同一个可检查的账本。</li>
-          <li>把文章、代码、实验与课程视为同一研究过程的不同输出。</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>Contact</h2>
-        <p>目前可通过 <a href={site.github}>GitHub</a> 查看项目与联系。正式邮箱、CV、教育经历与论文列表会在个人资料完善后加入本站。</p>
-      </section>
+    <div class="bio-copy prose-like blank-profile-fields">
+      <section><h2>Bio</h2><div class="empty-field" aria-hidden="true"></div></section>
+      <section><h2>Research interests</h2><div class="empty-field" aria-hidden="true"></div></section>
+      <section><h2>Contact</h2><div class="empty-field" aria-hidden="true"></div></section>
     </div>
   </section>
 </BaseLayout>

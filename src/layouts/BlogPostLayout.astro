@@ -15,7 +15,7 @@ const { post, headings, previous, next } = Astro.props;
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 ---
 
-<BaseLayout title={`${post.data.title} | HlinForest`} description={post.data.description} image="" type="article">
+<BaseLayout title={`${post.data.title} | Spike`} description={post.data.description} image="" type="article">
   <div class="reading-progress" data-reading-progress aria-hidden="true"></div>
   <div class="article-shell">
     <aside class="article-rail" aria-label="文章操作">
@@ -35,7 +35,7 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
         <div class="article-meta">
           <span><time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time></span>
           <span>{readingMinutes(post.body)} 分钟阅读</span>
-          <span>Hanlin</span>
+          <span>Spike</span>
           {post.data.updatedAt && <span>更新于 {formatDate(post.data.updatedAt)}</span>}
         </div>
         <div class="article-tags">{post.data.tags.map((tag) => <a class="tag" href={`/blog/?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}</div>

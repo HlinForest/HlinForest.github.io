@@ -8,8 +8,7 @@ const active = (href: string) => href === '/' ? path === '/' : path.startsWith(h
 <header class="site-header">
   <div class="container header-inner">
     <a class="brand" href="/" aria-label={`${site.name} 首页`}>
-      <span class="brand-name">Hanlin</span>
-      <span class="brand-role">AI systems & research notes</span>
+      <span class="brand-name">{site.author}</span>
     </a>
     <div class="header-actions">
       <nav class="desktop-nav" aria-label="主导航">
