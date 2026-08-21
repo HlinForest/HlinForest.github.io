@@ -2,7 +2,7 @@
 import { site } from '../data/site';
 
 const path = Astro.url.pathname;
-const active = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
+const active = (href: string) => href === '/#about' ? path === '/' : path.startsWith(href);
 ---
 
 <header class="site-header">
@@ -11,23 +11,13 @@ const active = (href: string) => href === '/' ? path === '/' : path.startsWith(h
       <span class="brand-name">{site.author}</span>
     </a>
     <div class="header-actions">
-      <nav class="desktop-nav" aria-label="主导航">
+      <nav class="site-nav" aria-label="主导航">
         {site.nav.map((item) => (
           <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
         ))}
+        <a href={site.github} rel="me">GitHub ↗</a>
       </nav>
-      <button class="search-trigger compact" type="button" data-open-search aria-label="搜索文章与学习文档" title="搜索">
-        <span aria-hidden="true">⌕</span>
-        <span>搜索</span>
-        <kbd>⌘ K</kbd>
-      </button>
       <button class="icon-button" type="button" data-theme-toggle aria-label="切换深浅主题" title="切换主题">◐</button>
     </div>
   </div>
 </header>
-
-<nav class="mobile-nav" aria-label="移动端导航">
-  {site.nav.map((item) => (
-    <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
-  ))}
-</nav>

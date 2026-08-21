@@ -38,7 +38,7 @@ const toc = headings.filter((heading) => heading.depth === 2 || heading.depth ==
           <span>Spike</span>
           {post.data.updatedAt && <span>更新于 {formatDate(post.data.updatedAt)}</span>}
         </div>
-        <div class="article-tags">{post.data.tags.map((tag) => <a class="tag" href={`/blog/?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}</div>
+        <div class="article-tags">{post.data.tags.map((tag) => <a class="tag" href={`/notes/?tag=${encodeURIComponent(tag)}`}>{tag}</a>)}</div>
       </header>
 
       <div class="prose" data-article-body><slot /></div>

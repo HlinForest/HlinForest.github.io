@@ -1,10 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
 import SiteHeader from '../components/SiteHeader.astro';
-import SearchDialog from '../components/SearchDialog.astro';
 import { site } from '../data/site';
-import { byNewest, publishedOnly } from '../utils/posts';
-import { learningTitle, learningUrl } from '../utils/learning';
 import '../styles/global.css';
 
 interface Props {
@@ -17,29 +13,11 @@ interface Props {
 const {
   title = site.title,
   description = site.description,
-  image = '/og.png',
+  image = site.portrait,
   type = 'website',
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url);
 const imageUrl = image ? new URL(image, site.url) : undefined;
-const posts = (await getCollection('blog')).filter(publishedOnly).sort(byNewest);
-const learning = await getCollection('learning');
-const searchItems = [
-  ...posts.map((post) => ({
-    title: post.data.title,
-    description: post.data.description,
-    tags: post.data.tags,
-    href: `/blog/${post.id}/`,
-    section: post.data.series || 'Blog',
-  })),
-  ...learning.map((doc) => ({
-    title: learningTitle(doc),
-    description: 'CS336 中文深度学习文档',
-    tags: ['CS336', 'LLM', '学习文档'],
-    href: learningUrl(doc),
-    section: 'Learning Notes',
-  })),
-];
 ---
 
 <!doctype html>
@@ -77,14 +55,9 @@ const searchItems = [
     <footer class="site-footer">
       <div class="container footer-inner">
         <span>© {new Date().getFullYear()} {site.author}</span>
-        <div class="footer-links">
-          <a href="/rss.xml">RSS</a>
-          <a href={site.github} rel="me">GitHub</a>
-          <a href="/about/">关于</a>
-        </div>
+        <a href={site.github} rel="me">GitHub ↗</a>
       </div>
     </footer>
-    <SearchDialog items={searchItems} />
     <script>
       const root = document.documentElement;
       document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
@@ -93,49 +66,17 @@ const searchItems = [
         localStorage.setItem('theme', next);
       });
 
-      const dialog = document.querySelector<HTMLDialogElement>('[data-search-dialog]');
-      const input = document.querySelector<HTMLInputElement>('[data-search-input]');
-      const results = document.querySelector<HTMLElement>('[data-search-results]');
-      const rawIndex = document.querySelector('[data-search-index]')?.textContent || '[]';
-      type SearchItem = { title: string; description: string; section: string; tags: string[]; href: string };
-      const index = JSON.parse(rawIndex) as SearchItem[];
-
-      const openSearch = () => {
-        if (!dialog) return;
-        dialog.showModal();
-        window.setTimeout(() => input?.focus(), 20);
-      };
-      const closeSearch = () => dialog?.close();
-      document.querySelectorAll('[data-open-search]').forEach((el) => el.addEventListener('click', openSearch));
-      document.querySelector('[data-close-search]')?.addEventListener('click', closeSearch);
-      dialog?.addEventListener('click', (event) => { if (event.target === dialog) closeSearch(); });
-      document.addEventListener('keydown', (event) => {
-        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openSearch(); }
-        if (event.key === 'Escape') closeSearch();
-      });
-
-      const escapeHtml = (value: unknown) => String(value).replace(/[&<>'"]/g, (char) => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-      } as Record<string, string>)[char] || char);
-      input?.addEventListener('input', () => {
-        const query = input.value.trim().toLocaleLowerCase();
-        if (!results) return;
-        if (!query) { results.innerHTML = '<div class="search-empty">输入关键词开始搜索</div>'; return; }
-        const matches = index.filter((item) => [item.title, item.description, item.section, ...(item.tags || [])].join(' ').toLocaleLowerCase().includes(query)).slice(0, 8);
-        results.innerHTML = matches.length ? matches.map((item) => `
-          <a class="search-item" href="${encodeURI(item.href)}">
-            <strong>${escapeHtml(item.title)}</strong>
-            <span>${escapeHtml(item.section)} · ${escapeHtml((item.tags || []).join(' / '))}</span>
-          </a>`).join('') : '<div class="search-empty">没有找到匹配内容</div>';
-      });
-
       document.querySelectorAll('.heading-anchor').forEach((anchor) => {
         anchor.addEventListener('click', async (event) => {
           event.preventDefault();
           const href = anchor.getAttribute('href');
           if (!href) return;
           history.replaceState(null, '', href);
-          try { await navigator.clipboard.writeText(location.href); anchor.textContent = '✓'; setTimeout(() => anchor.textContent = '#', 900); } catch {}
+          try {
+            await navigator.clipboard.writeText(location.href);
+            anchor.textContent = '✓';
+            setTimeout(() => anchor.textContent = '#', 900);
+          } catch {}
         });
       });
     </script>

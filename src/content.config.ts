@@ -18,12 +18,4 @@ const blog = defineCollection({
   }),
 });
 
-const learning = defineCollection({
-  loader: glob({
-    base: './src/content/learning',
-    pattern: '**/*.md',
-    generateId: ({ entry }) => entry.replace(/\.md$/i, '').toLowerCase(),
-  }),
-});
-
-export const collections = { blog, learning };
+export const collections = { blog };

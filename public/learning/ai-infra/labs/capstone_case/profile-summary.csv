@@ -1,8 +1,0 @@
-region,cpu_ms,cuda_ms,calls,allocated_mib,notes
-dataloader_wait,41.0,0.0,1,0,"periodic every 4-6 steps"
-h2d_copy,8.5,7.9,2,64,"pageable host memory"
-forward,13.0,31.0,1,910,"many pointwise kernels"
-backward,18.0,54.0,1,1320,"12 gradient buckets"
-allreduce,2.0,28.0,12,192,"little visible overlap"
-optimizer_step,9.0,12.0,1,580,"AdamW foreach disabled"
-loss_item,6.8,0.0,1,0,"CPU waits for device"

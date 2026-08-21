@@ -7,7 +7,7 @@ export const byNewest = (a: BlogPost, b: BlogPost) =>
 
 export const publishedOnly = (post: BlogPost) => !post.data.draft;
 
-export const postUrl = (post: BlogPost) => `/blog/${post.id}/`;
+export const postUrl = (post: BlogPost) => `/notes/${post.id}/`;
 
 export function readingMinutes(body = '') {
   const chinese = (body.match(/[\u3400-\u9fff]/g) || []).length;
