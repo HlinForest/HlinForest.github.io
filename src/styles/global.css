@@ -540,7 +540,7 @@ img { max-width: 100%; height: auto; }
   align-items: flex-start;
 }
 .about-identity::before {
-  content: 'S';
+  content: '';
   position: absolute;
   z-index: -1;
   left: -.07em;
@@ -580,6 +580,41 @@ img { max-width: 100%; height: auto; }
   font-weight: 700;
 }
 .identity-link:hover { color: var(--text); }
+
+.home-mark {
+  position: relative;
+  width: min(100%, 570px);
+  aspect-ratio: 3 / 4;
+  justify-self: end;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 72% 18%, color-mix(in srgb, white 72%, transparent) 0 8%, transparent 31%),
+    radial-gradient(circle at 22% 78%, color-mix(in srgb, var(--accent) 34%, transparent), transparent 42%),
+    linear-gradient(145deg, color-mix(in srgb, var(--tiffany) 74%, white), color-mix(in srgb, var(--tiffany) 26%, var(--surface)) 52%, var(--surface-soft));
+  box-shadow: 22px 22px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface));
+}
+.home-mark::before,
+.home-mark::after {
+  content: '';
+  position: absolute;
+  border: 1px solid color-mix(in srgb, var(--accent-strong) 20%, transparent);
+  border-radius: 50%;
+}
+.home-mark::before { width: 72%; aspect-ratio: 1; left: -25%; top: 12%; }
+.home-mark::after { width: 88%; aspect-ratio: 1; right: -40%; bottom: -9%; }
+.home-mark span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  color: color-mix(in srgb, var(--accent-strong) 72%, var(--text));
+  font-family: var(--serif);
+  font-size: clamp(12rem, 25vw, 20rem);
+  font-weight: 520;
+  line-height: 1;
+  letter-spacing: -.09em;
+  text-shadow: 0 12px 40px color-mix(in srgb, var(--accent-strong) 16%, transparent);
+}
 
 .art-portrait { width: min(100%, 570px); margin: 0; justify-self: end; }
 .art-portrait-frame {
@@ -643,6 +678,98 @@ img { max-width: 100%; height: auto; }
   letter-spacing: -.075em;
 }
 
+.misc-page { padding-block: clamp(76px, 10vw, 132px); }
+.misc-head { margin-bottom: 62px; }
+.misc-head h1 {
+  margin: 18px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(4.8rem, 11vw, 8.8rem);
+  font-weight: 520;
+  line-height: .82;
+  letter-spacing: -.075em;
+}
+.music-carousel {
+  width: min(100%, 610px);
+  margin-inline: auto;
+  outline: none;
+}
+.music-carousel:focus-visible { outline: 2px solid var(--accent); outline-offset: 12px; }
+.music-slide[hidden] { display: none; }
+.music-portrait { margin: 0; }
+.music-portrait-frame {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--tiffany);
+  box-shadow: 22px 22px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface));
+}
+.music-portrait-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid color-mix(in srgb, white 34%, transparent);
+  pointer-events: none;
+}
+.music-portrait-frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.music-quote {
+  margin: 30px 0 0;
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: clamp(1.12rem, 2vw, 1.38rem);
+  font-weight: 520;
+  line-height: 1.75;
+  letter-spacing: .035em;
+  text-align: center;
+}
+.music-quote.two-lines span { display: block; }
+.music-portrait figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px 24px;
+  margin-top: 17px;
+  color: var(--text-faint);
+  font-size: .68rem;
+  line-height: 1.55;
+}
+.music-portrait figcaption strong {
+  flex: none;
+  color: var(--text-soft);
+  letter-spacing: .12em;
+}
+.music-portrait figcaption > span { text-align: right; }
+.music-portrait figcaption a { text-decoration: underline; text-underline-offset: 2px; }
+.music-portrait figcaption a:hover { color: var(--accent-strong); }
+.music-controls {
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  gap: 18px;
+  align-items: center;
+  margin-top: 34px;
+}
+.music-controls > button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-soft);
+  cursor: pointer;
+}
+.music-controls > button:hover { border-color: var(--accent); color: var(--accent-strong); }
+.music-dots { display: flex; justify-content: center; gap: 4px; }
+.music-dots button {
+  min-width: 42px;
+  padding: 7px 9px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  color: var(--text-faint);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: .72rem;
+}
+.music-dots button[aria-pressed='true'] { border-bottom-color: var(--accent); color: var(--accent-strong); }
+
 @media (max-width: 820px) {
   .site-nav { gap: 1px; }
   .site-nav a { padding-inline: 7px; font-size: .76rem; }
@@ -654,6 +781,7 @@ img { max-width: 100%; height: auto; }
   .about-identity { min-height: 290px; }
   .about-identity::before { left: -.02em; font-size: min(72vw, 23rem); }
   .about-identity h1 { font-size: clamp(5.4rem, 24vw, 8.6rem); }
+  .home-mark { width: min(90%, 530px); justify-self: center; }
   .art-portrait { width: min(90%, 530px); justify-self: center; }
   .site-footer { margin-top: 70px; padding-bottom: 42px; }
 }
@@ -664,9 +792,19 @@ img { max-width: 100%; height: auto; }
   .icon-button { width: 32px; }
   .about-landing { width: min(calc(100% - 36px), var(--content)); }
   .about-identity { min-height: 240px; }
+  .home-mark {
+    width: calc(100% - 14px);
+    box-shadow: 14px 14px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface));
+  }
   .art-portrait { width: calc(100% - 14px); }
   .art-portrait-frame { box-shadow: 14px 14px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface)); }
   .portrait-quote { margin-top: 24px; font-size: .98rem; text-align: left; }
   .art-portrait figcaption { display: grid; }
   .art-portrait figcaption > span:last-child { text-align: left; }
+  .misc-head { margin-bottom: 46px; }
+  .music-carousel { width: calc(100% - 14px); }
+  .music-portrait-frame { box-shadow: 14px 14px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface)); }
+  .music-quote { font-size: 1.05rem; text-align: left; }
+  .music-portrait figcaption { display: grid; }
+  .music-portrait figcaption > span { text-align: left; }
 }

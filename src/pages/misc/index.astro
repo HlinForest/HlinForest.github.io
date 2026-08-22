@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../data/site';
+---
+
+<BaseLayout title="Misc | Spike" description="Spike 的私人收藏。">
+  <section class="misc-page container" aria-labelledby="music-title">
+    <header class="misc-head">
+      <div class="eyebrow">Misc</div>
+      <h1 id="music-title">Music</h1>
+    </header>
+
+    <div class="music-carousel" data-music-carousel tabindex="0" aria-label="喜欢的音乐人肖像">
+      <div class="music-slides" aria-live="polite">
+        <article class="music-slide" data-music-slide>
+          <figure class="music-portrait">
+            <div class="music-portrait-frame">
+              <img src={site.portrait} alt={site.portraitAlt} width="1090" height="1451" />
+            </div>
+            <blockquote class="music-quote">也没有一时澎湃悸动，却在深秋细水长流。</blockquote>
+            <figcaption>
+              <strong>方大同</strong>
+              <span>
+                After <a href={site.portraitSource}>Khalil Fong, 2007 · Verity</a>
+                · AI-transformed · <a href={site.portraitLicense}>CC BY-SA 2.0</a>
+              </span>
+            </figcaption>
+          </figure>
+        </article>
+
+        <article class="music-slide" data-music-slide hidden>
+          <figure class="music-portrait">
+            <div class="music-portrait-frame">
+              <img
+                src="/zhang-yusheng-impressionist-portrait.png"
+                alt="张雨生年轻时期的印象派肖像画"
+                width="1110"
+                height="1480"
+              />
+            </div>
+            <blockquote class="music-quote two-lines">
+              <span>我的胸口鼓鼓吹胀</span>
+              <span>欢乐幸福的遐想</span>
+            </blockquote>
+            <figcaption>
+              <strong>张雨生</strong>
+              <span>AI-generated impressionist portrait study</span>
+            </figcaption>
+          </figure>
+        </article>
+      </div>
+
+      <nav class="music-controls" aria-label="切换肖像">
+        <button type="button" data-music-prev aria-label="上一张肖像">←</button>
+        <div class="music-dots" role="group" aria-label="选择肖像">
+          <button type="button" data-music-dot="0" aria-label="查看方大同肖像" aria-pressed="true">01</button>
+          <button type="button" data-music-dot="1" aria-label="查看张雨生肖像" aria-pressed="false">02</button>
+        </div>
+        <button type="button" data-music-next aria-label="下一张肖像">→</button>
+      </nav>
+    </div>
+  </section>
+
+  <script>
+    const carousel = document.querySelector<HTMLElement>('[data-music-carousel]');
+    const slides = [...document.querySelectorAll<HTMLElement>('[data-music-slide]')];
+    const dots = [...document.querySelectorAll<HTMLButtonElement>('[data-music-dot]')];
+    let currentSlide = 0;
+
+    const showSlide = (next: number) => {
+      currentSlide = (next + slides.length) % slides.length;
+      slides.forEach((slide, index) => {
+        const active = index === currentSlide;
+        slide.hidden = !active;
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      dots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === currentSlide)));
+    };
+
+    document.querySelector('[data-music-prev]')?.addEventListener('click', () => showSlide(currentSlide - 1));
+    document.querySelector('[data-music-next]')?.addEventListener('click', () => showSlide(currentSlide + 1));
+    dots.forEach((dot) => dot.addEventListener('click', () => showSlide(Number(dot.dataset.musicDot))));
+    carousel?.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') showSlide(currentSlide - 1);
+      if (event.key === 'ArrowRight') showSlide(currentSlide + 1);
+    });
+    showSlide(0);
+  </script>
+</BaseLayout>
