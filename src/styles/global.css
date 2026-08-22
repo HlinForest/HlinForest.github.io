@@ -888,14 +888,12 @@ img { max-width: 100%; height: auto; }
 }
 .photo-reveal p { margin: 0; }
 .photo-reveal p + p { margin-top: 1em; }
-.tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover ~ .photo-reveal,
-.tokyo-feature .garden-album-stage.is-open > .photo-reveal {
+.tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover ~ .photo-reveal {
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
 }
-.tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover img,
-.tokyo-feature .garden-album-stage.is-open .garden-album-slide[data-tokyo-story-trigger] img { scale: 1.025; }
+.tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover img { scale: 1.025; }
 .music-carousel {
   width: min(100%, 610px);
   margin-inline: 0;
