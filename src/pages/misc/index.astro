@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../data/site';
 ---
 
-<BaseLayout title="Misc | Spike" description="Spike 喜欢的文字、照片与音乐。" image="/tokyo-skyscanner-reference.png">
+<BaseLayout title="Misc | Spike" description="Spike 喜欢的文字、照片与音乐。" image="/tokyo-blue-hour-tower.png">
   <section class="misc-page container" aria-labelledby="misc-title">
     <header class="misc-head">
       <div class="eyebrow">Misc</div>
@@ -25,6 +25,26 @@ import { site } from '../../data/site';
         <h2 id="photography-title">Photography</h2>
       </header>
 
+      <figure class="photo-feature photo-panorama">
+        <div class="photo-feature-frame">
+          <img
+            src="/tokyo-skyscanner-reference.png"
+            alt="东京天际线、东京塔与远处富士山的宽幅城市景观"
+            width="3157"
+            height="796"
+          />
+        </div>
+        <figcaption>
+          <span>Tokyo skyline</span>
+          <span class="photo-meta">
+            Favorite image · Skyscanner reference<br />
+            <a href="https://www.skyscanner.com.hk/news/bc/stories-of-our-favourite-travel-photos">
+              Visual reference · Skyscanner travel stories <span aria-hidden="true">↗</span>
+            </a>
+          </span>
+        </figcaption>
+      </figure>
+
       <figure class="photo-feature tokyo-feature">
         <div
           class="photo-feature-frame"
@@ -35,10 +55,10 @@ import { site } from '../../data/site';
           aria-label="东京蓝调时刻，悬停或点击阅读文字"
         >
           <img
-            src="/tokyo-skyscanner-reference.png"
-            alt="蓝调时刻的东京天际线、东京塔与远处的富士山"
-            width="3157"
-            height="796"
+            src="/tokyo-blue-hour-tower.png"
+            alt="蓝调时刻的东京港区天际线与点亮的东京塔"
+            width="1536"
+            height="960"
           />
           <div class="photo-reveal" data-photo-overlay aria-hidden="true">
             <blockquote>
@@ -52,7 +72,7 @@ import { site } from '../../data/site';
         <figcaption>
           <span>Tokyo · Blue hour</span>
           <span class="photo-meta">
-            Favorite image · Skyscanner reference · 悬停或点击阅读<br />
+            Visual study · AI-generated · 悬停或点击阅读<br />
             <a href="https://www.sina.cn/news/detail/5155104072140071.html">
               Text &amp; image reference · _等待夏夜吹成烈焰 / 新浪 <span aria-hidden="true">↗</span>
             </a>
