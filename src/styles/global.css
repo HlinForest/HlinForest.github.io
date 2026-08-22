@@ -861,13 +861,8 @@ img { max-width: 100%; height: auto; }
   font-size: .64rem;
   letter-spacing: .035em;
 }
-.photo-feature figcaption > span:last-child { text-align: right; }
+.photo-feature figcaption > .photo-meta { text-align: right; }
 .photo-meta { line-height: 1.7; }
-.tokyo-feature .photo-feature-frame {
-  cursor: pointer;
-  outline: none;
-}
-.tokyo-feature .photo-feature-frame:focus-visible { outline: 2px solid var(--accent); outline-offset: 10px; }
 .photo-reveal {
   position: absolute;
   z-index: 1;
@@ -893,14 +888,14 @@ img { max-width: 100%; height: auto; }
 }
 .photo-reveal p { margin: 0; }
 .photo-reveal p + p { margin-top: 1em; }
-.tokyo-feature .photo-feature-frame:hover > .photo-reveal,
-.tokyo-feature .photo-feature-frame.is-open > .photo-reveal {
+.tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover ~ .photo-reveal,
+.tokyo-feature .garden-album-stage.is-open > .photo-reveal {
   opacity: 1;
   pointer-events: auto;
   visibility: visible;
 }
-.tokyo-feature .photo-feature-frame:hover > img,
-.tokyo-feature .photo-feature-frame.is-open > img { scale: 1.025; }
+.tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover img,
+.tokyo-feature .garden-album-stage.is-open .garden-album-slide[data-tokyo-story-trigger] img { scale: 1.025; }
 .music-carousel {
   width: min(100%, 610px);
   margin-inline: 0;
@@ -1019,7 +1014,7 @@ img { max-width: 100%; height: auto; }
   .photo-reveal { align-items: start; padding: 24px; }
   .photo-reveal blockquote { font-size: .84rem; line-height: 1.75; }
   .photo-feature figcaption { display: grid; gap: 7px; }
-  .photo-feature figcaption > span:last-child { text-align: left; }
+  .photo-feature figcaption > .photo-meta { text-align: left; }
   .garden-album-controls { left: 10px; right: 10px; bottom: 10px; gap: 6px; }
   .garden-album-dots button { min-width: 34px; padding-inline: 5px; }
   .music-carousel { width: calc(100% - 14px); }
