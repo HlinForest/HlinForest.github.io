@@ -678,6 +678,39 @@ img { max-width: 100%; height: auto; }
   line-height: .95;
   letter-spacing: -.052em;
 }
+.misc-statement {
+  display: grid;
+  grid-template-columns: minmax(0, 690px) auto;
+  gap: 28px clamp(32px, 6vw, 90px);
+  align-items: end;
+  margin: 0 0 clamp(56px, 8vw, 90px);
+  padding: 0 0 clamp(42px, 6vw, 64px);
+  border-bottom: 1px solid var(--line);
+}
+.misc-statement p {
+  margin: 0;
+  color: var(--text-soft);
+  font-family: var(--serif);
+  font-size: clamp(1rem, 1.55vw, 1.18rem);
+  line-height: 1.95;
+  letter-spacing: .018em;
+}
+.misc-statement > a,
+.photo-meta a {
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.misc-statement > a {
+  justify-self: end;
+  font-family: var(--mono);
+  font-size: .64rem;
+  line-height: 1.6;
+  text-align: right;
+}
+.misc-statement > a:hover,
+.photo-meta a:hover { color: var(--text); }
 .misc-section {
   display: grid;
   grid-template-columns: minmax(130px, 180px) minmax(0, 1fr);
@@ -739,7 +772,8 @@ img { max-width: 100%; height: auto; }
   font-size: .64rem;
   letter-spacing: .035em;
 }
-.photo-feature figcaption span:last-child { text-align: right; }
+.photo-feature figcaption > span:last-child { text-align: right; }
+.photo-meta { line-height: 1.7; }
 .tokyo-feature { cursor: pointer; outline: none; }
 .tokyo-feature:focus-visible { outline: 2px solid var(--accent); outline-offset: 10px; }
 .photo-reveal {
@@ -865,6 +899,8 @@ img { max-width: 100%; height: auto; }
   }
   .profile-avatar { width: min(78vw, 355px); }
   .profile-introduction { min-height: auto; padding-top: 0; }
+  .misc-statement { grid-template-columns: 1fr; align-items: start; }
+  .misc-statement > a { justify-self: start; text-align: left; }
   .misc-section { grid-template-columns: 1fr; gap: 28px; }
   .misc-section-head { grid-template-columns: 34px 1fr; align-items: baseline; gap: 4px; }
   .art-portrait { width: min(90%, 530px); justify-self: center; }
@@ -888,7 +924,7 @@ img { max-width: 100%; height: auto; }
   .photo-reveal { align-items: start; padding: 24px; }
   .photo-reveal blockquote { font-size: .74rem; line-height: 1.75; }
   .photo-feature figcaption { display: grid; gap: 7px; }
-  .photo-feature figcaption span:last-child { text-align: left; }
+  .photo-feature figcaption > span:last-child { text-align: left; }
   .music-carousel { width: calc(100% - 14px); }
   .music-portrait-frame { box-shadow: 14px 14px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface)); }
   .music-quote { font-size: 1.05rem; text-align: left; }
