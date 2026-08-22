@@ -80,26 +80,62 @@ import { site } from '../../data/site';
         </figcaption>
       </figure>
 
-      <figure class="photo-feature">
-        <div class="photo-feature-frame">
-          <img
-            src="/garden-of-words-rainy-lake-v2.png"
-            alt="雨中低垂枝叶映在深绿色湖面上，雨滴形成层层水纹"
-            width="1536"
-            height="1024"
-            loading="lazy"
-          />
+      <figure class="photo-feature garden-album" data-garden-album tabindex="0" aria-label="言叶之庭雨景相册">
+        <div class="garden-album-stage" aria-live="polite">
+          <button type="button" class="garden-album-slide" data-garden-slide>
+            <img
+              src="/garden-alan-lake.png"
+              alt="雨中新宿御苑被树木环抱的湖面"
+              width="1200"
+              height="900"
+              loading="lazy"
+            />
+          </button>
+          <button type="button" class="garden-album-slide" data-garden-slide hidden>
+            <img
+              src="/garden-alan-rain-field.png"
+              alt="雨幕中的新宿御苑草地与远处树木"
+              width="1200"
+              height="900"
+              loading="lazy"
+            />
+          </button>
+          <button type="button" class="garden-album-slide" data-garden-slide hidden>
+            <img
+              src="/garden-alan-hydrangea.png"
+              alt="雨水覆盖的蓝紫色绣球花与深绿叶片"
+              width="1200"
+              height="900"
+              loading="lazy"
+            />
+          </button>
+          <button type="button" class="garden-album-slide" data-garden-slide hidden>
+            <img
+              src="/garden-alan-lily.png"
+              alt="雨中的白色百合花与水珠"
+              width="1200"
+              height="900"
+              loading="lazy"
+            />
+          </button>
+
+          <nav class="garden-album-controls" aria-label="切换言叶之庭雨景照片">
+            <button type="button" data-garden-prev aria-label="上一张雨景照片">←</button>
+            <div class="garden-album-dots" role="group" aria-label="选择雨景照片">
+              <button type="button" data-garden-dot="0" aria-label="查看雨天湖面" aria-pressed="true">01</button>
+              <button type="button" data-garden-dot="1" aria-label="查看雨幕草地" aria-pressed="false">02</button>
+              <button type="button" data-garden-dot="2" aria-label="查看雨中绣球" aria-pressed="false">03</button>
+              <button type="button" data-garden-dot="3" aria-label="查看雨中百合" aria-pressed="false">04</button>
+            </div>
+            <button type="button" data-garden-next aria-label="下一张雨景照片">→</button>
+          </nav>
         </div>
         <figcaption>
-          <span>言叶之庭 · 雨天湖面</span>
+          <span data-garden-label>言叶之庭 · 雨天湖面</span>
           <span class="photo-meta">
-            Original visual study · AI-generated<br />
+            Photography · Alan D. Haller<br />
             <a href="https://alan-d-haller.info/travel_jp/thegardenofwords/">
-              Location reference · 新宿御苑雨景 <span aria-hidden="true">↗</span>
-            </a>
-            ·
-            <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=835636229">
-              Composition reference · 雨天の湖面 <span aria-hidden="true">↗</span>
+              Source · 雨中的新宿御苑 <span aria-hidden="true">↗</span>
             </a>
           </span>
         </figcaption>
@@ -185,6 +221,40 @@ import { site } from '../../data/site';
       }
       if (event.key === 'Escape') setPhotoOpen(false);
     });
+
+    const gardenAlbum = document.querySelector<HTMLElement>('[data-garden-album]');
+    const gardenSlides = [...document.querySelectorAll<HTMLButtonElement>('[data-garden-slide]')];
+    const gardenDots = [...document.querySelectorAll<HTMLButtonElement>('[data-garden-dot]')];
+    const gardenLabel = document.querySelector<HTMLElement>('[data-garden-label]');
+    const gardenLabels = [
+      '言叶之庭 · 雨天湖面',
+      '言叶之庭 · 雨幕草地',
+      '言叶之庭 · 雨中绣球',
+      '言叶之庭 · 雨中百合',
+    ];
+    let currentGardenSlide = 0;
+
+    const showGardenSlide = (next: number) => {
+      currentGardenSlide = (next + gardenSlides.length) % gardenSlides.length;
+      gardenSlides.forEach((slide, index) => {
+        const active = index === currentGardenSlide;
+        slide.hidden = !active;
+        slide.setAttribute('aria-hidden', String(!active));
+        slide.setAttribute('aria-label', active ? `${gardenLabels[index]}，点击查看下一张` : gardenLabels[index]);
+      });
+      gardenDots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === currentGardenSlide)));
+      if (gardenLabel) gardenLabel.textContent = gardenLabels[currentGardenSlide];
+    };
+
+    gardenSlides.forEach((slide) => slide.addEventListener('click', () => showGardenSlide(currentGardenSlide + 1)));
+    document.querySelector('[data-garden-prev]')?.addEventListener('click', () => showGardenSlide(currentGardenSlide - 1));
+    document.querySelector('[data-garden-next]')?.addEventListener('click', () => showGardenSlide(currentGardenSlide + 1));
+    gardenDots.forEach((dot) => dot.addEventListener('click', () => showGardenSlide(Number(dot.dataset.gardenDot))));
+    gardenAlbum?.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') showGardenSlide(currentGardenSlide - 1);
+      if (event.key === 'ArrowRight') showGardenSlide(currentGardenSlide + 1);
+    });
+    showGardenSlide(0);
 
     const carousel = document.querySelector<HTMLElement>('[data-music-carousel]');
     const slides = [...document.querySelectorAll<HTMLElement>('[data-music-slide]')];

@@ -771,6 +771,86 @@ img { max-width: 100%; height: auto; }
   height: calc(100% + 8px);
   translate: 0 -4px;
 }
+.garden-album { outline: none; }
+.garden-album:focus-visible { outline: 2px solid var(--accent); outline-offset: 10px; }
+.garden-album-stage {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--surface-soft);
+}
+.garden-album-stage::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border: 1px solid color-mix(in srgb, white 24%, transparent);
+  pointer-events: none;
+}
+.garden-album-slide {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.garden-album-slide[hidden] { display: none; }
+.garden-album-slide:focus-visible { outline: 2px solid var(--accent); outline-offset: -5px; }
+.garden-album-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 600ms cubic-bezier(.2, .7, .2, 1);
+}
+.garden-album-slide:hover img { scale: 1.012; }
+.garden-album-controls {
+  position: absolute;
+  z-index: 3;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  gap: 12px;
+  align-items: center;
+  pointer-events: none;
+}
+.garden-album-controls button { pointer-events: auto; }
+.garden-album-controls > button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid color-mix(in srgb, white 46%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, #071d24 64%, transparent);
+  color: white;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+.garden-album-controls > button:hover { background: color-mix(in srgb, var(--accent-strong) 78%, transparent); }
+.garden-album-dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+.garden-album-dots button {
+  min-width: 40px;
+  padding: 7px 8px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: color-mix(in srgb, #071d24 58%, transparent);
+  color: color-mix(in srgb, white 64%, transparent);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: .67rem;
+  backdrop-filter: blur(8px);
+}
+.garden-album-dots button[aria-pressed='true'] {
+  border-bottom-color: var(--tiffany);
+  color: white;
+}
 .photo-feature figcaption {
   display: flex;
   justify-content: space-between;
@@ -940,6 +1020,8 @@ img { max-width: 100%; height: auto; }
   .photo-reveal blockquote { font-size: .84rem; line-height: 1.75; }
   .photo-feature figcaption { display: grid; gap: 7px; }
   .photo-feature figcaption > span:last-child { text-align: left; }
+  .garden-album-controls { left: 10px; right: 10px; bottom: 10px; gap: 6px; }
+  .garden-album-dots button { min-width: 34px; padding-inline: 5px; }
   .music-carousel { width: calc(100% - 14px); }
   .music-portrait-frame { box-shadow: 14px 14px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface)); }
   .music-quote { font-size: 1.05rem; text-align: left; }
