@@ -713,15 +713,17 @@ img { max-width: 100%; height: auto; }
 .photo-meta a:hover { color: var(--text); }
 .misc-section {
   display: grid;
-  grid-template-columns: minmax(130px, 180px) minmax(0, 1fr);
-  gap: clamp(36px, 6vw, 82px);
+  grid-template-columns: 1fr;
+  gap: 30px;
   padding-block: clamp(46px, 7vw, 78px);
   border-top: 1px solid var(--line);
 }
 .misc-section-head {
   align-self: start;
   display: grid;
-  gap: 14px;
+  grid-template-columns: 42px 1fr;
+  align-items: baseline;
+  gap: 8px;
 }
 .misc-section-head > span {
   color: var(--accent-strong);
@@ -737,12 +739,6 @@ img { max-width: 100%; height: auto; }
   font-weight: 540;
   line-height: 1.25;
   letter-spacing: -.02em;
-}
-.photography-section { grid-template-columns: 1fr; }
-.photography-section .misc-section-head {
-  grid-template-columns: 42px 1fr;
-  align-items: baseline;
-  gap: 8px;
 }
 .photography-section .photo-feature { width: 100%; }
 .photo-feature {
