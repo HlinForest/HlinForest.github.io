@@ -113,14 +113,14 @@ public/images/misc/my-photo.jpg
 
 ### 3.3 给当前东京／言叶之庭相册增加照片
 
-当前合并相册的顺序是：东京蓝调时刻、湖面、草地、绣球、百合。若要继续增加同一组、同一来源的雨景：
+当前合并相册的顺序是：东京蓝调时刻 01–04、湖面、草地、绣球、百合。若要继续增加同一组、同一来源的雨景：
 
 1. 在 `garden-album-stage` 中、相册控制栏之前复制一个 `data-garden-slide` 块并修改图片路径。
 2. 在 `garden-album-dots` 中增加下一个编号按钮。
 3. 在页面下方脚本的 `gardenLabels` 数组末尾增加对应标题。
 4. `data-garden-dot` 从 `0` 开始，必须与照片顺序一致。
 
-第 6 张照片的示例：
+第 9 张照片的示例：
 
 ```astro
 <button type="button" class="garden-album-slide" data-garden-slide hidden>
@@ -139,17 +139,20 @@ public/images/misc/my-photo.jpg
 ```astro
 <button
   type="button"
-  data-garden-dot="5"
+  data-garden-dot="8"
   aria-label="查看雨中石阶"
   aria-pressed="false"
->06</button>
+>09</button>
 ```
 
 脚本数组增加：
 
 ```ts
 const gardenLabels = [
-  'Tokyo · Blue hour',
+  'Tokyo · Blue hour 01',
+  'Tokyo · Blue hour 02',
+  'Tokyo · Blue hour 03',
+  'Tokyo · Blue hour 04',
   '言叶之庭 · 雨天湖面',
   '言叶之庭 · 雨幕草地',
   '言叶之庭 · 雨中绣球',
@@ -158,7 +161,7 @@ const gardenLabels = [
 ];
 ```
 
-注意：当前第 2 张以后统一显示 Alan D. Haller 的署名与来源。自己的照片或其他作者的照片不要直接加进这组相册，应使用上一节的独立照片块并填写正确署名。
+注意：当前第 1–4 张显示 Tokyo blue hour 的摄影说明，第 5 张以后统一显示 Alan D. Haller 的署名与来源。自己的照片或其他作者的照片不要直接加进这组相册，应使用上一节的独立照片块并填写正确署名。
 
 ## 4. 如何给照片添加文字
 

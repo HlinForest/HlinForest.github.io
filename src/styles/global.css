@@ -890,7 +890,6 @@ img { max-width: 100%; height: auto; }
 .photo-reveal p + p { margin-top: 1em; }
 .tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover ~ .photo-reveal {
   opacity: 1;
-  pointer-events: auto;
   visibility: visible;
 }
 .tokyo-feature .garden-album-slide[data-tokyo-story-trigger]:hover img { scale: 1.025; }

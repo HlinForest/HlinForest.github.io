@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../data/site';
 ---
 
-<BaseLayout title="Misc | Spike" description="Spike 喜欢的文字、照片与音乐。" image="/tokyo-blue-hour-tower.png">
+<BaseLayout title="Misc | Spike" description="Spike 喜欢的文字、照片与音乐。" image="/tokyo-blue-hour-01.webp">
   <section class="misc-page container" aria-labelledby="misc-title">
     <header class="misc-head">
       <div class="eyebrow">Misc</div>
@@ -59,10 +59,55 @@ import { site } from '../../data/site';
             data-tokyo-story-trigger
           >
             <img
-              src="/tokyo-blue-hour-tower.png"
-              alt="蓝调时刻的东京港区天际线与点亮的东京塔"
-              width="1536"
-              height="960"
+              src="/tokyo-blue-hour-01.webp"
+              alt="蓝调时刻的东京铁塔与城市天际线"
+              width="2400"
+              height="1599"
+            />
+          </button>
+          <button
+            type="button"
+            class="garden-album-slide"
+            data-garden-slide
+            data-tokyo-story-trigger
+            hidden
+          >
+            <img
+              src="/tokyo-blue-hour-02.webp"
+              alt="蓝调时刻中被云层环抱的东京高楼"
+              width="2400"
+              height="1600"
+              loading="lazy"
+            />
+          </button>
+          <button
+            type="button"
+            class="garden-album-slide"
+            data-garden-slide
+            data-tokyo-story-trigger
+            hidden
+          >
+            <img
+              src="/tokyo-blue-hour-03.webp"
+              alt="彩霞映照下的东京湾与城市天际线"
+              width="2048"
+              height="1366"
+              loading="lazy"
+            />
+          </button>
+          <button
+            type="button"
+            class="garden-album-slide"
+            data-garden-slide
+            data-tokyo-story-trigger
+            hidden
+          >
+            <img
+              src="/tokyo-blue-hour-04.webp"
+              alt="晚霞后的东京城市天际线"
+              width="2048"
+              height="1362"
+              loading="lazy"
             />
           </button>
           <button type="button" class="garden-album-slide" data-garden-slide hidden>
@@ -114,21 +159,24 @@ import { site } from '../../data/site';
           <nav class="garden-album-controls" aria-label="切换摄影相册">
             <button type="button" data-garden-prev aria-label="上一张照片">←</button>
             <div class="garden-album-dots" role="group" aria-label="选择照片">
-              <button type="button" data-garden-dot="0" aria-label="查看东京蓝调时刻" aria-pressed="true">01</button>
-              <button type="button" data-garden-dot="1" aria-label="查看雨天湖面" aria-pressed="false">02</button>
-              <button type="button" data-garden-dot="2" aria-label="查看雨幕草地" aria-pressed="false">03</button>
-              <button type="button" data-garden-dot="3" aria-label="查看雨中绣球" aria-pressed="false">04</button>
-              <button type="button" data-garden-dot="4" aria-label="查看雨中百合" aria-pressed="false">05</button>
+              <button type="button" data-garden-dot="0" aria-label="查看东京蓝调时刻 01" aria-pressed="true">01</button>
+              <button type="button" data-garden-dot="1" aria-label="查看东京蓝调时刻 02" aria-pressed="false">02</button>
+              <button type="button" data-garden-dot="2" aria-label="查看东京蓝调时刻 03" aria-pressed="false">03</button>
+              <button type="button" data-garden-dot="3" aria-label="查看东京蓝调时刻 04" aria-pressed="false">04</button>
+              <button type="button" data-garden-dot="4" aria-label="查看雨天湖面" aria-pressed="false">05</button>
+              <button type="button" data-garden-dot="5" aria-label="查看雨幕草地" aria-pressed="false">06</button>
+              <button type="button" data-garden-dot="6" aria-label="查看雨中绣球" aria-pressed="false">07</button>
+              <button type="button" data-garden-dot="7" aria-label="查看雨中百合" aria-pressed="false">08</button>
             </div>
             <button type="button" data-garden-next aria-label="下一张照片">→</button>
           </nav>
         </div>
         <figcaption>
-          <span data-garden-label>Tokyo · Blue hour</span>
+          <span data-garden-label>Tokyo · Blue hour 01</span>
           <span class="photo-meta" data-tokyo-meta>
-            Visual study · AI-generated · 悬停或点击阅读<br />
+            Photograph · selected reference · 悬停或点击阅读<br />
             <a href="https://www.sina.cn/news/detail/5155104072140071.html">
-              Text &amp; image reference · _等待夏夜吹成烈焰 / 新浪 <span aria-hidden="true">↗</span>
+              Text reference · _等待夏夜吹成烈焰 / 新浪 <span aria-hidden="true">↗</span>
             </a>
           </span>
           <span class="photo-meta" data-garden-meta hidden>
@@ -201,8 +249,6 @@ import { site } from '../../data/site';
   </section>
 
   <script>
-    const photoOverlay = document.querySelector<HTMLElement>('[data-photo-overlay]');
-
     const gardenAlbum = document.querySelector<HTMLElement>('[data-garden-album]');
     const gardenSlides = [...document.querySelectorAll<HTMLButtonElement>('[data-garden-slide]')];
     const gardenDots = [...document.querySelectorAll<HTMLButtonElement>('[data-garden-dot]')];
@@ -210,12 +256,16 @@ import { site } from '../../data/site';
     const tokyoMeta = document.querySelector<HTMLElement>('[data-tokyo-meta]');
     const gardenMeta = document.querySelector<HTMLElement>('[data-garden-meta]');
     const gardenLabels = [
-      'Tokyo · Blue hour',
+      'Tokyo · Blue hour 01',
+      'Tokyo · Blue hour 02',
+      'Tokyo · Blue hour 03',
+      'Tokyo · Blue hour 04',
       '言叶之庭 · 雨天湖面',
       '言叶之庭 · 雨幕草地',
       '言叶之庭 · 雨中绣球',
       '言叶之庭 · 雨中百合',
     ];
+    const tokyoSlideCount = 4;
     let currentGardenSlide = 0;
 
     const showGardenSlide = (next: number) => {
@@ -229,12 +279,11 @@ import { site } from '../../data/site';
       });
       gardenDots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === currentGardenSlide)));
       if (gardenLabel) gardenLabel.textContent = gardenLabels[currentGardenSlide];
-      if (tokyoMeta) tokyoMeta.hidden = currentGardenSlide !== 0;
-      if (gardenMeta) gardenMeta.hidden = currentGardenSlide === 0;
+      if (tokyoMeta) tokyoMeta.hidden = currentGardenSlide >= tokyoSlideCount;
+      if (gardenMeta) gardenMeta.hidden = currentGardenSlide < tokyoSlideCount;
     };
 
     gardenSlides.forEach((slide) => slide.addEventListener('click', () => showGardenSlide(currentGardenSlide + 1)));
-    photoOverlay?.addEventListener('click', () => showGardenSlide(1));
     document.querySelector('[data-garden-prev]')?.addEventListener('click', () => showGardenSlide(currentGardenSlide - 1));
     document.querySelector('[data-garden-next]')?.addEventListener('click', () => showGardenSlide(currentGardenSlide + 1));
     gardenDots.forEach((dot) => dot.addEventListener('click', () => showGardenSlide(Number(dot.dataset.gardenDot))));
