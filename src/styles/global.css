@@ -803,8 +803,9 @@ img { max-width: 100%; height: auto; }
   background: color-mix(in srgb, #071d33 89%, transparent);
   color: #f4fbfb;
   opacity: 0;
+  pointer-events: none;
   visibility: hidden;
-  transition: opacity 320ms ease, visibility 320ms ease;
+  transition: opacity 320ms ease;
 }
 .photo-reveal blockquote {
   max-width: 690px;
@@ -816,9 +817,10 @@ img { max-width: 100%; height: auto; }
 }
 .photo-reveal p { margin: 0; }
 .photo-reveal p + p { margin-top: 1em; }
-.tokyo-feature .photo-feature-frame:hover .photo-reveal,
-.tokyo-feature .photo-feature-frame.is-open .photo-reveal {
+.tokyo-feature .photo-feature-frame:hover > .photo-reveal,
+.tokyo-feature .photo-feature-frame.is-open > .photo-reveal {
   opacity: 1;
+  pointer-events: auto;
   visibility: visible;
 }
 .tokyo-feature .photo-feature-frame:hover > img,
