@@ -774,7 +774,15 @@ img { max-width: 100%; height: auto; }
 }
 .photo-feature figcaption > span:last-child { text-align: right; }
 .photo-meta { line-height: 1.7; }
-.tokyo-feature .photo-feature-frame { cursor: pointer; outline: none; }
+.tokyo-feature .photo-feature-frame {
+  aspect-ratio: 3157 / 796;
+  cursor: pointer;
+  outline: none;
+}
+.tokyo-feature .photo-feature-frame > img {
+  height: calc(100% + 8px);
+  translate: 0 -4px;
+}
 .tokyo-feature .photo-feature-frame:focus-visible { outline: 2px solid var(--accent); outline-offset: 10px; }
 .photo-reveal {
   position: absolute;
@@ -800,6 +808,11 @@ img { max-width: 100%; height: auto; }
 }
 .photo-reveal p { margin: 0; }
 .photo-reveal p + p { margin-top: 1em; }
+.tokyo-feature .photo-reveal { padding: 18px 30px; }
+.tokyo-feature .photo-reveal blockquote {
+  font-size: clamp(.7rem, .95vw, .82rem);
+  line-height: 1.65;
+}
 .tokyo-feature .photo-feature-frame:hover .photo-reveal,
 .tokyo-feature .photo-feature-frame.is-open .photo-reveal {
   opacity: 1;
@@ -921,6 +934,7 @@ img { max-width: 100%; height: auto; }
   .misc-head { margin-bottom: 46px; }
   .misc-section { padding-block: 42px; }
   .photo-feature-frame { aspect-ratio: 4 / 3; }
+  .tokyo-feature .photo-feature-frame { aspect-ratio: 16 / 10; }
   .photo-reveal { align-items: start; padding: 24px; }
   .photo-reveal blockquote { font-size: .74rem; line-height: 1.75; }
   .photo-feature figcaption { display: grid; gap: 7px; }
