@@ -3,65 +3,150 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../data/site';
 ---
 
-<BaseLayout title="My favorite musician | Spike" description="Spike 喜欢的音乐人。">
-  <section class="misc-page container" aria-labelledby="music-title">
+<BaseLayout title="Misc | Spike" description="Spike 的摄影、徒步与音乐收藏。" image="/tokyo-blue-hour-tower.png">
+  <section class="misc-page container" aria-labelledby="misc-title">
     <header class="misc-head">
       <div class="eyebrow">Misc</div>
-      <h1 id="music-title">my favorite musician</h1>
+      <h1 id="misc-title">Misc</h1>
     </header>
 
-    <div class="music-carousel" data-music-carousel tabindex="0" aria-label="喜欢的音乐人肖像">
-      <div class="music-slides" aria-live="polite">
-        <article class="music-slide" data-music-slide>
-          <figure class="music-portrait">
-            <div class="music-portrait-frame">
-              <img src={site.portrait} alt={site.portraitAlt} width="1090" height="1451" />
-            </div>
-            <blockquote class="music-quote">也没有一时澎湃悸动，却在深秋细水长流。</blockquote>
-            <figcaption>
-              <strong>方大同</strong>
-              <span>
-                After <a href={site.portraitSource}>Khalil Fong, 2007 · Verity</a>
-                · AI-transformed · <a href={site.portraitLicense}>CC BY-SA 2.0</a>
-              </span>
-            </figcaption>
-          </figure>
-        </article>
+    <section class="misc-section" aria-labelledby="photography-title">
+      <header class="misc-section-head">
+        <span aria-hidden="true">01</span>
+        <h2 id="photography-title">Photography</h2>
+      </header>
 
-        <article class="music-slide" data-music-slide hidden>
-          <figure class="music-portrait">
-            <div class="music-portrait-frame">
-              <img
-                src="/zhang-yusheng-impressionist-portrait.png"
-                alt="张雨生年轻时期的印象派肖像画"
-                width="1110"
-                height="1480"
-              />
-            </div>
-            <blockquote class="music-quote two-lines">
-              <span>我的胸口鼓鼓吹胀</span>
-              <span>欢乐幸福的遐想</span>
+      <figure
+        class="photo-feature tokyo-feature"
+        data-photo-reveal
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+        aria-label="东京蓝调时刻，悬停或点击阅读文字"
+      >
+        <div class="photo-feature-frame">
+          <img
+            src="/tokyo-blue-hour-tower.png"
+            alt="蓝调时刻的东京港区天际线与点亮的东京塔"
+            width="1536"
+            height="960"
+          />
+          <div class="photo-reveal" data-photo-overlay aria-hidden="true">
+            <blockquote>
+              <p>在天完全黑透之前，落日之后的蓝调时刻给港区的天际线覆上一层淡淡的克莱因蓝。</p>
+              <p>玻璃幕墙里开始一盏一盏地亮起灯，这与任何国际大都会的蓝调时刻并无二致，</p>
+              <p>直至东京塔的点亮。</p>
+              <p>一瞬间红白灯光的亮起在一片寂静的蓝色中形成了鲜明的冷暖对比。真正看到《东京教父》、《天气之子》等等无数影视作品中亮起的红白铁塔的这一刻，我心目中的东京才真正具像化。</p>
             </blockquote>
-            <figcaption>
-              <strong>张雨生</strong>
-              <span>AI-generated impressionist portrait study</span>
-            </figcaption>
-          </figure>
-        </article>
-      </div>
-
-      <nav class="music-controls" aria-label="切换肖像">
-        <button type="button" data-music-prev aria-label="上一张肖像">←</button>
-        <div class="music-dots" role="group" aria-label="选择肖像">
-          <button type="button" data-music-dot="0" aria-label="查看方大同肖像" aria-pressed="true">01</button>
-          <button type="button" data-music-dot="1" aria-label="查看张雨生肖像" aria-pressed="false">02</button>
+          </div>
         </div>
-        <button type="button" data-music-next aria-label="下一张肖像">→</button>
-      </nav>
-    </div>
+        <figcaption>
+          <span>Tokyo · Blue hour</span>
+          <span>悬停或点击阅读</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="misc-section" aria-labelledby="hiking-title">
+      <header class="misc-section-head">
+        <span aria-hidden="true">02</span>
+        <h2 id="hiking-title">Hiking</h2>
+      </header>
+
+      <figure class="photo-feature">
+        <div class="photo-feature-frame">
+          <img
+            src="/mount-fuji-hiking.png"
+            alt="通向富士山的秋日徒步小径"
+            width="1536"
+            height="960"
+            loading="lazy"
+          />
+        </div>
+        <figcaption><span>Mount Fuji</span></figcaption>
+      </figure>
+    </section>
+
+    <section class="misc-section" aria-labelledby="music-title">
+      <header class="misc-section-head">
+        <span aria-hidden="true">03</span>
+        <h2 id="music-title">my favorite musician</h2>
+      </header>
+
+      <div class="music-carousel" data-music-carousel tabindex="0" aria-label="喜欢的音乐人肖像">
+        <div class="music-slides" aria-live="polite">
+          <article class="music-slide" data-music-slide>
+            <figure class="music-portrait">
+              <div class="music-portrait-frame">
+                <img src={site.portrait} alt={site.portraitAlt} width="1090" height="1451" loading="lazy" />
+              </div>
+              <blockquote class="music-quote">也没有一时澎湃悸动，却在深秋细水长流。</blockquote>
+              <figcaption>
+                <strong>方大同</strong>
+                <span>
+                  After <a href={site.portraitSource}>Khalil Fong, 2007 · Verity</a>
+                  · AI-transformed · <a href={site.portraitLicense}>CC BY-SA 2.0</a>
+                </span>
+              </figcaption>
+            </figure>
+          </article>
+
+          <article class="music-slide" data-music-slide hidden>
+            <figure class="music-portrait">
+              <div class="music-portrait-frame">
+                <img
+                  src="/zhang-yusheng-impressionist-portrait.png"
+                  alt="张雨生年轻时期的印象派肖像画"
+                  width="1110"
+                  height="1480"
+                  loading="lazy"
+                />
+              </div>
+              <blockquote class="music-quote two-lines">
+                <span>我的胸口鼓鼓吹胀</span>
+                <span>欢乐幸福的遐想</span>
+              </blockquote>
+              <figcaption>
+                <strong>张雨生</strong>
+                <span>AI-generated impressionist portrait study</span>
+              </figcaption>
+            </figure>
+          </article>
+        </div>
+
+        <nav class="music-controls" aria-label="切换肖像">
+          <button type="button" data-music-prev aria-label="上一张肖像">←</button>
+          <div class="music-dots" role="group" aria-label="选择肖像">
+            <button type="button" data-music-dot="0" aria-label="查看方大同肖像" aria-pressed="true">01</button>
+            <button type="button" data-music-dot="1" aria-label="查看张雨生肖像" aria-pressed="false">02</button>
+          </div>
+          <button type="button" data-music-next aria-label="下一张肖像">→</button>
+        </nav>
+      </div>
+    </section>
   </section>
 
   <script>
+    const photoReveal = document.querySelector<HTMLElement>('[data-photo-reveal]');
+    const photoOverlay = photoReveal?.querySelector<HTMLElement>('[data-photo-overlay]');
+
+    const setPhotoOpen = (open: boolean) => {
+      photoReveal?.classList.toggle('is-open', open);
+      photoReveal?.setAttribute('aria-expanded', String(open));
+      photoOverlay?.setAttribute('aria-hidden', String(!open));
+    };
+
+    photoReveal?.addEventListener('click', () => {
+      setPhotoOpen(photoReveal.getAttribute('aria-expanded') !== 'true');
+    });
+    photoReveal?.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        setPhotoOpen(photoReveal.getAttribute('aria-expanded') !== 'true');
+      }
+      if (event.key === 'Escape') setPhotoOpen(false);
+    });
+
     const carousel = document.querySelector<HTMLElement>('[data-music-carousel]');
     const slides = [...document.querySelectorAll<HTMLElement>('[data-music-slide]')];
     const dots = [...document.querySelectorAll<HTMLButtonElement>('[data-music-dot]')];

@@ -3,19 +3,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
 ---
 
-<BaseLayout>
-  <section class="about-landing container" id="about" aria-labelledby="spike-name">
-    <div class="about-identity">
-      <div class="about-label">About</div>
+<BaseLayout image="/spike-spiegel-portrait.png">
+  <section class="profile-home container" id="about" aria-labelledby="spike-name">
+    <aside class="profile-identity">
+      <figure class="profile-avatar">
+        <img
+          src="/spike-spiegel-portrait.png"
+          alt="星际牛仔 Spike 的原创动漫肖像"
+          width="1024"
+          height="1280"
+        />
+        <figcaption>Original fan art · AI-generated</figcaption>
+      </figure>
+
       <h1 id="spike-name">Spike</h1>
-      <div class="identity-rule" aria-hidden="true"></div>
       <a class="identity-link" href={site.github} rel="me">
         GitHub <span aria-hidden="true">↗</span>
       </a>
-    </div>
+    </aside>
 
-    <div class="home-mark" role="img" aria-label="Spike 字母视觉">
-      <span>S</span>
+    <div class="profile-introduction">
+      <div class="about-label">About</div>
+      <p>我还在学习中，会慢慢更新的。</p>
     </div>
   </section>
 </BaseLayout>
