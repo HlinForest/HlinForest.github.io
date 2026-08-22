@@ -738,6 +738,13 @@ img { max-width: 100%; height: auto; }
   line-height: 1.25;
   letter-spacing: -.02em;
 }
+.photography-section { grid-template-columns: 1fr; }
+.photography-section .misc-section-head {
+  grid-template-columns: 42px 1fr;
+  align-items: baseline;
+  gap: 8px;
+}
+.photography-section .photo-feature { width: 100%; }
 .photo-feature {
   width: min(100%, 850px);
   margin: 0;
@@ -803,7 +810,7 @@ img { max-width: 100%; height: auto; }
   max-width: 690px;
   margin: auto;
   font-family: var(--serif);
-  font-size: clamp(.78rem, 1.25vw, .96rem);
+  font-size: clamp(.92rem, 1.45vw, 1.12rem);
   line-height: 1.9;
   letter-spacing: .025em;
 }
@@ -932,7 +939,7 @@ img { max-width: 100%; height: auto; }
   .photo-feature-frame { aspect-ratio: 4 / 3; }
   .photo-panorama .photo-feature-frame { aspect-ratio: 16 / 10; }
   .photo-reveal { align-items: start; padding: 24px; }
-  .photo-reveal blockquote { font-size: .74rem; line-height: 1.75; }
+  .photo-reveal blockquote { font-size: .84rem; line-height: 1.75; }
   .photo-feature figcaption { display: grid; gap: 7px; }
   .photo-feature figcaption > span:last-child { text-align: left; }
   .music-carousel { width: calc(100% - 14px); }
