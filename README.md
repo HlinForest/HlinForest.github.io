@@ -1,13 +1,17 @@
 # HlinForest
 
-个人技术博客与学习文档库，发布到 `https://hlinforest.github.io`。
+Spike 的个人学术主页、摄影收藏与 Notes，发布于 <https://hlinforest.github.io/>。
+
+## 维护手册
+
+上传照片、添加照片文字、新增笔记、本地预览与 GitHub 发布的完整步骤，请阅读 **[CONTENT_GUIDE.md](./CONTENT_GUIDE.md)**。
 
 ## 内容结构
 
-- `src/content/blog/`：可独立阅读的 Blog，按 `series` 分区、按 `tags` 分类。
-- `src/content/learning/cs336/`：原生接入本站阅读器的 CS336 长篇学习文档。
-- `public/learning/`：保留现有交互门户的 AI Infra、PyTorch/ARENA、AI Safety × CRL 课程。
-- `src/pages/`：首页、文章、归档、学习文档、关于、RSS 与动态内容路由。
+- `src/content/blog/`：Notes，按 `series` 分区、按 `tags` 分类。
+- `src/pages/misc/index.astro`：摄影收藏与音乐人页面。
+- `public/`：照片、插图和其他静态文件。
+- `src/pages/`：首页、Misc、Notes、RSS 与其他页面。
 
 ## 新增 Blog
 
@@ -27,7 +31,7 @@ lang: "zh"
 ---
 ```
 
-Markdown 原生支持表格、任务列表、脚注、目录标题、KaTeX 公式和带语法高亮的代码块。MDX 还可以导入：
+Markdown 原生支持表格、任务列表、目录标题、KaTeX 公式和带语法高亮的代码块。MDX 还可以导入：
 
 - `Callout.astro`：提示、警告、观点框。
 - `FlowDiagram.astro`：响应式流程图。
