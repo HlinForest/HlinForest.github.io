@@ -542,9 +542,9 @@ img { max-width: 100%; height: auto; }
 .profile-avatar img {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  object-position: center;
+  object-position: 56% center;
   background: var(--tiffany);
   box-shadow: 15px 15px 0 color-mix(in srgb, var(--tiffany) 36%, var(--surface));
 }
