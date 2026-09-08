@@ -1,0 +1,23 @@
+{
+  "renderer": "3b1b/ManimGL",
+  "version": "1.7.2",
+  "groups": 38,
+  "frames": 164,
+  "layouts": [
+    "desktop",
+    "mobile"
+  ],
+  "sources": {
+    "advanced.py": "f4d94e6a9be75df6bfbac5ce9c22317ace824c4db3d03fee9f4d34f2fa3aac6c",
+    "check_scenes.py": "f279b25cc35760bc49ec6a785db0c78e1948b50decb93ed45151581675a4936a",
+    "core_attention.py": "46700c6b2ead48702f411bdd0d0c019e495c95801eb7a5f7b7cc00340eed54fa",
+    "custom_config.yml": "6f3d6cb1f4dce493b2951595d47a5bdf8f0dc38287aca9e2e8fa818171c637bf",
+    "integrate.py": "8e48f7c00c57c5eeaefdb005dfd393bd413d7d12ac664cb119da2a5d94e4ec91",
+    "memory_variants.py": "adf9a470de8ee4fff76a3bcc86b0ab92ac3fbf8ca25a299b6178c200531d42ed",
+    "render.py": "89d480cc565e528b27ae1cc59b918d45ade44b3c71c98ee9b1d80c15d1ec2be6",
+    "requirements.txt": "cdca57df1457ce14660900e3de6bb75f4c306e4342175789323eed76be1ec2e8",
+    "samples.py": "713247174afa923d36423f84192be791440aef750e5323b255ceb28310f8d091",
+    "spec.py": "1145669a8519d59cf7e1a8e7768a450245dbae730322be26f8a727f1b90f6266",
+    "storyboard.py": "8008de7013607f87428bc62c6b62702a9e467910ab5af82c619dcb1d30d515d4"
+  }
+}

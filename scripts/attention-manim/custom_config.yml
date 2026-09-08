@@ -1,0 +1,7 @@
+directories:
+  cache: ../../tmp/attention-manim-cache
+  temporary_storage: ../../tmp/attention-manim-tex
+camera:
+  background_color: white
+text:
+  font: Microsoft YaHei

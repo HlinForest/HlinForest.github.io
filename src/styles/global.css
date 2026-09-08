@@ -353,11 +353,13 @@ img { max-width: 100%; height: auto; }
 .prose details { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font-family: var(--sans); font-size: .94rem; }
 .prose summary { cursor: pointer; font-weight: 700; }
 .prose figcaption { margin-top: 10px; color: var(--text-faint); font-family: var(--sans); font-size: .8rem; text-align: center; }
-.prose .matrix-figure { margin-inline: 0; min-width: 0; }
-.prose .matrix-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: white; }
-.prose .matrix-scroll:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 3px; }
-.prose .matrix-scroll a { display: block; width: max(100%, 960px); }
-.prose .matrix-scroll img { display: block; width: 100%; max-width: none; height: auto; }
+.prose .matrix-steps { min-width: 0; max-width: 100%; margin-block: 2rem; }
+.prose .matrix-step { min-width: 0; margin: 1.5rem 0 2rem; }
+.prose .matrix-step > a,
+.prose .matrix-step picture { display: block; width: 100%; }
+.prose .matrix-step img { display: block; width: 100%; max-width: 100%; height: auto; background: white; }
+.prose .matrix-step figcaption { margin-top: .75rem; line-height: 1.7; text-align: left; }
+.prose .matrix-step > a:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 3px; }
 .prose .katex-display { overflow-x: auto; overflow-y: hidden; padding: 10px 0; }
 .prose .expressive-code { margin-block: 1.7em; font-family: var(--mono); }
 .prose .expressive-code pre { margin: 0; }
