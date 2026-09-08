@@ -1,0 +1,3555 @@
+[
+  {
+    "slug": "matmul-count",
+    "formula": "Cᵢⱼ = Σₐ Aᵢₐ Bₐⱼ",
+    "boxes": [
+      {
+        "name": "A",
+        "shape": "m × k",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "B",
+        "shape": "k × n",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 135.5,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "C",
+        "shape": "m × n",
+        "rows": 3,
+        "cols": 4,
+        "x": 602.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "m 个输出行，n 个输出列；每个格子沿 k 相乘再相加。",
+      "矩阵中一个有色格子代表一个标量；小格仅示意轴结构。",
+      "每格 k 次乘法、k−1 次加法；共有 mn 格。"
+    ]
+  },
+  {
+    "slug": "projections",
+    "formula": "Q = XWQ ; K = XWK ; V = XWV",
+    "boxes": [
+      {
+        "name": "X",
+        "shape": "N × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 83.0,
+        "y": 149.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "WQ",
+        "shape": "D × Hdk",
+        "rows": 6,
+        "cols": 4,
+        "x": 376.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "Q merged",
+        "shape": "N × Hdk",
+        "rows": 4,
+        "cols": 4,
+        "x": 622.0,
+        "y": 149.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "X",
+        "shape": "N × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 83.0,
+        "y": 444.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "WK",
+        "shape": "D × Hdk",
+        "rows": 6,
+        "cols": 4,
+        "x": 376.0,
+        "y": 417.0,
+        "width": 108,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "K merged",
+        "shape": "N × Hdk",
+        "rows": 4,
+        "cols": 4,
+        "x": 622.0,
+        "y": 444.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "X",
+        "shape": "N × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 43.0,
+        "y": 739.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "WV",
+        "shape": "D × Hdv",
+        "rows": 6,
+        "cols": 6,
+        "x": 329.0,
+        "y": 712.0,
+        "width": 162,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "V merged",
+        "shape": "N × Hdv",
+        "rows": 4,
+        "cols": 6,
+        "x": 615.0,
+        "y": 739.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "省略 batch；示意 H=2，dk=2，dv=3，D=6，N=4。",
+      "Q/K 是匹配特征，V 是待聚合的信息；三套权重独立学习。",
+      "每行 token 独立投影；D 被收缩，token 轴 N 保留。"
+    ]
+  },
+  {
+    "slug": "heads",
+    "formula": "split → per-head attention → concat → WO",
+    "boxes": [
+      {
+        "name": "Q merged",
+        "shape": "N × (Hdk)",
+        "rows": 4,
+        "cols": 4,
+        "x": 129.5,
+        "y": 122.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Q head 1",
+        "shape": "N × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 439.5,
+        "y": 122.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Q head 2",
+        "shape": "N × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 609.5,
+        "y": 122.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "O head 1",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 78.5,
+        "y": 363.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "O head 2",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 374.5,
+        "y": 363.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "O merged",
+        "shape": "N × (Hdv)",
+        "rows": 4,
+        "cols": 6,
+        "x": 600.0,
+        "y": 363.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "O merged",
+        "shape": "N × (Hdv)",
+        "rows": 4,
+        "cols": 6,
+        "x": 43.0,
+        "y": 631.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "WO",
+        "shape": "(Hdv) × D",
+        "rows": 6,
+        "cols": 6,
+        "x": 329.0,
+        "y": 604.0,
+        "width": 162,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "ΔX",
+        "shape": "N × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 615.0,
+        "y": 631.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "本图 H=2，dk=2，dv=3，D=6；batch 独立重复此过程。",
+      "颜色在本图标记 head；拼接没有求和，也没有增加 token。",
+      "[B,H,N,dv] → transpose(0,2,1,3) → reshape(B,N,Hdv)。"
+    ]
+  },
+  {
+    "slug": "scores",
+    "formula": "A = QKᵀ / √dk",
+    "boxes": [
+      {
+        "name": "Q",
+        "shape": "N × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Kᵀ",
+        "shape": "dk × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 149.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 602.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "N 个 query，M 个 key；此图 N=M=4，dk=2。",
+      "A 是实数分数，不是概率；K 转置后原来的行变成列。",
+      "一个 query 行与每一个 key 列做点积；结果再逐元素缩放。"
+    ]
+  },
+  {
+    "slug": "weighted-values",
+    "formula": "O = PV ; oᵢ = Σⱼ pᵢⱼvⱼ",
+    "boxes": [
+      {
+        "name": "P",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 110.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 108,
+        "support": "lower"
+      },
+      {
+        "name": "V",
+        "shape": "M × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 369.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "O",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "横向权重的 M 与纵向 value 的 M 收缩，留下 N × dv。",
+      "P 是非负概率；上三角白格是因果不可见位置，权重为零。",
+      "同一行权重用于 V 的每个 value 通道；每行得到一个向量。"
+    ]
+  },
+  {
+    "slug": "weighted-example",
+    "formula": "[1/4, 3/4] V = [4, 5]",
+    "boxes": [
+      {
+        "name": "p",
+        "shape": "1 × 2",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "V",
+        "shape": "2 × 2",
+        "rows": 2,
+        "cols": 2,
+        "x": 383.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "o",
+        "shape": "1 × 2",
+        "rows": 1,
+        "cols": 2,
+        "x": 629.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "2 个 key，2 个 value 通道；输入和输出都使用行向量。",
+      "第一行 V 贡献 [0.25,0.5]，第二行贡献 [3.75,4.5]。",
+      "每个输出坐标单独求和：0.25×1+0.75×5=4。"
+    ]
+  },
+  {
+    "slug": "mask-dropout",
+    "formula": "mask → row softmax → training dropout → PV",
+    "boxes": [
+      {
+        "name": "keep: 1=True",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 246.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "P",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 492.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "P 行",
+        "shape": "1 × 2",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 336.0,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "随机保留 / 0.5",
+        "shape": "1 × 2",
+        "rows": 1,
+        "cols": 2,
+        "x": 383.0,
+        "y": 336.0,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "P̃ 行",
+        "shape": "1 × 2",
+        "rows": 1,
+        "cols": 2,
+        "x": 629.0,
+        "y": 336.0,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "行是 query，列是 key；mask 广播到独立的 batch/head。",
+      "全遮蔽行返回全 0 是本文约定；dropout 后一行不必和为 1。",
+      "mask 决定可见性；dropout 对已有概率随机置零，再按保留率缩放。"
+    ]
+  },
+  {
+    "slug": "softmax-passes",
+    "formula": "safe softmax: max → sum exp → normalize",
+    "boxes": [
+      {
+        "name": "x",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 3,
+        "x": 228.0,
+        "y": 122.0,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "m",
+        "shape": "1 × 1",
+        "rows": 1,
+        "cols": 1,
+        "x": 538.0,
+        "y": 122.0,
+        "width": 27,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "exp(x−m)",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 3,
+        "x": 228.0,
+        "y": 282.0,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "l",
+        "shape": "1 × 1",
+        "rows": 1,
+        "cols": 1,
+        "x": 538.0,
+        "y": 282.0,
+        "width": 27,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "exp(x−m)",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 3,
+        "x": 228.0,
+        "y": 442.0,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "P",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 3,
+        "x": 511.0,
+        "y": 442.0,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "一行 M 个分数；图中文字为四舍五入示意，正文有精确值。",
+      "m 是最大值，l 是缩放后的指数和；都只占一个标量。",
+      "这里不缓存指数数组：3 次读 x + 1 次写 P；pass 不等于 kernel。"
+    ]
+  },
+  {
+    "slug": "flash-tile",
+    "formula": "x = Qi Kjᵀ / √dk ; a′ = c ⊙ a + W Vj",
+    "boxes": [
+      {
+        "name": "Qi",
+        "shape": "R × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 199.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Kjᵀ",
+        "shape": "dk × T",
+        "rows": 2,
+        "cols": 4,
+        "x": 418.0,
+        "y": 135.5,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "x",
+        "shape": "R × T",
+        "rows": 3,
+        "cols": 4,
+        "x": 664.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "W",
+        "shape": "R × T",
+        "rows": 3,
+        "cols": 4,
+        "x": 172.0,
+        "y": 349.5,
+        "width": 108,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Vj",
+        "shape": "T × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 431.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "本块分子",
+        "shape": "R × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 677.5,
+        "y": 349.5,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "c",
+        "shape": "R × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 89.5,
+        "y": 577.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "a",
+        "shape": "R × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 308.5,
+        "y": 577.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "本块分子",
+        "shape": "R × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 554.5,
+        "y": 577.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "a′",
+        "shape": "R × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 800.5,
+        "y": 577.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "R 条 query，T 个当前 key；m/l 各有 R 个标量，a 有 R×dv 个数。",
+      "W 是未归一化的正权重；P=W/l 需要完整历史的分母。",
+      "更新 l′=c·l+rowsum(W)；所有 key 块结束后 O=a/l。"
+    ]
+  },
+  {
+    "slug": "rotation",
+    "formula": "(QR)(KR)ᵀ = QRRᵀKᵀ = QKᵀ",
+    "boxes": [
+      {
+        "name": "QR",
+        "shape": "N × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "(KR)ᵀ",
+        "shape": "dk × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 149.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A unscaled",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 602.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "R 为 dk × dk 正交矩阵，RRᵀ=I；两分支使用同一个 R。",
+      "旋转后的 Q/K 仍是实数特征，未做量化时点积保持。",
+      "等式只保证旋转不改点积；后续低精度量化仍会引入误差。"
+    ]
+  },
+  {
+    "slug": "linear-association",
+    "formula": "(Q̄ K̄ᵀ)V = Q̄(K̄ᵀV)",
+    "boxes": [
+      {
+        "name": "Q̄",
+        "shape": "N × r",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "K̄ᵀ",
+        "shape": "r × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 149.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Aκ",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 602.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Aκ",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 110.0,
+        "y": 363.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "V",
+        "shape": "M × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 369.5,
+        "y": 363.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "分子",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 363.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "K̄ᵀ",
+        "shape": "r × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 110.0,
+        "y": 631.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "V",
+        "shape": "M × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 369.5,
+        "y": 604.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "S",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 615.5,
+        "y": 631.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Q̄",
+        "shape": "N × r",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 845.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "S",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 872.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "同一个分子",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 845.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "Q̄=φ(Q)，K̄=φ(K)；r 为特征维度，与序列长度无关。",
+      "Aκ 是核相似度，不是 softmax 概率；两条路径使用相同的新核。",
+      "这张图是非因果分子；分母见下一图，因果要使用前缀状态。"
+    ]
+  },
+  {
+    "slug": "linear-normalizer",
+    "formula": "z = K̄ᵀ1 ; h = Q̄z ; O = numerator / (h+ε)",
+    "boxes": [
+      {
+        "name": "K̄ᵀ",
+        "shape": "r × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 110.0,
+        "y": 149.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "1",
+        "shape": "M × 1",
+        "rows": 4,
+        "cols": 1,
+        "x": 396.5,
+        "y": 122.0,
+        "width": 27,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "z",
+        "shape": "r × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 642.5,
+        "y": 149.0,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Q̄",
+        "shape": "N × r",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 363.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "z",
+        "shape": "r × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 396.5,
+        "y": 390.0,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "h",
+        "shape": "N × 1",
+        "rows": 4,
+        "cols": 1,
+        "x": 642.5,
+        "y": 363.0,
+        "width": 27,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "分子",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 123.5,
+        "y": 604.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "h+ε",
+        "shape": "N × 1",
+        "rows": 4,
+        "cols": 1,
+        "x": 396.5,
+        "y": 604.0,
+        "width": 27,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "O",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 604.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "1 是全 1 列向量；h 的第 i 项是第 i 个 query 的总权重。",
+      "分母归一化核权重；ε 是额外数值保护，会轻微改变精确比值。",
+      "[N,1] 自动沿 value 轴广播，不会把不同 query 混在一起。"
+    ]
+  },
+  {
+    "slug": "linear-state",
+    "formula": "St = St−1 + k̄t vtᵀ ; otᵀ = q̄tᵀ St / (q̄tᵀzt+ε)",
+    "boxes": [
+      {
+        "name": "k̄t",
+        "shape": "r × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 150.5,
+        "y": 122.0,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "vtᵀ",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 369.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "本步写入",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "S1",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 123.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "k̄2v2ᵀ",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "S2",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 615.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "q̄2ᵀ",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 509.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "S2",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 496.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "分子",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 615.5,
+        "y": 509.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "第二个 key 特征为 [2,1]，value 为 [1,4,2]；示例忽略 ε。",
+      "S 的行是 key 特征通道，列是 value 通道；不再有 token 轴。",
+      "o2=[2,2.5,2]；写入 t 再读取 t，只用到前缀 1…t。"
+    ]
+  },
+  {
+    "slug": "linear-chunk",
+    "formula": "num = Q̄c Sbefore + Ac Vc ; Ac = tril(Q̄c K̄cᵀ)",
+    "boxes": [
+      {
+        "name": "Q̄c",
+        "shape": "C × r",
+        "rows": 3,
+        "cols": 2,
+        "x": 199.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Sbefore",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 431.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "历史分子",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 677.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Ac",
+        "shape": "C × C",
+        "rows": 3,
+        "cols": 3,
+        "x": 185.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "lower"
+      },
+      {
+        "name": "Vc",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 431.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "本块分子",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 677.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "K̄cᵀ",
+        "shape": "r × C",
+        "rows": 2,
+        "cols": 3,
+        "x": 62.5,
+        "y": 563.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Vc",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 308.5,
+        "y": 550.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Sbefore",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 554.5,
+        "y": 563.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Safter",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 800.5,
+        "y": 563.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "C 为 chunk token 数；Sbefore 汇总当前块之前的全部 token。",
+      "Ac 是非负核相似度；白格严格为 0，不可含未来 token。",
+      "总分母=Q̄c zbefore+rowsum(Ac)；先合分子分母，再做一次除法。"
+    ]
+  },
+  {
+    "slug": "delta-update",
+    "formula": "prediction = kᵀS ; eᵀ = vᵀ−prediction ; S′ = S+βkeᵀ",
+    "boxes": [
+      {
+        "name": "kᵀ",
+        "shape": "1 × dk",
+        "rows": 1,
+        "cols": 2,
+        "x": 199.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "S",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 431.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "prediction",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 677.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "βk",
+        "shape": "dk × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 89.5,
+        "y": 309.0,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "eᵀ",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 308.5,
+        "y": 322.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "S",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 554.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "S′",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 800.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "qᵀ",
+        "shape": "1 × dk",
+        "rows": 1,
+        "cols": 2,
+        "x": 199.0,
+        "y": 509.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "S′",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 431.5,
+        "y": 496.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "oᵀ",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 677.5,
+        "y": 509.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "key-major 状态的行是 dk，列是 dv；q/k/v 数学上为列向量。",
+      "β 为标量写入率；e 是目标 value 与已有预测之差。",
+      "瞬时损失梯度为 −keᵀ；减去 β 倍梯度就是加上 βkeᵀ。"
+    ]
+  },
+  {
+    "slug": "kda-decay",
+    "formula": "S̄ = DS ; A = (I−βkkᵀ)D ; S′ = AS+βkvᵀ",
+    "boxes": [
+      {
+        "name": "D",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 199.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 54,
+        "support": "diag"
+      },
+      {
+        "name": "S",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 431.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "S̄",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 677.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "I−βkkᵀ",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 199.0,
+        "y": 309.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "D",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 445.0,
+        "y": 309.0,
+        "width": 54,
+        "height": 54,
+        "support": "diag"
+      },
+      {
+        "name": "A",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 691.0,
+        "y": 309.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 76.0,
+        "y": 496.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "S",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 308.5,
+        "y": 496.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "βkvᵀ",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 554.5,
+        "y": 496.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "S′",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 800.5,
+        "y": 496.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "DeltaNet：D=I；GDN：对角线同一标量；KDA：每行不同门。",
+      "D 是衰减门，不是概率矩阵；对角外的白格都是严格零。",
+      "先用 S̄ 预测残差再写入；交换 D 与低秩修正会改变算法。"
+    ]
+  },
+  {
+    "slug": "chunk-solve",
+    "formula": "(I+L)U = R ; R = Diag(β)(V−Kg S0)",
+    "boxes": [
+      {
+        "name": "Kg",
+        "shape": "C × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "S0",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "历史预测",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "I+L",
+        "shape": "C × C",
+        "rows": 3,
+        "cols": 3,
+        "x": 123.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "lower"
+      },
+      {
+        "name": "U",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 369.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "R",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "L 严格下三角，对角为 0；I+L 的对角全为 1。",
+      "U 每行是修正后的实际写入 value，不是原始 V。",
+      "u1=R1；u2=R2−L21u1；u3=R3−L31u1−L32u2。"
+    ]
+  },
+  {
+    "slug": "chunk-output",
+    "formula": "O = Qg S0 + EU ; SC = Diag(g1:C)S0 + KendᵀU",
+    "boxes": [
+      {
+        "name": "Qg",
+        "shape": "C × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "S0",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "历史输出",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "E",
+        "shape": "C × C",
+        "rows": 3,
+        "cols": 3,
+        "x": 123.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "lower"
+      },
+      {
+        "name": "U",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 369.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "本块输出",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Kendᵀ",
+        "shape": "dk × C",
+        "rows": 2,
+        "cols": 3,
+        "x": 123.5,
+        "y": 563.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "U",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 369.5,
+        "y": 550.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "块尾增量",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 615.5,
+        "y": 563.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "g 是逐通道区间门乘积；Kend 每行已衰减至块尾。",
+      "E 是有符号的读取系数，不是 softmax 概率。",
+      "S_i 的展开也是此图截取前 i 行：每次写入先衰减到读取时刻。"
+    ]
+  },
+  {
+    "slug": "chunk-gram",
+    "formula": "F=(G⊙K)(K/G)ᵀ ; E=(G⊙Q)(K/G)ᵀ",
+    "boxes": [
+      {
+        "name": "G⊙K 或 G⊙Q",
+        "shape": "C × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "(K/G)ᵀ",
+        "shape": "dk × C",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "F 或 E（mask前）",
+        "shape": "C × C",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "G[i]=α1⊙…⊙αi；逐元素乘除发生在同形 C × dk 数组上。",
+      "F 截成严格下三角，E 截成含对角的下三角。",
+      "第 i,j 项的门比值为 Gi/Gj；只适用于 G 非零且数值安全。"
+    ]
+  },
+  {
+    "slug": "affine-scan",
+    "formula": "(A2,B2) ∘ (A1,B1) = (A2A1, A2B1+B2)",
+    "boxes": [
+      {
+        "name": "A2",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 199.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A1",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 445.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A21",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 691.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A2",
+        "shape": "dk × dk",
+        "rows": 2,
+        "cols": 2,
+        "x": 76.0,
+        "y": 309.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "B1",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 308.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "B2",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 554.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "B21",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 800.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "S 是 dk × dv；A 左乘 S，B 与 S 同形。",
+      "先执行 1 再执行 2，因此左边必须是 A2；一般不可交换。",
+      "结合律可并行组合，但 A2A1 仍需约 2dk³ FLOPs。"
+    ]
+  },
+  {
+    "slug": "layer-gates",
+    "formula": "rawα = (X Wad) Wau ; output = concat(RMSNorm(O)⊙gate) WO",
+    "boxes": [
+      {
+        "name": "X",
+        "shape": "N × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 83.0,
+        "y": 149.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Wad",
+        "shape": "D × r_gate",
+        "rows": 6,
+        "cols": 2,
+        "x": 403.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "hidden",
+        "shape": "N × r_gate",
+        "rows": 4,
+        "cols": 2,
+        "x": 649.0,
+        "y": 149.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "hidden",
+        "shape": "N × r_gate",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 417.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Wau",
+        "shape": "r_gate × Hdk",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 444.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "rawα merged",
+        "shape": "N × Hdk",
+        "rows": 4,
+        "cols": 4,
+        "x": 602.0,
+        "y": 417.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "RMSNorm(O)",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 123.5,
+        "y": 658.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "gate（单头）",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 369.5,
+        "y": 658.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "gated O",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 658.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "r_gate 是门的低秩宽度，与 Linear Attention 的特征维 r 不同。",
+      "gate 是 sigmoid 输出；RMSNorm 按每行 value 通道计算均方根。",
+      "β 由 XWβ 后 sigmoid 得到；最终合头与 WO 使用前文同一拼接图。"
+    ]
+  },
+  {
+    "slug": "backward-softmax",
+    "formula": "dV=PᵀG ; dP=GVᵀ ; dQ=dAK/√dk ; dK=dAᵀQ/√dk",
+    "boxes": [
+      {
+        "name": "Pᵀ",
+        "shape": "M × N",
+        "rows": 4,
+        "cols": 4,
+        "x": 110.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "G",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 369.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dV",
+        "shape": "M × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "G",
+        "shape": "N × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 123.5,
+        "y": 363.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Vᵀ",
+        "shape": "dv × M",
+        "rows": 3,
+        "cols": 4,
+        "x": 356.0,
+        "y": 376.5,
+        "width": 108,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "dP",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 602.0,
+        "y": 363.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dA",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 110.0,
+        "y": 604.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "K",
+        "shape": "M × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 383.0,
+        "y": 604.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dQ × √dk",
+        "shape": "N × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 629.0,
+        "y": 604.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dAᵀ",
+        "shape": "M × N",
+        "rows": 4,
+        "cols": 4,
+        "x": 110.0,
+        "y": 845.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "Q",
+        "shape": "N × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 383.0,
+        "y": 845.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dK × √dk",
+        "shape": "M × dk",
+        "rows": 4,
+        "cols": 2,
+        "x": 629.0,
+        "y": 845.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "G=∂loss/∂O，与 O 同形；dX 表示梯度，不是模型维度 D。",
+      "图中 N=M=4；所有乘法都收缩中间维，batch/head 独立。",
+      "Flash 反向重算 tile 内 P 后，按完全相同的乘法累计梯度。"
+    ]
+  },
+  {
+    "slug": "backward-reduce",
+    "formula": "dA = P ⊙ (dP − rowsum(P⊙dP))",
+    "boxes": [
+      {
+        "name": "P⊙dP",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 195.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "D",
+        "shape": "N × 1",
+        "rows": 4,
+        "cols": 1,
+        "x": 557.5,
+        "y": 122.0,
+        "width": 27,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dP",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 110.0,
+        "y": 363.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "D",
+        "shape": "N × 1",
+        "rows": 4,
+        "cols": 1,
+        "x": 396.5,
+        "y": 363.0,
+        "width": 27,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "centered",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 602.0,
+        "y": 363.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "P",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 110.0,
+        "y": 604.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "centered",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 356.0,
+        "y": 604.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dA",
+        "shape": "N × M",
+        "rows": 4,
+        "cols": 4,
+        "x": 602.0,
+        "y": 604.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "softmax 的归一化发生在 M 个 key 上，梯度也沿同一轴归约。",
+      "P 为 0 的位置，dA 也为 0；固定全遮蔽 query 没有梯度贡献。",
+      "Flash 可用 D=rowsum(G⊙O) 替代上图的第一次归约。"
+    ]
+  },
+  {
+    "slug": "backward-projection",
+    "formula": "dWQ = Σb Xbᵀ dQb ; dXQ = dQ WQᵀ",
+    "boxes": [
+      {
+        "name": "Xᵀ",
+        "shape": "D × N",
+        "rows": 6,
+        "cols": 4,
+        "x": 110.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "dQ merged",
+        "shape": "N × Hdk",
+        "rows": 4,
+        "cols": 4,
+        "x": 356.0,
+        "y": 149.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dWQ per batch",
+        "shape": "D × Hdk",
+        "rows": 6,
+        "cols": 4,
+        "x": 602.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "dQ merged",
+        "shape": "N × Hdk",
+        "rows": 4,
+        "cols": 4,
+        "x": 70.0,
+        "y": 417.0,
+        "width": 108,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "WQᵀ",
+        "shape": "Hdk × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 309.0,
+        "y": 417.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "dXQ",
+        "shape": "N × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 595.0,
+        "y": 417.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "先把 head 梯度合并回 N × Hdk，再对投影层求导。",
+      "权重为所有 token、所有 batch 共享，必须累加这些位置的贡献。",
+      "softmax 行 Jacobian 为 Diag(p)−ppᵀ；无需实际生成三维 Jacobian。"
+    ]
+  },
+  {
+    "slug": "backward-linear",
+    "formula": "dQ̄ = S dn + dh z ; dS += q̄ dnᵀ ; dK̄ = dS v + dz",
+    "boxes": [
+      {
+        "name": "S",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 123.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "dn",
+        "shape": "dv × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 396.5,
+        "y": 122.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "dQ̄ 分子项",
+        "shape": "r × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 642.5,
+        "y": 135.5,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "q̄",
+        "shape": "r × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 150.5,
+        "y": 336.0,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "dnᵀ",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 369.5,
+        "y": 349.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "dS 增量",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 615.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "dS",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 123.5,
+        "y": 536.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "v",
+        "shape": "dv × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 396.5,
+        "y": 523.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "dK̄ 部分",
+        "shape": "r × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 642.5,
+        "y": 536.5,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "dSᵀ",
+        "shape": "dv × r",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 737.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "k̄",
+        "shape": "r × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 396.5,
+        "y": 750.5,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "dv",
+        "shape": "dv × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 642.5,
+        "y": 737.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "dn=g/h，dh=−〈g,n〉/h²；dh 为标量，乘 z 时广播。",
+      "dS、dz 从未来向过去累积；必须使用该时刻的前缀状态。",
+      "dz+=dh·q̄；最后再乘特征映射 φ 的逐元素导数。"
+    ]
+  },
+  {
+    "slug": "backward-delta",
+    "formula": "H += qgᵀ ; dk_write=βHe ; de=βHᵀk ; dS̄=H−k deᵀ",
+    "boxes": [
+      {
+        "name": "q",
+        "shape": "dk × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 150.5,
+        "y": 122.0,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "gᵀ",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 369.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "H 增量",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "H",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 123.5,
+        "y": 322.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "e",
+        "shape": "dv × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 396.5,
+        "y": 309.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "dk_write / β",
+        "shape": "dk × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 642.5,
+        "y": 322.5,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Hᵀ",
+        "shape": "dv × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 523.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "k",
+        "shape": "dk × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 396.5,
+        "y": 536.5,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "de / β",
+        "shape": "dv × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 642.5,
+        "y": 523.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "k",
+        "shape": "dk × 1",
+        "rows": 2,
+        "cols": 1,
+        "x": 150.5,
+        "y": 737.0,
+        "width": 27,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "deᵀ",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 369.5,
+        "y": 750.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "H−dS̄",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 615.5,
+        "y": 737.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "dk 作为形状表示 key 维；作为带前缀的变量 dk_write 表示 key 梯度。",
+      "dβ=Σab H_ab k_a e_b；对所有状态格子的逐元素乘积求和。",
+      "dk 再减 S̄de；dα=rowsum(dS̄⊙Sprev)；Hprev=DdS̄。"
+    ]
+  },
+  {
+    "slug": "gqa-groups",
+    "formula": "GQA: head h reads KV group floor(h / group_size)",
+    "boxes": [
+      {
+        "name": "Q0",
+        "shape": "N × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "K0ᵀ",
+        "shape": "dk × M",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A0",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Q1",
+        "shape": "N × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 137.0,
+        "y": 336.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "K0ᵀ",
+        "shape": "dk × M",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 349.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "A1",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "P0 或 P1",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 123.5,
+        "y": 550.0,
+        "width": 81,
+        "height": 81,
+        "support": "lower"
+      },
+      {
+        "name": "V0",
+        "shape": "M × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 369.5,
+        "y": 550.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "O0 或 O1",
+        "shape": "N × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 550.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "图示 Hq=4、Hkv=2；组 1 的 Q2/Q3 同理读取 K1/V1。",
+      "共享的是 K/V，不是 Q、概率 P 或最终输出；组内 head 仍独立。",
+      "缓存按 Hkv 计数，QK/PV 主乘法仍按 Hq 计数。"
+    ]
+  },
+  {
+    "slug": "mla-expand",
+    "formula": "C = RMSNorm(X WDKV) ; Kh = C UKh ; Vh = C UVh",
+    "boxes": [
+      {
+        "name": "X",
+        "shape": "M × D",
+        "rows": 4,
+        "cols": 6,
+        "x": 58.0,
+        "y": 149.0,
+        "width": 162,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "WDKV",
+        "shape": "D × r",
+        "rows": 6,
+        "cols": 2,
+        "x": 378.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "C",
+        "shape": "M × r",
+        "rows": 4,
+        "cols": 2,
+        "x": 674.0,
+        "y": 149.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "C",
+        "shape": "M × r",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 417.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "UKh",
+        "shape": "r × dc",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 444.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Kh",
+        "shape": "M × dc",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 417.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "C",
+        "shape": "M × r",
+        "rows": 4,
+        "cols": 2,
+        "x": 137.0,
+        "y": 658.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "UVh",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 685.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Vh",
+        "shape": "M × dv",
+        "rows": 4,
+        "cols": 3,
+        "x": 615.5,
+        "y": 658.0,
+        "width": 81,
+        "height": 108,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "r 为 KV 压缩宽度；各头的 UKh、UVh 不同，C 相同。",
+      "第一行乘法后还做 RMSNorm；不能跨过归一化随意合并权重。",
+      "概念上可展开全部 K/V，但推理缓存只保存每 token 的 C。"
+    ]
+  },
+  {
+    "slug": "mla-absorb",
+    "formula": "qC(C UK)ᵀ = (qC UKᵀ)Cᵀ ; p(C UV) = (pC)UV",
+    "boxes": [
+      {
+        "name": "qC",
+        "shape": "1 × dc",
+        "rows": 1,
+        "cols": 3,
+        "x": 123.5,
+        "y": 149.0,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "UKᵀ",
+        "shape": "dc × r",
+        "rows": 3,
+        "cols": 2,
+        "x": 383.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "q̄",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 629.0,
+        "y": 149.0,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "q̄",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 349.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Cᵀ",
+        "shape": "r × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 336.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "内容分数",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 4,
+        "x": 602.0,
+        "y": 349.5,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "p",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 4,
+        "x": 110.0,
+        "y": 563.5,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "C",
+        "shape": "M × r",
+        "rows": 4,
+        "cols": 2,
+        "x": 383.0,
+        "y": 523.0,
+        "width": 54,
+        "height": 108,
+        "support": "dense"
+      },
+      {
+        "name": "z",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 629.0,
+        "y": 563.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "z",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 777.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "UV",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 764.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "o",
+        "shape": "1 × dv",
+        "rows": 1,
+        "cols": 3,
+        "x": 615.5,
+        "y": 777.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "这里只画一头、一个新 query；不物化 M 个展开后的 K/V。",
+      "C 仍保留 M 条历史；不同 head 的 p 和 z 各不相同。",
+      "吸收是同一 MLA 内部的精确结合律；并不把任意 MHA 无损压缩。"
+    ]
+  },
+  {
+    "slug": "mla-output",
+    "formula": "Δx = Σh zh (UVh WOh)",
+    "boxes": [
+      {
+        "name": "UVh",
+        "shape": "r × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 83.5,
+        "y": 135.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "WOh",
+        "shape": "dv × D",
+        "rows": 3,
+        "cols": 6,
+        "x": 309.0,
+        "y": 122.0,
+        "width": 162,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Wh combined",
+        "shape": "r × D",
+        "rows": 2,
+        "cols": 6,
+        "x": 595.0,
+        "y": 135.5,
+        "width": 162,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "zh",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 97.0,
+        "y": 349.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Wh combined",
+        "shape": "r × D",
+        "rows": 2,
+        "cols": 6,
+        "x": 309.0,
+        "y": 336.0,
+        "width": 162,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "Δxh",
+        "shape": "1 × D",
+        "rows": 1,
+        "cols": 6,
+        "x": 595.0,
+        "y": 349.5,
+        "width": 162,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "WOh 是总 WO 对应第 h 头的 dv 行；所有头贡献最后相加。",
+      "合并矩阵可能更大，是否预存要权衡参数存储与执行成本。",
+      "图中没有跨过 softmax 或 RMSNorm；只能重排相邻线性运算。"
+    ]
+  },
+  {
+    "slug": "mla-rope",
+    "formula": "logits = (q̄ Cᵀ + qR KRᵀ) / √(dc+dR)",
+    "boxes": [
+      {
+        "name": "q̄",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Cᵀ",
+        "shape": "r × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 122.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "内容分数",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 4,
+        "x": 602.0,
+        "y": 135.5,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "qR",
+        "shape": "1 × dR",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 322.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "KRᵀ",
+        "shape": "dR × M",
+        "rows": 2,
+        "cols": 4,
+        "x": 356.0,
+        "y": 309.0,
+        "width": 108,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "位置分数",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 4,
+        "x": 602.0,
+        "y": 322.5,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "内容分数",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 4,
+        "x": 110.0,
+        "y": 496.0,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "位置分数",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 4,
+        "x": 356.0,
+        "y": 496.0,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "未缩放总分",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 4,
+        "x": 602.0,
+        "y": 496.0,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "本图 r=dR=2 仅为示意；缩放仍取原内容宽度 dc 加位置宽度 dR。",
+      "位置 key KR 跨主 heads 共享；位置 query 每头不同。",
+      "每 token 缓存 r+dR 个数；RoPE 没有破坏内容路径的吸收。"
+    ]
+  },
+  {
+    "slug": "dsa-indexer",
+    "formula": "I[t,s] = Σh w[t,h] ReLU(qI[t,h] · kI[s])",
+    "boxes": [
+      {
+        "name": "QI 单索引头",
+        "shape": "N × dI",
+        "rows": 3,
+        "cols": 2,
+        "x": 97.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "KIᵀ（共享）",
+        "shape": "dI × M",
+        "rows": 2,
+        "cols": 6,
+        "x": 309.0,
+        "y": 135.5,
+        "width": 162,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "index dots",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 6,
+        "x": 595.0,
+        "y": 122.0,
+        "width": 162,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "ReLU(dots)",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 6,
+        "x": 63.0,
+        "y": 336.0,
+        "width": 162,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "wh",
+        "shape": "N × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 396.5,
+        "y": 336.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "head贡献",
+        "shape": "N × M",
+        "rows": 3,
+        "cols": 6,
+        "x": 595.0,
+        "y": 336.0,
+        "width": 162,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "索引头数 HI 与主 MLA head 数无关；各 head贡献再相加为 I。",
+      "I 是分数，不是概率；w 可以为负，所以 I 也可能为负。",
+      "QI 来自当前 query latent，KI 来自历史输入；不用先算主 Attention。"
+    ]
+  },
+  {
+    "slug": "dsa-gather",
+    "formula": "scores → TopKIndices → gather C, KR → selected MLA",
+    "boxes": [
+      {
+        "name": "I[t,:]",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 6,
+        "x": 181.0,
+        "y": 122.0,
+        "width": 162,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Jt",
+        "shape": "1 × k",
+        "rows": 1,
+        "cols": 3,
+        "x": 537.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 27,
+        "support": "index"
+      },
+      {
+        "name": "C cache",
+        "shape": "M × r",
+        "rows": 6,
+        "cols": 2,
+        "x": 202.5,
+        "y": 282.0,
+        "width": 54,
+        "height": 162,
+        "support": "dense"
+      },
+      {
+        "name": "Csel",
+        "shape": "k × r",
+        "rows": 3,
+        "cols": 2,
+        "x": 563.5,
+        "y": 322.5,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "q̄h",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 590.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Cselᵀ",
+        "shape": "r × k",
+        "rows": 2,
+        "cols": 3,
+        "x": 369.5,
+        "y": 577.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "content logits",
+        "shape": "1 × k",
+        "rows": 1,
+        "cols": 3,
+        "x": 615.5,
+        "y": 590.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "ph,sel",
+        "shape": "1 × k",
+        "rows": 1,
+        "cols": 3,
+        "x": 123.5,
+        "y": 791.0,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Csel",
+        "shape": "k × r",
+        "rows": 3,
+        "cols": 2,
+        "x": 383.0,
+        "y": 764.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "zh",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 2,
+        "x": 629.0,
+        "y": 791.0,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "Jt 是不重复的整数源位置，范围 0…t；不是概率或主 head 轴。",
+      "同一 query 的全部主 heads 共用 Jt，主概率 ph,sel 仍各自计算。",
+      "Csel[a,:]=C[Jt[a],:]；KR 也按同一个 Jt gather，索引分数不替代主分数。"
+    ]
+  },
+  {
+    "slug": "rope-pairs",
+    "formula": "[x′, y′] = [x, y] Rθ ; RθRθᵀ = I",
+    "boxes": [
+      {
+        "name": "坐标对",
+        "shape": "1 × 2",
+        "rows": 1,
+        "cols": 2,
+        "x": 137.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Rθ",
+        "shape": "2 × 2",
+        "rows": 2,
+        "cols": 2,
+        "x": 383.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "旋转后",
+        "shape": "1 × 2",
+        "rows": 1,
+        "cols": 2,
+        "x": 629.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "θ=position×frequency；行向量约定为右乘 Rθ。",
+      "Rθ 是旋转矩阵，不是概率；两个转置位置必须一致。",
+      "query 与 key 各用自身位置，点积由相对位置差控制。"
+    ]
+  },
+  {
+    "slug": "rope-obstruction",
+    "formula": "qC Rt Rsᵀ UKᵀ csᵀ : the middle factor depends on source position s",
+    "boxes": [
+      {
+        "name": "qC",
+        "shape": "1 × dc",
+        "rows": 1,
+        "cols": 2,
+        "x": 199.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Rt",
+        "shape": "dc × dc",
+        "rows": 2,
+        "cols": 2,
+        "x": 445.0,
+        "y": 122.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "qC Rt",
+        "shape": "1 × dc",
+        "rows": 1,
+        "cols": 2,
+        "x": 691.0,
+        "y": 135.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "qC Rt",
+        "shape": "1 × dc",
+        "rows": 1,
+        "cols": 2,
+        "x": 76.0,
+        "y": 322.5,
+        "width": 54,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "Rsᵀ",
+        "shape": "dc × dc",
+        "rows": 2,
+        "cols": 2,
+        "x": 322.0,
+        "y": 309.0,
+        "width": 54,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "UKᵀ",
+        "shape": "dc × r",
+        "rows": 2,
+        "cols": 3,
+        "x": 554.5,
+        "y": 309.0,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "依赖 s 的 query",
+        "shape": "1 × r",
+        "rows": 1,
+        "cols": 3,
+        "x": 800.5,
+        "y": 322.5,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "dc=2，r=3；Rs 随每个历史 token 改变，Rt 由当前 query 位置决定。",
+      "旋转矩阵与一般投影矩阵不可交换；改变括号不会改变这个次序。",
+      "最后再乘 csᵀ 才得到一个分数；无法对所有 s 只做一次 query 变换。"
+    ]
+  },
+  {
+    "slug": "softmax-jacobian",
+    "formula": "J = Diag(p) − ppᵀ ; Jg = p ⊙ (g − pᵀg)",
+    "boxes": [
+      {
+        "name": "p",
+        "shape": "M × 1",
+        "rows": 3,
+        "cols": 1,
+        "x": 150.5,
+        "y": 122.0,
+        "width": 27,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "pᵀ",
+        "shape": "1 × M",
+        "rows": 1,
+        "cols": 3,
+        "x": 369.5,
+        "y": 149.0,
+        "width": 81,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "ppᵀ",
+        "shape": "M × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Diag(p)",
+        "shape": "M × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 123.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "diag"
+      },
+      {
+        "name": "ppᵀ",
+        "shape": "M × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 369.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "J",
+        "shape": "M × M",
+        "rows": 3,
+        "cols": 3,
+        "x": 615.5,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "这是单条 query 的 Jacobian；N 条 query 就要保存 N 份 M×M。",
+      "J 描述概率每一项对分数每一项的导数，不是概率矩阵。",
+      "正文的逐元素与归约形式计算 Jg，可避免物化这张矩阵。"
+    ]
+  },
+  {
+    "slug": "chunk-wy",
+    "formula": "solve (I+L)U0=Diag(β)V ; solve (I+L)W=Diag(β)Kg ; U=U0−WS0",
+    "boxes": [
+      {
+        "name": "I+L",
+        "shape": "C × C",
+        "rows": 3,
+        "cols": 3,
+        "x": 129.3999999999998,
+        "y": 122.0,
+        "width": 81,
+        "height": 81,
+        "support": "lower"
+      },
+      {
+        "name": "W",
+        "shape": "C × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 388.8999999999998,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "Diag(β)Kg",
+        "shape": "C × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 634.8999999999999,
+        "y": 122.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "W",
+        "shape": "C × dk",
+        "rows": 3,
+        "cols": 2,
+        "x": 142.8999999999998,
+        "y": 336.0,
+        "width": 54,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "S0",
+        "shape": "dk × dv",
+        "rows": 2,
+        "cols": 3,
+        "x": 375.3999999999998,
+        "y": 349.5,
+        "width": 81,
+        "height": 54,
+        "support": "dense"
+      },
+      {
+        "name": "U0−U",
+        "shape": "C × dv",
+        "rows": 3,
+        "cols": 3,
+        "x": 621.3999999999999,
+        "y": 336.0,
+        "width": 81,
+        "height": 81,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "U0 为 C×dv，W 为 C×dk；此 W 是三角求解结果，不是投影权重。",
+      "带逆矩阵的记法代表求解；代码不需真正生成 inverse。",
+      "解的线性性允许拆分右端项；最后 U 与原三角系统解相同。"
+    ]
+  },
+  {
+    "slug": "dsa-teacher",
+    "formula": "teacher p = mean_heads(Pmain) ; loss = KL(stopgrad(p) || softmax(I))",
+    "boxes": [
+      {
+        "name": "Pmain（逐头行）",
+        "shape": "Hq × L",
+        "rows": 3,
+        "cols": 4,
+        "x": 224.83999999999975,
+        "y": 122.0,
+        "width": 108,
+        "height": 81,
+        "support": "dense"
+      },
+      {
+        "name": "teacher p",
+        "shape": "1 × L",
+        "rows": 1,
+        "cols": 4,
+        "x": 598.8399999999997,
+        "y": 149.0,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "index scores I",
+        "shape": "1 × L",
+        "rows": 1,
+        "cols": 4,
+        "x": 244.33999999999975,
+        "y": 336.0,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      },
+      {
+        "name": "student π",
+        "shape": "1 × L",
+        "rows": 1,
+        "cols": 4,
+        "x": 579.3399999999997,
+        "y": 336.0,
+        "width": 108,
+        "height": 27,
+        "support": "dense"
+      }
+    ],
+    "meaning": [
+      "L 是监督位置数：warmup 为全部可见 token，稀疏阶段为所选 token。",
+      "teacher 是概率，stopgrad 后固定；索引器输入同样不向主网反传。",
+      "KL=Σs p_s(log p_s−log π_s)；主模型用 LM loss，索引器用此 KL。"
+    ]
+  }
+]
