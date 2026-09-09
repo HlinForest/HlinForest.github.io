@@ -43,10 +43,11 @@ def markup(group):
         desk=records["desktop"][group,i]["image"]
         mobile=records["mobile"][group,i]["image"]
         width,height=Image.open(folder/desk).size
+        mobile_width=Image.open(folder/mobile).width
         label=html.escape(f"步骤 {i}：{step['title']}",quote=True)
         caption=html.escape(step["caption"])
         parts.extend([
-            '<figure class="matrix-step">',
+            f'<figure class="matrix-step" style="--diagram-width: {width/2:g}px; --diagram-mobile-width: {mobile_width/2:g}px">',
             f'<a href="{prefix}{desk}" target="_blank" rel="noopener" aria-label="{label}，打开高清图">',
             '<picture>',
             f'<source media="(max-width: 768px)" srcset="{prefix}{mobile}" />',

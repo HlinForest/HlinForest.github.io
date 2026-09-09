@@ -12,7 +12,7 @@
     "check_scenes.py": "f279b25cc35760bc49ec6a785db0c78e1948b50decb93ed45151581675a4936a",
     "core_attention.py": "46700c6b2ead48702f411bdd0d0c019e495c95801eb7a5f7b7cc00340eed54fa",
     "custom_config.yml": "6f3d6cb1f4dce493b2951595d47a5bdf8f0dc38287aca9e2e8fa818171c637bf",
-    "integrate.py": "8e48f7c00c57c5eeaefdb005dfd393bd413d7d12ac664cb119da2a5d94e4ec91",
+    "integrate.py": "a5edf7b18401eb18b63e994f780cef98202501b4fed80f1dc2e83347e6599c2b",
     "memory_variants.py": "adf9a470de8ee4fff76a3bcc86b0ab92ac3fbf8ca25a299b6178c200531d42ed",
     "render.py": "89d480cc565e528b27ae1cc59b918d45ade44b3c71c98ee9b1d80c15d1ec2be6",
     "requirements.txt": "cdca57df1457ce14660900e3de6bb75f4c306e4342175789323eed76be1ec2e8",

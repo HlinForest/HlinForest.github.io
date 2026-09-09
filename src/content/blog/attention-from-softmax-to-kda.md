@@ -84,7 +84,7 @@ lang: "zh"
 
 <!-- manim-group:projections:start -->
 <section class="matrix-steps" data-matrix-group="projections" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 288px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/projections-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：一个 token 先做一次投影，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/projections-01-mobile.png" />
@@ -92,7 +92,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 1：一个 token 先做一次投影</strong> 每个输出坐标都是输入向量与投影矩阵一列的点积；W_Q 对所有 token 共享。 <a href="/images/notes/attention-from-softmax-to-kda/manim/projections-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 266px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/projections-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：对每一行重复，得到 Q，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/projections-02-mobile.png" />
@@ -100,7 +100,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 2：对每一行重复，得到 Q</strong> 第一行与上一步完全相同。乘法只收缩输入特征轴，保留三个 token。 <a href="/images/notes/attention-from-softmax-to-kda/manim/projections-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 261px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/projections-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：使用另一组权重得到 K，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/projections-03-mobile.png" />
@@ -108,7 +108,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 3：使用另一组权重得到 K</strong> Q、K、V 各自有训练得到的投影权重；它们不是从 Q 复制出来的。 <a href="/images/notes/attention-from-softmax-to-kda/manim/projections-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 279px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/projections-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：value 投影保留输出信息，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/projections-04-mobile.png" />
@@ -123,7 +123,7 @@ lang: "zh"
 
 <!-- manim-group:scores:start -->
 <section class="matrix-steps" data-matrix-group="scores" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 370px; --diagram-mobile-width: 370.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：六个 token：先定位 query 与 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/scores-01-mobile.png" />
@@ -131,7 +131,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 1：六个 token：先定位 query 与 key</strong> 总览图的格子表示因果可见性，不是概率大小。q₃ 只读取 k₁、k₂、k₃；后面的分步图再放大点积、归一化与 value 聚合。 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 488px; --diagram-mobile-width: 306px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：把 key 行转成参与点积的列，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/scores-02-mobile.png" />
@@ -139,7 +139,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 2：把 key 行转成参与点积的列</strong> 转置真实交换高和宽；原第 j 行变成第 j 列，token 编号保持不变。 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372px; --diagram-mobile-width: 285px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：选 query 3 与 key 2，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/scores-03-mobile.png" />
@@ -147,7 +147,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 3：选 query 3 与 key 2</strong> 两个对应分量相乘后相加，只产生一个分数。 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 792px; --diagram-mobile-width: 348.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：同一个 query 依次比较全部 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/scores-04-mobile.png" />
@@ -155,7 +155,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 4：同一个 query 依次比较全部 key</strong> 输出的第 j 格对应历史位置 j；下一步才屏蔽未来位置。 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 792px; --diagram-mobile-width: 306px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：把 query 行排在一起，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/scores-05-mobile.png" />
@@ -163,7 +163,7 @@ lang: "zh"
 </picture></a>
 <figcaption><strong>步骤 5：把 query 行排在一起</strong> 每条 query 独立生成一行。标准 logits 为 A=B/√d_k，这里 d_k=2。 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-05-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 656px; --diagram-mobile-width: 306px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/scores-06-desktop.png" target="_blank" rel="noopener" aria-label="步骤 6：每个点积分数使用相同缩放，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/scores-06-mobile.png" />
@@ -187,7 +187,7 @@ $$
 
 <!-- manim-group:weighted-example:start -->
 <section class="matrix-steps" data-matrix-group="weighted-example" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 320px; --diagram-mobile-width: 200px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：选中一条概率行，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-01-mobile.png" />
@@ -195,7 +195,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：选中一条概率行</strong> p 的第 j 项对应 V 的第 j 行；两个数是概率，value 行包含两个输出通道。 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 278px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：一个概率缩放整条 value，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-02-mobile.png" />
@@ -203,7 +203,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：一个概率缩放整条 value</strong> 同一个标量乘到这一行的每个通道；不改变向量的长度。 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 278px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：一个概率缩放整条 value，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-03-mobile.png" />
@@ -211,7 +211,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：一个概率缩放整条 value</strong> 同一个标量乘到这一行的每个通道；不改变向量的长度。 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 280.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：对应通道相加，得到输出，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/weighted-example-04-mobile.png" />
@@ -226,7 +226,7 @@ $$
 
 <!-- manim-group:weighted-values:start -->
 <section class="matrix-steps" data-matrix-group="weighted-values" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 298px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-values-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：一条概率行聚合全部 value，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/weighted-values-01-mobile.png" />
@@ -234,7 +234,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：一条概率行聚合全部 value</strong> 第三个输出同时接收三个历史位置的贡献。 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-values-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 290px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/weighted-values-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：所有 query 使用同一个 V，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/weighted-values-02-mobile.png" />
@@ -259,7 +259,7 @@ $W_O$ 的每一列告诉模型如何混合所有 head 的通道，得到一个�
 
 <!-- manim-group:heads:start -->
 <section class="matrix-steps" data-matrix-group="heads" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 325px; --diagram-mobile-width: 325px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：同一 token 的两份 head 输出，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/heads-01-mobile.png" />
@@ -267,7 +267,7 @@ $W_O$ 的每一列告诉模型如何混合所有 head 的通道，得到一个�
 </picture></a>
 <figcaption><strong>步骤 1：同一 token 的两份 head 输出</strong> 两头对应同一个 token。head 用上标区分，颜色仍表示输出。 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 302.5px; --diagram-mobile-width: 303px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：沿通道拼接，token 数不变，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/heads-02-mobile.png" />
@@ -275,7 +275,7 @@ $W_O$ 的每一列告诉模型如何混合所有 head 的通道，得到一个�
 </picture></a>
 <figcaption><strong>步骤 2：沿通道拼接，token 数不变</strong> 左两列属于 head 1，右两列属于 head 2；1×2 与 1×2 拼成 1×4。 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 302px; --diagram-mobile-width: 302.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：输出权重按输入通道分行块，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/heads-03-mobile.png" />
@@ -283,7 +283,7 @@ $W_O$ 的每一列告诉模型如何混合所有 head 的通道，得到一个�
 </picture></a>
 <figcaption><strong>步骤 3：输出权重按输入通道分行块</strong> 上两行接收 head 1，下两行接收 head 2。每块都输出相同的两个模型通道。 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 291.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：head 1 乘自己的权重行块，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/heads-04-mobile.png" />
@@ -291,7 +291,7 @@ $W_O$ 的每一列告诉模型如何混合所有 head 的通道，得到一个�
 </picture></a>
 <figcaption><strong>步骤 4：head 1 乘自己的权重行块</strong> 每个输出格子由左侧向量与右侧对应列点积得到；两个 contracted 轴长度均为 2。 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 291.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：head 2 乘自己的权重行块，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/heads-05-mobile.png" />
@@ -299,7 +299,7 @@ $W_O$ 的每一列告诉模型如何混合所有 head 的通道，得到一个�
 </picture></a>
 <figcaption><strong>步骤 5：head 2 乘自己的权重行块</strong> 每个输出格子由左侧向量与右侧对应列点积得到；两个 contracted 轴长度均为 2。 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-05-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 323px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/heads-06-desktop.png" target="_blank" rel="noopener" aria-label="步骤 6：两头贡献相加，完成输出投影，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/heads-06-mobile.png" />
@@ -333,7 +333,7 @@ mask 决定哪些信息合法；dropout 决定本次训练随机保留哪些合�
 
 <!-- manim-group:mask-dropout:start -->
 <section class="matrix-steps" data-matrix-group="mask-dropout" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 355px; --diagram-mobile-width: 355.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：第 3 个 query 只能看前三个位置，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-01-mobile.png" />
@@ -341,7 +341,7 @@ mask 决定哪些信息合法；dropout 决定本次训练随机保留哪些合�
 </picture></a>
 <figcaption><strong>步骤 1：第 3 个 query 只能看前三个位置</strong> 空格表示不参与计算的未来位置。mask 应在 softmax 前把对应 logits 设为负无穷。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 323px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：全遮蔽行没有可归一化的概率，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-02-mobile.png" />
@@ -349,7 +349,7 @@ mask 决定哪些信息合法；dropout 决定本次训练随机保留哪些合�
 </picture></a>
 <figcaption><strong>步骤 2：全遮蔽行没有可归一化的概率</strong> 先判断是否存在可见 key；全遮蔽行直接返回零。不要先执行 −∞−(−∞)，那会产生 NaN。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 387px; --diagram-mobile-width: 387.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：dropout 在概率算完后丢弃部分连接，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-03-mobile.png" />
@@ -357,7 +357,7 @@ mask 决定哪些信息合法；dropout 决定本次训练随机保留哪些合�
 </picture></a>
 <figcaption><strong>步骤 3：dropout 在概率算完后丢弃部分连接</strong> 示例保留掩码 R=[0,1]。保留项除以 0.5；这一行和为 1.5，不再强制归一化，期望保持原值。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 343.5px; --diagram-mobile-width: 343.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：全遮蔽与随机全丢弃是两种情况，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mask-dropout-04-mobile.png" />
@@ -417,7 +417,7 @@ def softmax_attention(q, k, v, causal=False, keep=None, q_start=0):
 
 <!-- manim-group:matmul-count:start -->
 <section class="matrix-steps" data-matrix-group="matmul-count" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 342px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先数一个输出格子的运算，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-01-mobile.png" />
@@ -425,7 +425,7 @@ def softmax_attention(q, k, v, causal=False, keep=None, q_start=0):
 </picture></a>
 <figcaption><strong>步骤 1：先数一个输出格子的运算</strong> 内积长度 k=3：需要 3 次乘法、2 次加法，共 5 FLOPs。 <a href="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 239px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：输出有 m×n 个格子，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-02-mobile.png" />
@@ -433,7 +433,7 @@ def softmax_attention(q, k, v, causal=False, keep=None, q_start=0):
 </picture></a>
 <figcaption><strong>步骤 2：输出有 m×n 个格子</strong> 本例 m=2、n=2，共 4 个内积：4×5=20 FLOPs。 <a href="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 366px; --diagram-mobile-width: 366.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：推广到任意矩阵大小，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/matmul-count-03-mobile.png" />
@@ -478,7 +478,7 @@ $$
 
 <!-- manim-group:gqa-groups:start -->
 <section class="matrix-steps" data-matrix-group="gqa-groups" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 488px; --diagram-mobile-width: 361px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：八个 query heads，共享两组 KV，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-01-mobile.png" />
@@ -486,7 +486,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：八个 query heads，共享两组 KV</strong> 每列槽位仍代表一个 query head；组号是离散 ID。组内共享历史 K/V，不共享 Q 或概率。 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 274px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：head 0 读取组 0 的 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-02-mobile.png" />
@@ -494,7 +494,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：head 0 读取组 0 的 key</strong> 得到自己的分数后，head 0 独立做缩放、mask 和 softmax。 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 290.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：head 1 再读取同一份 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-03-mobile.png" />
@@ -502,7 +502,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：head 1 再读取同一份 key</strong> K₀ 与上一帧是同一缓存对象。query 不同，所以概率可以不同。 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 298px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：head 0 的概率读取共享 V₀，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-04-mobile.png" />
@@ -510,7 +510,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 4：head 0 的概率读取共享 V₀</strong> 这里 a=exp(1/√2)，与前面点积按 d_k=2 缩放后的 softmax 一致。两个 head 读同一个 V₀，得到不同输出。 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 298px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：head 1 的概率读取共享 V₀，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-05-mobile.png" />
@@ -518,7 +518,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 5：head 1 的概率读取共享 V₀</strong> 这里 a=exp(1/√2)，与前面点积按 d_k=2 缩放后的 softmax 一致。两个 head 读同一个 V₀，得到不同输出。 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-05-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 307px; --diagram-mobile-width: 307px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-06-desktop.png" target="_blank" rel="noopener" aria-label="步骤 6：缓存按 KV heads 计数，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/gqa-groups-06-mobile.png" />
@@ -557,7 +557,7 @@ X 为 $M\times D$，C 为 $M\times r$，$U_h^K$ 为 $r\times d_c$，$U_h^V$ 为 
 
 <!-- manim-group:mla-expand:start -->
 <section class="matrix-steps" data-matrix-group="mla-expand" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 329px; --diagram-mobile-width: 330px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先保留每个 token 的压缩表示，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-01-mobile.png" />
@@ -565,7 +565,7 @@ X 为 $M\times D$，C 为 $M\times r$，$U_h^K$ 为 $r\times d_c$，$U_h^V$ 为 
 </picture></a>
 <figcaption><strong>步骤 1：先保留每个 token 的压缩表示</strong> 下列数值从示意 latent C 开始，不声称是特定 RMSNorm 参数的输出。每行仍是独立历史 token，所有 heads 共享这些行。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 280px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：某个 head 展开内容 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-02-mobile.png" />
@@ -573,7 +573,7 @@ X 为 $M\times D$，C 为 $M\times r$，$U_h^K$ 为 $r\times d_c$，$U_h^V$ 为 
 </picture></a>
 <figcaption><strong>步骤 2：某个 head 展开内容 key</strong> 3×2 latent 经 2×3 投影展开为 3×3 内容 key；每个 head 有自己的升维权重。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 243px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：从同一 C 展开 value，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-expand-03-mobile.png" />
@@ -606,7 +606,7 @@ $$
 
 <!-- manim-group:mla-absorb:start -->
 <section class="matrix-steps" data-matrix-group="mla-absorb" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 582px; --diagram-mobile-width: 262px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先看展开后的内容点积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-01-mobile.png" />
@@ -614,7 +614,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：先看展开后的内容点积</strong> 这一写法需要展开全部历史内容 key。这里只比较未缩放内容分数。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 325px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：把升维权重吸收到当前 query，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-02-mobile.png" />
@@ -622,7 +622,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：把升维权重吸收到当前 query</strong> 一次 query 变换得到 latent 宽度 2，避免对每条历史重复展开。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 321px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：直接读取压缩缓存，分数相同，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-03-mobile.png" />
@@ -630,7 +630,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：直接读取压缩缓存，分数相同</strong> 输出与第一帧同为 [1,1,2]。吸收只改变括号，不跨过 softmax 或 RMSNorm。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 262.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：先用主概率聚合 latent，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-absorb-04-mobile.png" />
@@ -653,7 +653,7 @@ $$
 
 <!-- manim-group:mla-output:start -->
 <section class="matrix-steps" data-matrix-group="mla-output" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 326px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-output-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：组合相邻的 value 与输出投影，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-output-01-mobile.png" />
@@ -661,7 +661,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：组合相邻的 value 与输出投影</strong> W_O 的第 h 个行块接收该 head 的 value 输出。这里没有越过非线性运算。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-output-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 342.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-output-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：latent 汇总直接投影到模型宽度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-output-02-mobile.png" />
@@ -669,7 +669,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：latent 汇总直接投影到模型宽度</strong> 每个 head 算出相同模型宽度的一份贡献；所有 head 的贡献最后相加。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-output-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 302.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-output-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：对应模型通道累加各头贡献，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-output-03-mobile.png" />
@@ -690,7 +690,7 @@ MLA 的因果混合仍遍历历史，每 token 每头 latent 比较与聚合主�
 
 <!-- manim-group:rope-pairs:start -->
 <section class="matrix-steps" data-matrix-group="rope-pairs" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 261.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-pairs-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先旋转一个二维坐标对，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rope-pairs-01-mobile.png" />
@@ -698,7 +698,7 @@ MLA 的因果混合仍遍历历史，每 token 每头 latent 比较与聚合主�
 </picture></a>
 <figcaption><strong>步骤 1：先旋转一个二维坐标对</strong> 本组采用行向量右乘约定。90 度旋转把 [1,0] 变成 [0,1]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-pairs-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 323px; --diagram-mobile-width: 323px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-pairs-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：对每个坐标对独立旋转，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rope-pairs-02-mobile.png" />
@@ -723,7 +723,7 @@ $$
 
 <!-- manim-group:rope-obstruction:start -->
 <section class="matrix-steps" data-matrix-group="rope-obstruction" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 384px; --diagram-mobile-width: 385px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：普通 RoPE 在投影中间插入位置因子，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-01-mobile.png" />
@@ -731,7 +731,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：普通 RoPE 在投影中间插入位置因子</strong> 当前 query 的 R_t 固定，但每个历史 s 的 R_s 不同。不能把所有历史位置共用一次 query 变换。 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 294.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：历史位置 0 的 query 变换，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-02-mobile.png" />
@@ -739,7 +739,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：历史位置 0 的 query 变换</strong> 暂取 R_t=I；下一帧只换历史位置旋转。 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 305px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：历史位置 1 的变换已经不同，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rope-obstruction-03-mobile.png" />
@@ -761,7 +761,7 @@ mask、softmax 在两路相加并缩放之后进行，不能分别 softmax 后�
 
 <!-- manim-group:mla-rope:start -->
 <section class="matrix-steps" data-matrix-group="mla-rope" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 219px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：内容路读取 latent，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-01-mobile.png" />
@@ -769,7 +769,7 @@ mask、softmax 在两路相加并缩放之后进行，不能分别 softmax 后�
 </picture></a>
 <figcaption><strong>步骤 1：内容路读取 latent</strong> 此路可以吸收内容 key 的升维权重。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 295.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：位置路读取共享 RoPE key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-02-mobile.png" />
@@ -777,7 +777,7 @@ mask、softmax 在两路相加并缩放之后进行，不能分别 softmax 后�
 </picture></a>
 <figcaption><strong>步骤 2：位置路读取共享 RoPE key</strong> 这里输入已经按各自位置旋转。位置 query 每头不同，位置 key 跨主 heads 共享。 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 587px; --diagram-mobile-width: 240px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：两路同位置分数相加，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/mla-rope-03-mobile.png" />
@@ -806,7 +806,7 @@ ReLU 把每个索引头的负点积变为 0；之后乘当前 query 对应的 he
 
 <!-- manim-group:dsa-indexer:start -->
 <section class="matrix-steps" data-matrix-group="dsa-indexer" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 262px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：索引器先算自己的点积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-01-mobile.png" />
@@ -814,7 +814,7 @@ ReLU 把每个索引头的负点积变为 0；之后乘当前 query 对应的 he
 </picture></a>
 <figcaption><strong>步骤 1：索引器先算自己的点积</strong> 轻量索引器先扫描候选 key；它不是从主 Attention 输出反推索引。 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 237px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：每头先截去负点积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-02-mobile.png" />
@@ -822,7 +822,7 @@ ReLU 把每个索引头的负点积变为 0；之后乘当前 query 对应的 he
 </picture></a>
 <figcaption><strong>步骤 2：每头先截去负点积</strong> ReLU 把负点积变为零；接下来仍有可为负的 head 权重。 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 587px; --diagram-mobile-width: 262px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：加权汇总得到索引分数，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-indexer-03-mobile.png" />
@@ -841,7 +841,7 @@ ReLU 把每个索引头的负点积变为 0；之后乘当前 query 对应的 he
 
 <!-- manim-group:dsa-gather:start -->
 <section class="matrix-steps" data-matrix-group="dsa-gather" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 530px; --diagram-mobile-width: 312px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：屏蔽未来，再取 Top-K 位置，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-01-mobile.png" />
@@ -849,7 +849,7 @@ ReLU 把每个索引头的负点积变为 0；之后乘当前 query 对应的 he
 </picture></a>
 <figcaption><strong>步骤 1：屏蔽未来，再取 Top-K 位置</strong> 位置从 0 开始。分数前三名是位置 2、0、4；图中再按源位置排序成 [0,2,4]。未来位置 5 不可选。 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 357px; --diagram-mobile-width: 282.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：整数位置变成实际缓存行，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-02-mobile.png" />
@@ -857,7 +857,7 @@ ReLU 把每个索引头的负点积变为 0；之后乘当前 query 对应的 he
 </picture></a>
 <figcaption><strong>步骤 2：整数位置变成实际缓存行</strong> 选中第 0、2、4 行，顺序对应三个 selected slots。Kᴿ 必须使用同一组位置 gather；所有主 heads 共享这组整数位置。 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 331.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：主 query 对选中内容重新打分，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-03-mobile.png" />
@@ -865,7 +865,7 @@ ReLU 把每个索引头的负点积变为 0；之后乘当前 query 对应的 he
 </picture></a>
 <figcaption><strong>步骤 3：主 query 对选中内容重新打分</strong> 再加同位置的 RoPE 分数，并由主 softmax 归一化；索引器分数不直接作为主权重。 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 326px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：主概率读取选中的 value 信息，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-gather-04-mobile.png" />
@@ -900,7 +900,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 
 <!-- manim-group:dsa-teacher:start -->
 <section class="matrix-steps" data-matrix-group="dsa-teacher" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 332px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：跨主 heads 平均得到教师概率，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-01-mobile.png" />
@@ -908,7 +908,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 </picture></a>
 <figcaption><strong>步骤 1：跨主 heads 平均得到教师概率</strong> 先固定同一 query、同一监督位置集合。教师概率 stop-gradient，不通过该 KL 更新主模型。 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 323px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：索引分数在同一集合上归一化，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-02-mobile.png" />
@@ -916,7 +916,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 </picture></a>
 <figcaption><strong>步骤 2：索引分数在同一集合上归一化</strong> 训练索引器时用 softmax 得到学生概率；推理选位置时直接用索引分数排名。 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 261.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：用教师分布监督索引器，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/dsa-teacher-03-mobile.png" />
@@ -948,7 +948,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 
 <!-- manim-group:softmax-passes:start -->
 <section class="matrix-steps" data-matrix-group="softmax-passes" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 320px; --diagram-mobile-width: 254px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：第 1 遍：只找最大值，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-01-mobile.png" />
@@ -956,7 +956,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 </picture></a>
 <figcaption><strong>步骤 1：第 1 遍：只找最大值</strong> 最大值需要看完所有元素才能确定；这一遍不输出概率。 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 327px; --diagram-mobile-width: 328px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：第 2 遍：重新读取并累加指数，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-02-mobile.png" />
@@ -964,7 +964,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 </picture></a>
 <figcaption><strong>步骤 2：第 2 遍：重新读取并累加指数</strong> 减最大值让指数不超过 1。若不保存 E，最终输出时还需重新读取 x 并计算指数。 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 266px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：第 3 遍：逐项输出概率，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-03-mobile.png" />
@@ -972,7 +972,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 </picture></a>
 <figcaption><strong>步骤 3：第 3 遍：逐项输出概率</strong> 三次读取分数行。也可存 E 把计算换成额外内存搬运；遍数必须说明中间量是否保存。 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 261px; --diagram-mobile-width: 261.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：在线更新最大值与分母，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-04-mobile.png" />
@@ -980,7 +980,7 @@ TopK 是离散选取：在排名不变的一小段扰动范围里，输出位置
 </picture></a>
 <figcaption><strong>步骤 4：在线更新最大值与分母</strong> 读完 x₁=0 后 m=0,l=1；读到 x₂=log2 时旧分母乘 1/2，再加新项 1，得到 3/2。 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 384px; --diagram-mobile-width: 384.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：在线分母仍不等于一次输出全部概率，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-passes-05-mobile.png" />
@@ -1036,7 +1036,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 
 <!-- manim-group:flash-tile:start -->
 <section class="matrix-steps" data-matrix-group="flash-tile" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 324px; --diagram-mobile-width: 324px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先消费第一个 score/value，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-01-mobile.png" />
@@ -1044,7 +1044,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 </picture></a>
 <figcaption><strong>步骤 1：先消费第一个 score/value</strong> 初始空状态由首个有效元素建立。a 是尚未除以 l 的加权和；全空 tile 必须跳过。 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 363px; --diagram-mobile-width: 364px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：最大值变大：同时重标定分子分母，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-02-mobile.png" />
@@ -1052,7 +1052,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 </picture></a>
 <figcaption><strong>步骤 2：最大值变大：同时重标定分子分母</strong> 旧 a 从 [2,0] 变成 [1,0]，旧 l 从 1 变成 1/2。两者乘同一个因子，所以旧输出比值不变。 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 315px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：同一个缩放系数作用于 l 与 a，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-03-mobile.png" />
@@ -1060,7 +1060,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 </picture></a>
 <figcaption><strong>步骤 3：同一个缩放系数作用于 l 与 a</strong> 竖线左侧是标量分母，右侧是两通道分子。每格同时乘 1/2；旧比值 [2,0]/1 与 [1,0]/(1/2) 相同。 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 319px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：在新尺度下加入第二条 value，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-04-mobile.png" />
@@ -1068,7 +1068,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 </picture></a>
 <figcaption><strong>步骤 4：在新尺度下加入第二条 value</strong> 新 score 等于新最大值，因此指数系数为 1；这一步仍不需要保存概率向量。 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 320px; --diagram-mobile-width: 241px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：最后才做分式归一化，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-05-mobile.png" />
@@ -1076,7 +1076,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 </picture></a>
 <figcaption><strong>步骤 5：最后才做分式归一化</strong> 本例与对 [0,log2] 做 softmax 再乘 V 完全一致。Flash 减少中间矩阵的显存读写，主要点积计算仍随序列长度平方增长。 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-05-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 329.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-06-desktop.png" target="_blank" rel="noopener" aria-label="步骤 6：推广成一块 query 与一块 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-06-mobile.png" />
@@ -1084,7 +1084,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 </picture></a>
 <figcaption><strong>步骤 6：推广成一块 query 与一块 key</strong> 每条 query 各自维护 m,l,a。W 仅在当前 tile 存在；W V_j 累计到 a，再处理下一块。 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-06-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 587px; --diagram-mobile-width: 324.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-07-desktop.png" target="_blank" rel="noopener" aria-label="步骤 7：每条 query 累积自己的 l 与 a，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-07-mobile.png" />
@@ -1092,7 +1092,7 @@ m,l,c 是每行一个数，参与 X 或 a 的计算时沿列广播。W 不是归
 </picture></a>
 <figcaption><strong>步骤 7：每条 query 累积自己的 l 与 a</strong> 竖线左边各行的分母独立累加，右边各行的分子独立累加。这里旧 m=0，新 m′=log2，旧状态已同时重标定一半。 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-07-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 362px; --diagram-mobile-width: 304px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-08-desktop.png" target="_blank" rel="noopener" aria-label="步骤 8：所有 tile 完成后逐行归一化，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/flash-tile-08-mobile.png" />
@@ -1185,7 +1185,7 @@ FP16/BF16 也有舍入误差，FP8 进一步引入量化。block scaling 按块�
 
 <!-- manim-group:rotation:start -->
 <section class="matrix-steps" data-matrix-group="rotation" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 303px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rotation-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：同一个正交矩阵旋转 query，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rotation-01-mobile.png" />
@@ -1193,7 +1193,7 @@ FP16/BF16 也有舍入误差，FP8 进一步引入量化。block scaling 按块�
 </picture></a>
 <figcaption><strong>步骤 1：同一个正交矩阵旋转 query</strong> 这里 Q 与 K 使用同一个 R，区别于 RoPE 中按各自 token 位置旋转。 <a href="/images/notes/attention-from-softmax-to-kda/manim/rotation-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 258px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rotation-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：key 也使用同一个旋转，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rotation-02-mobile.png" />
@@ -1201,7 +1201,7 @@ FP16/BF16 也有舍入误差，FP8 进一步引入量化。block scaling 按块�
 </picture></a>
 <figcaption><strong>步骤 2：key 也使用同一个旋转</strong> 同时旋转保持点积：原点积为 1，旋转后 [0,1]·[-1,1] 仍为 1。 <a href="/images/notes/attention-from-softmax-to-kda/manim/rotation-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 401px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/rotation-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：中间的正交因子相消，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/rotation-03-mobile.png" />
@@ -1311,7 +1311,7 @@ $$
 
 <!-- manim-group:linear-association:start -->
 <section class="matrix-steps" data-matrix-group="linear-association" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 302.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：显式路径先生成所有相似度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-association-01-mobile.png" />
@@ -1319,7 +1319,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：显式路径先生成所有相似度</strong> 这里使用非负特征内积，不是 softmax。相似度矩阵仍随 query×key 数增长。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 301px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：改变括号，先汇总 KV 外积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-association-02-mobile.png" />
@@ -1327,7 +1327,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：改变括号，先汇总 KV 外积</strong> 收缩历史 token 轴，只留下特征×value 状态。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 302px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：query 读取状态，分子相同，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-association-03-mobile.png" />
@@ -1335,7 +1335,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：query 读取状态，分子相同</strong> 两条路径的分子经 NumPy 检查相同。归一化还需 z=K̄ᵀ1；不能把 softmax 从乘法中移过去。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 510px; --diagram-mobile-width: 375px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：第 1 步：逐 token 缓存与固定状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-association-04-mobile.png" />
@@ -1343,7 +1343,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 4：第 1 步：逐 token 缓存与固定状态</strong> 左侧逐行保存每个 token 的 key/value；右侧将它们叠加成同形 S,z。新 query 在左侧读取所有历史行，在右侧只读当前 S,z；这种压缩不是 softmax 的无损替代。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 510px; --diagram-mobile-width: 375px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：第 3 步：逐 token 缓存与固定状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-association-05-mobile.png" />
@@ -1351,7 +1351,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 5：第 3 步：逐 token 缓存与固定状态</strong> 左侧逐行保存每个 token 的 key/value；右侧将它们叠加成同形 S,z。新 query 在左侧读取所有历史行，在右侧只读当前 S,z；这种压缩不是 softmax 的无损替代。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-05-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 510px; --diagram-mobile-width: 375px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-association-06-desktop.png" target="_blank" rel="noopener" aria-label="步骤 6：第 6 步：逐 token 缓存与固定状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-association-06-mobile.png" />
@@ -1378,7 +1378,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 
 <!-- manim-group:linear-normalizer:start -->
 <section class="matrix-steps" data-matrix-group="linear-normalizer" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 308px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：第 1 步：key 与 value 外积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-01-mobile.png" />
@@ -1386,7 +1386,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 1：第 1 步：key 与 value 外积</strong> key 为 2×1 列向量，value 转为 1×3 行向量；输出 2×3，每个格子是对应 key 分量乘 value 分量。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 587px; --diagram-mobile-width: 266px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：第 1 步：逐格累积状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-02-mobile.png" />
@@ -1394,7 +1394,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 2：第 1 步：逐格累积状态</strong> 新旧状态形状相同。历史不再分 token 保存，而是叠加进同一组格子；S₀ 的零值留白。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 335px; --diagram-mobile-width: 311.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：第 1 步：累积 key 特征总量，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-03-mobile.png" />
@@ -1402,7 +1402,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 3：第 1 步：累积 key 特征总量</strong> z 保存 key 特征之和，维度为 2×1；它用于计算 query 对全部历史的总权重。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 288px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：第 1 步：query 读取分子，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-04-mobile.png" />
@@ -1410,7 +1410,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 4：第 1 步：query 读取分子</strong> query 收缩状态的 key 特征轴；每列留下一个输出通道。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372px; --diagram-mobile-width: 288px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：第 1 步：query 读取分母，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-05-mobile.png" />
@@ -1418,7 +1418,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 5：第 1 步：query 读取分母</strong> 分母是一个标量。本例第 2 步为 1×3+1×3=6；它不是需要求逆的矩阵。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-05-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 347.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-06-desktop.png" target="_blank" rel="noopener" aria-label="步骤 6：第 1 步：每个通道除以同一分母，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-06-mobile.png" />
@@ -1426,7 +1426,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 6：第 1 步：每个通道除以同一分母</strong> 各通道都除以 1，得到 [3.0, 1.0, 2.0]。这些数直接使用非负特征 k̄、q̄；零分量用于简化示例，并非有限输入经 ELU+1 的精确输出。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-06-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 308px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-07-desktop.png" target="_blank" rel="noopener" aria-label="步骤 7：第 2 步：key 与 value 外积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-07-mobile.png" />
@@ -1434,7 +1434,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 7：第 2 步：key 与 value 外积</strong> key 为 2×1 列向量，value 转为 1×3 行向量；输出 2×3，每个格子是对应 key 分量乘 value 分量。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-07-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 587px; --diagram-mobile-width: 266px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-08-desktop.png" target="_blank" rel="noopener" aria-label="步骤 8：第 2 步：逐格累积状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-08-mobile.png" />
@@ -1442,7 +1442,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 8：第 2 步：逐格累积状态</strong> 新旧状态形状相同。历史不再分 token 保存，而是叠加进同一组格子；S₀ 的零值留白。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-08-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 335px; --diagram-mobile-width: 311.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-09-desktop.png" target="_blank" rel="noopener" aria-label="步骤 9：第 2 步：累积 key 特征总量，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-09-mobile.png" />
@@ -1450,7 +1450,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 9：第 2 步：累积 key 特征总量</strong> z 保存 key 特征之和，维度为 2×1；它用于计算 query 对全部历史的总权重。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-09-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 288px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-10-desktop.png" target="_blank" rel="noopener" aria-label="步骤 10：第 2 步：query 读取分子，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-10-mobile.png" />
@@ -1458,7 +1458,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 10：第 2 步：query 读取分子</strong> query 收缩状态的 key 特征轴；每列留下一个输出通道。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-10-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372px; --diagram-mobile-width: 288px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-11-desktop.png" target="_blank" rel="noopener" aria-label="步骤 11：第 2 步：query 读取分母，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-11-mobile.png" />
@@ -1466,7 +1466,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 11：第 2 步：query 读取分母</strong> 分母是一个标量。本例第 2 步为 1×3+1×3=6；它不是需要求逆的矩阵。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-11-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 404px; --diagram-mobile-width: 347.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-12-desktop.png" target="_blank" rel="noopener" aria-label="步骤 12：第 2 步：每个通道除以同一分母，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-normalizer-12-mobile.png" />
@@ -1489,7 +1489,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 
 <!-- manim-group:linear-state:start -->
 <section class="matrix-steps" data-matrix-group="linear-state" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 834px; --diagram-mobile-width: 464px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：六步状态链：写入与读取，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-01-mobile.png" />
@@ -1497,7 +1497,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 1：六步状态链：写入与读取</strong> 下方外积沿箭头写入加号；上方 query 从更新后的状态读取分子。每个状态都是同样的 2×2；z 同时递推、最后参与归一化。手机分两段展示，重复的 S₃ 表示同一个衔接状态。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 214px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：时间链：S0 → S1，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-02-mobile.png" />
@@ -1505,7 +1505,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 2：时间链：S0 → S1</strong> 第 1 个 token 写入同一个 2×2 状态。其 key/value 均为 [1.0, 0.0]；z 同时累加 key，当前为 [1.0, 0.0]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 268px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：时间链：query 读取 S1，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-03-mobile.png" />
@@ -1513,7 +1513,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 3：时间链：query 读取 S1</strong> 本帧展示分子读取；分母为 1。沿时间依次读完 1…6 步，状态始终保持 2×2；不是六个历史 token 的无损存储。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 217px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：时间链：S1 → S2，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-04-mobile.png" />
@@ -1521,7 +1521,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 4：时间链：S1 → S2</strong> 第 2 个 token 写入同一个 2×2 状态。其 key/value 均为 [0.0, 1.0]；z 同时累加 key，当前为 [1.0, 1.0]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 271px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：时间链：query 读取 S2，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-05-mobile.png" />
@@ -1529,7 +1529,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 5：时间链：query 读取 S2</strong> 本帧展示分子读取；分母为 2。沿时间依次读完 1…6 步，状态始终保持 2×2；不是六个历史 token 的无损存储。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-05-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 217px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-06-desktop.png" target="_blank" rel="noopener" aria-label="步骤 6：时间链：S2 → S3，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-06-mobile.png" />
@@ -1537,7 +1537,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 6：时间链：S2 → S3</strong> 第 3 个 token 写入同一个 2×2 状态。其 key/value 均为 [1.0, 1.0]；z 同时累加 key，当前为 [2.0, 2.0]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-06-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 271px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-07-desktop.png" target="_blank" rel="noopener" aria-label="步骤 7：时间链：query 读取 S3，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-07-mobile.png" />
@@ -1545,7 +1545,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 7：时间链：query 读取 S3</strong> 本帧展示分子读取；分母为 4。沿时间依次读完 1…6 步，状态始终保持 2×2；不是六个历史 token 的无损存储。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-07-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 218px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-08-desktop.png" target="_blank" rel="noopener" aria-label="步骤 8：时间链：S3 → S4，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-08-mobile.png" />
@@ -1553,7 +1553,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 8：时间链：S3 → S4</strong> 第 4 个 token 写入同一个 2×2 状态。其 key/value 均为 [2.0, 0.0]；z 同时累加 key，当前为 [4.0, 2.0]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-08-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 272px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-09-desktop.png" target="_blank" rel="noopener" aria-label="步骤 9：时间链：query 读取 S4，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-09-mobile.png" />
@@ -1561,7 +1561,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 9：时间链：query 读取 S4</strong> 本帧展示分子读取；分母为 6。沿时间依次读完 1…6 步，状态始终保持 2×2；不是六个历史 token 的无损存储。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-09-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 217px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-10-desktop.png" target="_blank" rel="noopener" aria-label="步骤 10：时间链：S4 → S5，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-10-mobile.png" />
@@ -1569,7 +1569,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 10：时间链：S4 → S5</strong> 第 5 个 token 写入同一个 2×2 状态。其 key/value 均为 [0.0, 2.0]；z 同时累加 key，当前为 [4.0, 4.0]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-10-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 271px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-11-desktop.png" target="_blank" rel="noopener" aria-label="步骤 11：时间链：query 读取 S5，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-11-mobile.png" />
@@ -1577,7 +1577,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 11：时间链：query 读取 S5</strong> 本帧展示分子读取；分母为 8。沿时间依次读完 1…6 步，状态始终保持 2×2；不是六个历史 token 的无损存储。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-11-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 218px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-12-desktop.png" target="_blank" rel="noopener" aria-label="步骤 12：时间链：S5 → S6，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-12-mobile.png" />
@@ -1585,7 +1585,7 @@ S 保存“key 特征与 value 的关联总和”，z 保存“key 特征总量�
 </picture></a>
 <figcaption><strong>步骤 12：时间链：S5 → S6</strong> 第 6 个 token 写入同一个 2×2 状态。其 key/value 均为 [2.0, 1.0]；z 同时累加 key，当前为 [6.0, 5.0]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-12-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 271px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-state-13-desktop.png" target="_blank" rel="noopener" aria-label="步骤 13：时间链：query 读取 S6，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-state-13-mobile.png" />
@@ -1617,7 +1617,7 @@ $$
 
 <!-- manim-group:linear-chunk:start -->
 <section class="matrix-steps" data-matrix-group="linear-chunk" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 240.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：当前块先读取旧状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-01-mobile.png" />
@@ -1625,7 +1625,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：当前块先读取旧状态</strong> 旧状态只汇总本块以前的 token；不能包含本块未来。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 239.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：本块内部保留下三角，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-02-mobile.png" />
@@ -1633,7 +1633,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：本块内部保留下三角</strong> 对角线对应当前 token，下三角对应本块更早 token，右上角严格为零。 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 281.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：先相加分子，分母也相加，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/linear-chunk-03-mobile.png" />
@@ -1684,7 +1684,7 @@ $$
 
 <!-- manim-group:delta-update:start -->
 <section class="matrix-steps" data-matrix-group="delta-update" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 216px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：key 读取已有预测，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/delta-update-01-mobile.png" />
@@ -1692,7 +1692,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：key 读取已有预测</strong> key 查询已有状态；这里不是用 query 读最终输出。 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 460px; --diagram-mobile-width: 258px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：目标减预测，得到残差，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/delta-update-02-mobile.png" />
@@ -1700,7 +1700,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：目标减预测，得到残差</strong> 本例残差 [1,−1]：第一通道不足，第二通道过多。 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 263px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：只写残差外积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/delta-update-03-mobile.png" />
@@ -1708,7 +1708,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：只写残差外积</strong> 有符号残差允许增加或减少记忆；不是把完整 value 一直累加。 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 200px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：把修正写回状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/delta-update-04-mobile.png" />
@@ -1716,7 +1716,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 4：把修正写回状态</strong> 本例单位 key、β=1，写入后沿该 key 的预测精确变成目标 [2,1]。 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-04-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 283px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/delta-update-05-desktop.png" target="_blank" rel="noopener" aria-label="步骤 5：query 读取更新后的状态，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/delta-update-05-mobile.png" />
@@ -1761,7 +1761,7 @@ $$
 
 <!-- manim-group:kda-decay:start -->
 <section class="matrix-steps" data-matrix-group="kda-decay" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 241px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：遗忘门按状态行缩放，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-01-mobile.png" />
@@ -1769,7 +1769,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：遗忘门按状态行缩放</strong> 第一行衰减一半，第二行保留。D 为对角矩阵，非对角零值留白。 <a href="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 260.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：在遗忘后的状态上预测，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-02-mobile.png" />
@@ -1777,7 +1777,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：在遗忘后的状态上预测</strong> 随后计算残差 eᵀ=vᵀ−预测，再执行前组相同的残差外积写入。 <a href="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 338px; --diagram-mobile-width: 339px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：合并公式时保持乘法次序，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/kda-decay-03-mobile.png" />
@@ -1868,7 +1868,7 @@ $$
 
 <!-- manim-group:chunk-solve:start -->
 <section class="matrix-steps" data-matrix-group="chunk-solve" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 323px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：块内依赖形成单位下三角系统，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-01-mobile.png" />
@@ -1876,7 +1876,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：块内依赖形成单位下三角系统</strong> 图中系数矩阵含单位对角；正文 L 本身严格下三角。未知 U 逐行求出，不需要构造逆矩阵。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 469px; --diagram-mobile-width: 302.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：前代：第一行没有更早依赖，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-02-mobile.png" />
@@ -1884,7 +1884,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：前代：第一行没有更早依赖</strong> 逐个 value 通道减去已知历史写入。每行求出后供下一行使用；这是前向代入，不是并行独立逐行除法。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 469px; --diagram-mobile-width: 335px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：前代：只用已求出的第 1…1 行，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-03-mobile.png" />
@@ -1892,7 +1892,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：前代：只用已求出的第 1…1 行</strong> 逐个 value 通道减去已知历史写入。每行求出后供下一行使用；这是前向代入，不是并行独立逐行除法。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 469px; --diagram-mobile-width: 335px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：前代：只用已求出的第 1…2 行，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-solve-04-mobile.png" />
@@ -1907,7 +1907,7 @@ $$
 
 <!-- manim-group:chunk-output:start -->
 <section class="matrix-steps" data-matrix-group="chunk-output" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 241px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：输出先读取块前历史，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-01-mobile.png" />
@@ -1915,7 +1915,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：输出先读取块前历史</strong> Q_g 含从块首到当前读取时刻的门乘积。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 241px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：再读取本块实际写入，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-02-mobile.png" />
@@ -1923,7 +1923,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：再读取本块实际写入</strong> U 使用上一组前代结果；E 含对角及下三角，是读取系数而非 softmax 概率。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 300px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：同一 token、同一通道相加，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-03-mobile.png" />
@@ -1931,7 +1931,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：同一 token、同一通道相加</strong> 历史贡献与本块贡献必须对齐同一输出行。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 261.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：本块写入继续传到块尾，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-output-04-mobile.png" />
@@ -1951,7 +1951,7 @@ $W=(I+L)^{-1}\operatorname{Diag}(\beta)K_g$，再 $U=U_0-WS_0$；这连接到 WY
 
 <!-- manim-group:chunk-wy:start -->
 <section class="matrix-steps" data-matrix-group="chunk-wy" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 303px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先求与输入状态无关的写入，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-01-mobile.png" />
@@ -1959,7 +1959,7 @@ $W=(I+L)^{-1}\operatorname{Diag}(\beta)K_g$，再 $U=U_0-WS_0$；这连接到 WY
 </picture></a>
 <figcaption><strong>步骤 1：先求与输入状态无关的写入</strong> 本例右端 R_V 已包含逐行 β 缩放；用同一个前代系数矩阵求解。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 321px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：同一个系统，再解另一组右端，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-02-mobile.png" />
@@ -1967,7 +1967,7 @@ $W=(I+L)^{-1}\operatorname{Diag}(\beta)K_g$，再 $U=U_0-WS_0$；这连接到 WY
 </picture></a>
 <figcaption><strong>步骤 2：同一个系统，再解另一组右端</strong> W 是三角求解结果，不是投影层的训练权重；它描述输入状态对本块写入的影响。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 460px; --diagram-mobile-width: 302px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：扣掉输入状态贡献，得到 U，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-wy-03-mobile.png" />
@@ -1987,7 +1987,7 @@ $W=(I+L)^{-1}\operatorname{Diag}(\beta)K_g$，再 $U=U_0-WS_0$；这连接到 WY
 
 <!-- manim-group:chunk-gram:start -->
 <section class="matrix-steps" data-matrix-group="chunk-gram" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 219px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：累计门逐格乘 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-01-mobile.png" />
@@ -1995,7 +1995,7 @@ $W=(I+L)^{-1}\operatorname{Diag}(\beta)K_g$，再 $U=U_0-WS_0$；这连接到 WY
 </picture></a>
 <figcaption><strong>步骤 1：累计门逐格乘 key</strong> G 的每行是从块首到该位置的逐通道门乘积；乘法不收缩轴。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 320px; --diagram-mobile-width: 260.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：另一侧逐格除以累计门，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-02-mobile.png" />
@@ -2003,7 +2003,7 @@ $W=(I+L)^{-1}\operatorname{Diag}(\beta)K_g$，再 $U=U_0-WS_0$；这连接到 WY
 </picture></a>
 <figcaption><strong>步骤 2：另一侧逐格除以累计门</strong> 分母与分子逐格对应，并非矩阵逆。此展开仅适用于 G 非零且除法数值安全。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 540px; --diagram-mobile-width: 323.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：乘转置后形成时间对的门比值，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-03-mobile.png" />
@@ -2011,7 +2011,7 @@ $W=(I+L)^{-1}\operatorname{Diag}(\beta)K_g$，再 $U=U_0-WS_0$；这连接到 WY
 </picture></a>
 <figcaption><strong>步骤 3：乘转置后形成时间对的门比值</strong> 第 i,j 格包含 G_i/G_j，表示从写入 j 到读取 i 的区间衰减。 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 366px; --diagram-mobile-width: 298.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：按用途保留正确三角部分，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/chunk-gram-04-mobile.png" />
@@ -2054,7 +2054,7 @@ $$
 
 <!-- manim-group:affine-scan:start -->
 <section class="matrix-steps" data-matrix-group="affine-scan" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 284.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先 1 后 2，转移矩阵左乘，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-01-mobile.png" />
@@ -2062,7 +2062,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：先 1 后 2，转移矩阵左乘</strong> 将 S₁=A₁S₀+B₁ 代入 S₂=A₂S₁+B₂，得到 A₂A₁；不能交换顺序。 <a href="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 302.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：第一步写入经过第二步转移，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-02-mobile.png" />
@@ -2070,7 +2070,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：第一步写入经过第二步转移</strong> 早先写入也会被后续转移作用；只把 B₁+B₂ 相加是错误的。 <a href="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 241px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：再加上第二步新写入，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/affine-scan-03-mobile.png" />
@@ -2106,7 +2106,7 @@ $$
 
 <!-- manim-group:layer-gates:start -->
 <section class="matrix-steps" data-matrix-group="layer-gates" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372px; --diagram-mobile-width: 239.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：门投影先经过窄通道，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-01-mobile.png" />
@@ -2114,7 +2114,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：门投影先经过窄通道</strong> 门的低秩宽度与 Linear Attention 的特征维不是同一个参数。 <a href="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 266px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：再展开到每个 key 通道，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-02-mobile.png" />
@@ -2122,7 +2122,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：再展开到每个 key 通道</strong> raw 值还需正文规定的门参数化，再变成有效衰减系数；不能直接当作概率。 <a href="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 361.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：输出 gate 与 value 通道逐格相乘，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/layer-gates-03-mobile.png" />
@@ -2160,7 +2160,7 @@ $$
 
 <!-- manim-group:softmax-jacobian:start -->
 <section class="matrix-steps" data-matrix-group="softmax-jacobian" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 285px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：概率外积保留两个 key 轴，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-01-mobile.png" />
@@ -2168,7 +2168,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：概率外积保留两个 key 轴</strong> 一个 query 的概率向量有两个元素；外积得到两两依赖，不是概率转移矩阵。 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 460px; --diagram-mobile-width: 244px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：对角项减去交叉项，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-02-mobile.png" />
@@ -2176,7 +2176,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：对角项减去交叉项</strong> 提高一个 logit 会增加它自己的概率，也会降低其他项的概率，因此非对角导数为负。 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372px; --diagram-mobile-width: 208px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：梯度乘 Jacobian，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/softmax-jacobian-03-mobile.png" />
@@ -2192,7 +2192,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 
 <!-- manim-group:backward-softmax:start -->
 <section class="matrix-steps" data-matrix-group="backward-softmax" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 302px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：输出梯度沿概率转置传给 V，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-01-mobile.png" />
@@ -2200,7 +2200,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 1：输出梯度沿概率转置传给 V</strong> 共享 value 的梯度累加全部 query 的贡献；转置把 query 轴放到被收缩的位置。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 264.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：沿 value 转置传给概率，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-02-mobile.png" />
@@ -2208,7 +2208,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 2：沿 value 转置传给概率</strong> dP 的形状与 P 相同；接着经过 softmax 的局部反向得到 dA。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 261.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：logits 梯度传回 query，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-03-mobile.png" />
@@ -2216,7 +2216,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 3：logits 梯度传回 query</strong> 图中乘积尚未除以 √d_k；公式明确最终还要缩放。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 348px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：key 累加全部 query 的分数梯度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-softmax-04-mobile.png" />
@@ -2231,7 +2231,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 
 <!-- manim-group:backward-reduce:start -->
 <section class="matrix-steps" data-matrix-group="backward-reduce" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 282.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：概率与上游梯度逐格相乘，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-01-mobile.png" />
@@ -2239,7 +2239,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 1：概率与上游梯度逐格相乘</strong> 这一乘法不收缩维度；每个位置保留对应概率与梯度的乘积。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 285px; --diagram-mobile-width: 285.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：沿 key 轴求和，保留单列，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-02-mobile.png" />
@@ -2247,7 +2247,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 2：沿 key 轴求和，保留单列</strong> 每条 query 有自己的标量 D_i；keepdims=True 保留 N×1，供下一步广播。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 418px; --diagram-mobile-width: 241px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：每行减去自己的标量，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-03-mobile.png" />
@@ -2255,7 +2255,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 3：每行减去自己的标量</strong> 单列 D 沿列广播；第 i 行所有 key 都减同一个 D_i。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 181px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：逐格乘回概率，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-reduce-04-mobile.png" />
@@ -2270,7 +2270,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 
 <!-- manim-group:backward-projection:start -->
 <section class="matrix-steps" data-matrix-group="backward-projection" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 498px; --diagram-mobile-width: 288.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：沿 token 轴累计权重梯度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-01-mobile.png" />
@@ -2278,7 +2278,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 1：沿 token 轴累计权重梯度</strong> 先合并 head 梯度，恢复投影层输出布局；权重被所有 token 共享。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 461px; --diagram-mobile-width: 287.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：权重也被不同 batch 共享，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-02-mobile.png" />
@@ -2286,7 +2286,7 @@ mask 的梯度为 0，因为对应 P 为 0。投影层进一步有 $dW_Q=\sum_b 
 </picture></a>
 <figcaption><strong>步骤 2：权重也被不同 batch 共享</strong> 不能保留独立 batch 轴当作最终权重梯度；必须对 batch 求和。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 456px; --diagram-mobile-width: 282px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：权重转置把梯度传回输入，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-projection-03-mobile.png" />
@@ -2327,7 +2327,7 @@ $$
 
 <!-- manim-group:backward-linear:start -->
 <section class="matrix-steps" data-matrix-group="backward-linear" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 236px; --diagram-mobile-width: 223px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：先对分式输出求导，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-01-mobile.png" />
@@ -2335,7 +2335,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 1：先对分式输出求导</strong> 本例 l=2,g=[1,0]ᵀ，故 dn=[1/2,0]ᵀ、dl=−1/2。分母路径不能遗漏。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 323px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：分子读取向状态累积外积梯度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-02-mobile.png" />
@@ -2343,7 +2343,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 2：分子读取向状态累积外积梯度</strong> 归一化状态同时累积 dz += dl·q̄；query 梯度为 S dn + dl·z。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372.5px; --diagram-mobile-width: 321.5px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：写入反向把状态梯度传给 key，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-03-mobile.png" />
@@ -2351,7 +2351,7 @@ $$
 </picture></a>
 <figcaption><strong>步骤 3：写入反向把状态梯度传给 key</strong> 图中展示第一项，最终还要加 dz。dS、dz 从未来向过去累计，必须使用对应时刻的前缀状态。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372px; --diagram-mobile-width: 278px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：转置状态梯度传给 value，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-linear-04-mobile.png" />
@@ -2386,7 +2386,7 @@ $H_{prev}=D_td\bar S_t$。GDN 标量门梯度再对 key 维求和。
 
 <!-- manim-group:backward-delta:start -->
 <section class="matrix-steps" data-matrix-group="backward-delta" aria-label="分步矩阵图解">
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 414px; --diagram-mobile-width: 282px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-01-desktop.png" target="_blank" rel="noopener" aria-label="步骤 1：输出读取向状态回传外积，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-01-mobile.png" />
@@ -2394,7 +2394,7 @@ $H_{prev}=D_td\bar S_t$。GDN 标量门梯度再对 key 维求和。
 </picture></a>
 <figcaption><strong>步骤 1：输出读取向状态回传外积</strong> 先累积该时刻输出对状态的贡献；H 还包含未来时间回传的状态梯度。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-01-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 394px; --diagram-mobile-width: 289px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-02-desktop.png" target="_blank" rel="noopener" aria-label="步骤 2：残差写入对 key 的梯度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-02-mobile.png" />
@@ -2402,7 +2402,7 @@ $H_{prev}=D_td\bar S_t$。GDN 标量门梯度再对 key 维求和。
 </picture></a>
 <figcaption><strong>步骤 2：残差写入对 key 的梯度</strong> 这只是写入路径；key 同时参与预测，随后还需减去 S̄ de。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-02-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 372px; --diagram-mobile-width: 262px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-03-desktop.png" target="_blank" rel="noopener" aria-label="步骤 3：残差接收转置状态梯度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-03-mobile.png" />
@@ -2410,7 +2410,7 @@ $H_{prev}=D_td\bar S_t$。GDN 标量门梯度再对 key 维求和。
 </picture></a>
 <figcaption><strong>步骤 3：残差接收转置状态梯度</strong> 目标 value 的梯度加 de；预测值的梯度为 −de。写入率梯度 dβ=Σ_ab H_ab k_a e_b。 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-03-desktop.png" target="_blank" rel="noopener">打开高清图</a></figcaption>
 </figure>
-<figure class="matrix-step">
+<figure class="matrix-step" style="--diagram-width: 460px; --diagram-mobile-width: 282px">
 <a href="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-04-desktop.png" target="_blank" rel="noopener" aria-label="步骤 4：扣回预测路径的状态梯度，打开高清图">
 <picture>
 <source media="(max-width: 768px)" srcset="/images/notes/attention-from-softmax-to-kda/manim/backward-delta-04-mobile.png" />

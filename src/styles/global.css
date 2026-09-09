@@ -354,9 +354,12 @@ img { max-width: 100%; height: auto; }
 .prose summary { cursor: pointer; font-weight: 700; }
 .prose figcaption { margin-top: 10px; color: var(--text-faint); font-family: var(--sans); font-size: .8rem; text-align: center; }
 .prose .matrix-steps { min-width: 0; max-width: 100%; margin-block: 2rem; }
-.prose .matrix-step { min-width: 0; margin: 1.5rem 0 2rem; }
-.prose .matrix-step > a,
+.prose .matrix-step { min-width: 0; margin: 1rem 0 1.5rem; }
+.prose .matrix-step > a { display: block; width: min(100%, var(--diagram-width)); }
 .prose .matrix-step picture { display: block; width: 100%; }
+@media (max-width: 768px) {
+  .prose .matrix-step > a { width: min(100%, var(--diagram-mobile-width)); }
+}
 .prose .matrix-step img { display: block; width: 100%; max-width: 100%; height: auto; background: white; }
 .prose .matrix-step figcaption { margin-top: .75rem; line-height: 1.7; text-align: left; }
 .prose .matrix-step > a:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 3px; }
