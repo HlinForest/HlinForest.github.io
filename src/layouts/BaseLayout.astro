@@ -8,6 +8,7 @@ interface Props {
   description?: string;
   image?: string;
   type?: 'website' | 'article';
+  bodyClass?: string;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   description = site.description,
   image = '',
   type = 'website',
+  bodyClass,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url);
 const imageUrl = image ? new URL(image, site.url) : undefined;
@@ -38,7 +40,7 @@ const imageUrl = image ? new URL(image, site.url) : undefined;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     {imageUrl && <meta name="twitter:image" content={imageUrl} />}
-    <meta name="theme-color" content="#81d8d0" />
+    <meta name="theme-color" content="#002fa7" />
     <script is:inline>
       (() => {
         const saved = localStorage.getItem('theme');
@@ -48,7 +50,7 @@ const imageUrl = image ? new URL(image, site.url) : undefined;
     </script>
     <title>{title}</title>
   </head>
-  <body>
+  <body class={bodyClass}>
     <a class="skip-link" href="#main-content">跳到正文</a>
     <SiteHeader />
     <main id="main-content"><slot /></main>
