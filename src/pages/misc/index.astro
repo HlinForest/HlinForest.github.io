@@ -1,10 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../data/site';
-import '../../styles/misc-blog.css';
 ---
 
-<BaseLayout title="Misc | Spike" description="Spike 喜欢的文字、照片与音乐。" image="/tokyo-blue-hour-01.webp" bodyClass="misc-shell">
+<BaseLayout title="Misc | Spike" description="Spike 喜欢的文字、照片与音乐。" image="/tokyo-blue-hour-01.webp">
   <section class="misc-page container" aria-labelledby="misc-title">
     <header class="misc-head">
       <div class="eyebrow">Misc</div>
@@ -148,7 +147,14 @@ import '../../styles/misc-blog.css';
             />
           </button>
 
-        </div>
+          <div class="photo-reveal" data-photo-overlay>
+            <blockquote>
+              <p>在天完全黑透之前，落日之后的蓝调时刻给港区的天际线覆上一层淡淡的克莱因蓝。</p>
+              <p>玻璃幕墙里开始一盏一盏地亮起灯，这与任何国际大都会的蓝调时刻并无二致，</p>
+              <p>直至东京塔的点亮。</p>
+              <p>一瞬间红白灯光的亮起在一片寂静的蓝色中形成了鲜明的冷暖对比。真正看到《东京教父》、《天气之子》等等无数影视作品中亮起的红白铁塔的这一刻，我心目中的东京才真正具像化。</p>
+            </blockquote>
+          </div>
 
           <nav class="garden-album-controls" aria-label="切换摄影相册">
             <button type="button" data-garden-prev aria-label="上一张照片">←</button>
@@ -164,10 +170,11 @@ import '../../styles/misc-blog.css';
             </div>
             <button type="button" data-garden-next aria-label="下一张照片">→</button>
           </nav>
+        </div>
         <figcaption>
           <span data-garden-label>Tokyo · Blue hour 01</span>
           <span class="photo-meta" data-tokyo-meta>
-            Photograph · selected reference<br />
+            Photograph · selected reference · 悬停或点击阅读<br />
             <a href="https://www.sina.cn/news/detail/5155104072140071.html">
               Text reference · _等待夏夜吹成烈焰 / 新浪 <span aria-hidden="true">↗</span>
             </a>
@@ -180,15 +187,6 @@ import '../../styles/misc-blog.css';
           </span>
         </figcaption>
       </figure>
-      <details class="photo-story" data-tokyo-story>
-        <summary>阅读：东京的蓝调时刻</summary>
-        <blockquote>
-          <p>在天完全黑透之前，落日之后的蓝调时刻给港区的天际线覆上一层淡淡的克莱因蓝。</p>
-          <p>玻璃幕墙里开始一盏一盏地亮起灯，这与任何国际大都会的蓝调时刻并无二致，</p>
-          <p>直至东京塔的点亮。</p>
-          <p>一瞬间红白灯光的亮起在一片寂静的蓝色中形成了鲜明的冷暖对比。真正看到《东京教父》、《天气之子》等等无数影视作品中亮起的红白铁塔的这一刻，我心目中的东京才真正具像化。</p>
-        </blockquote>
-      </details>
     </section>
 
     <section class="misc-section" aria-labelledby="music-title">
@@ -256,7 +254,6 @@ import '../../styles/misc-blog.css';
     const gardenDots = [...document.querySelectorAll<HTMLButtonElement>('[data-garden-dot]')];
     const gardenLabel = document.querySelector<HTMLElement>('[data-garden-label]');
     const tokyoMeta = document.querySelector<HTMLElement>('[data-tokyo-meta]');
-    const tokyoStory = document.querySelector<HTMLDetailsElement>('[data-tokyo-story]');
     const gardenMeta = document.querySelector<HTMLElement>('[data-garden-meta]');
     const gardenLabels = [
       'Tokyo · Blue hour 01',
@@ -283,7 +280,6 @@ import '../../styles/misc-blog.css';
       gardenDots.forEach((dot, index) => dot.setAttribute('aria-pressed', String(index === currentGardenSlide)));
       if (gardenLabel) gardenLabel.textContent = gardenLabels[currentGardenSlide];
       if (tokyoMeta) tokyoMeta.hidden = currentGardenSlide >= tokyoSlideCount;
-      if (tokyoStory) tokyoStory.hidden = currentGardenSlide >= tokyoSlideCount;
       if (gardenMeta) gardenMeta.hidden = currentGardenSlide < tokyoSlideCount;
     };
 

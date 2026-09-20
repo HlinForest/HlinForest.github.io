@@ -8,7 +8,6 @@ interface Props {
   description?: string;
   image?: string;
   type?: 'website' | 'article';
-  bodyClass?: string;
 }
 
 const {
@@ -16,7 +15,6 @@ const {
   description = site.description,
   image = '',
   type = 'website',
-  bodyClass,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, site.url);
 const imageUrl = image ? new URL(image, site.url) : undefined;
@@ -50,7 +48,7 @@ const imageUrl = image ? new URL(image, site.url) : undefined;
     </script>
     <title>{title}</title>
   </head>
-  <body class={bodyClass}>
+  <body>
     <a class="skip-link" href="#main-content">跳到正文</a>
     <SiteHeader />
     <main id="main-content"><slot /></main>

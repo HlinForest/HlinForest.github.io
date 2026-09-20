@@ -1,65 +1,30 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
-import { byNewest, formatDate, postUrl, publishedOnly } from '../utils/posts';
-import '../styles/home.css';
-
-const recentPosts = (await getCollection('blog')).filter(publishedOnly).sort(byNewest).slice(0, 3);
 ---
 
-<BaseLayout image="/spike-profile-space.webp" bodyClass="home-shell">
-  <div class="blog-home container">
-    <section class="blog-profile" id="about" aria-labelledby="spike-name">
-      <figure class="blog-avatar">
-        <div class="blog-avatar-frame">
-          <img
-            src="/spike-profile-space.webp"
-            alt="用作个人头像的 Spike AI 插画，他正在太空舱中演奏萨克斯"
-            width="1672"
-            height="941"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
-        <figcaption>Spike · AI 插画</figcaption>
+<BaseLayout image="/spike-profile-space.webp">
+  <section class="profile-home container" id="about" aria-labelledby="spike-name">
+    <aside class="profile-identity">
+      <figure class="profile-avatar">
+        <img
+          src="/spike-profile-space.webp"
+          alt="太空舱中的 Spike 演奏萨克斯"
+          width="1672"
+          height="941"
+        />
+        <figcaption>AI study · France Olympic space saxophone, Spike adaptation</figcaption>
       </figure>
-      <div class="blog-profile-copy">
-        <h1 id="spike-name">Spike</h1>
-        <p>我还在学习中，会慢慢更新的。</p>
-        <a class="blog-profile-link" href={site.github} rel="me">
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </section>
 
-    <section class="blog-recent" aria-labelledby="recent-title">
-      <header class="blog-section-heading">
-        <h2 id="recent-title">最近笔记</h2>
-        <a href="/notes/">全部笔记 <span aria-hidden="true">↗</span></a>
-      </header>
-      {recentPosts.length > 0 ? (
-        <ul class="blog-posts">
-          {recentPosts.map((post) => (
-            <li>
-              <article class="blog-post">
-                <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
-                <h3><a href={postUrl(post)}>{post.data.title}</a></h3>
-                <p>{post.data.description}</p>
-              </article>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p class="blog-empty">笔记还在整理中。</p>
-      )}
-    </section>
+      <h1 id="spike-name">Spike</h1>
+      <a class="identity-link" href={site.github} rel="me">
+        GitHub <span aria-hidden="true">↗</span>
+      </a>
+    </aside>
 
-    <section class="blog-misc" aria-labelledby="home-misc-title">
-      <div>
-        <h2 id="home-misc-title"><a href="/misc/">Misc <span aria-hidden="true">↗</span></a></h2>
-        <p>一些喜欢的文字、照片与音乐。</p>
-      </div>
-    </section>
-  </div>
+    <div class="profile-introduction">
+      <div class="about-label">About</div>
+      <p>我还在学习中，会慢慢更新的。</p>
+    </div>
+  </section>
 </BaseLayout>
