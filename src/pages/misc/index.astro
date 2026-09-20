@@ -56,7 +56,6 @@ import { site } from '../../data/site';
             type="button"
             class="garden-album-slide"
             data-garden-slide
-            data-tokyo-story-trigger
           >
             <img
               src="/tokyo-blue-hour-01.webp"
@@ -69,7 +68,6 @@ import { site } from '../../data/site';
             type="button"
             class="garden-album-slide"
             data-garden-slide
-            data-tokyo-story-trigger
             hidden
           >
             <img
@@ -84,7 +82,6 @@ import { site } from '../../data/site';
             type="button"
             class="garden-album-slide"
             data-garden-slide
-            data-tokyo-story-trigger
             hidden
           >
             <img
@@ -99,7 +96,6 @@ import { site } from '../../data/site';
             type="button"
             class="garden-album-slide"
             data-garden-slide
-            data-tokyo-story-trigger
             hidden
           >
             <img
@@ -147,34 +143,25 @@ import { site } from '../../data/site';
             />
           </button>
 
-          <div class="photo-reveal" data-photo-overlay>
-            <blockquote>
-              <p>在天完全黑透之前，落日之后的蓝调时刻给港区的天际线覆上一层淡淡的克莱因蓝。</p>
-              <p>玻璃幕墙里开始一盏一盏地亮起灯，这与任何国际大都会的蓝调时刻并无二致，</p>
-              <p>直至东京塔的点亮。</p>
-              <p>一瞬间红白灯光的亮起在一片寂静的蓝色中形成了鲜明的冷暖对比。真正看到《东京教父》、《天气之子》等等无数影视作品中亮起的红白铁塔的这一刻，我心目中的东京才真正具像化。</p>
-            </blockquote>
-          </div>
-
-          <nav class="garden-album-controls" aria-label="切换摄影相册">
-            <button type="button" data-garden-prev aria-label="上一张照片">←</button>
-            <div class="garden-album-dots" role="group" aria-label="选择照片">
-              <button type="button" data-garden-dot="0" aria-label="查看东京蓝调时刻 01" aria-pressed="true">01</button>
-              <button type="button" data-garden-dot="1" aria-label="查看东京蓝调时刻 02" aria-pressed="false">02</button>
-              <button type="button" data-garden-dot="2" aria-label="查看东京蓝调时刻 03" aria-pressed="false">03</button>
-              <button type="button" data-garden-dot="3" aria-label="查看东京蓝调时刻 04" aria-pressed="false">04</button>
-              <button type="button" data-garden-dot="4" aria-label="查看雨天湖面" aria-pressed="false">05</button>
-              <button type="button" data-garden-dot="5" aria-label="查看雨幕草地" aria-pressed="false">06</button>
-              <button type="button" data-garden-dot="6" aria-label="查看雨中绣球" aria-pressed="false">07</button>
-              <button type="button" data-garden-dot="7" aria-label="查看雨中百合" aria-pressed="false">08</button>
-            </div>
-            <button type="button" data-garden-next aria-label="下一张照片">→</button>
-          </nav>
         </div>
+        <nav class="garden-album-controls" aria-label="切换摄影相册">
+          <button type="button" data-garden-prev aria-label="上一张照片">←</button>
+          <div class="garden-album-dots" role="group" aria-label="选择照片">
+            <button type="button" data-garden-dot="0" aria-label="查看东京蓝调时刻 01" aria-pressed="true">01</button>
+            <button type="button" data-garden-dot="1" aria-label="查看东京蓝调时刻 02" aria-pressed="false">02</button>
+            <button type="button" data-garden-dot="2" aria-label="查看东京蓝调时刻 03" aria-pressed="false">03</button>
+            <button type="button" data-garden-dot="3" aria-label="查看东京蓝调时刻 04" aria-pressed="false">04</button>
+            <button type="button" data-garden-dot="4" aria-label="查看雨天湖面" aria-pressed="false">05</button>
+            <button type="button" data-garden-dot="5" aria-label="查看雨幕草地" aria-pressed="false">06</button>
+            <button type="button" data-garden-dot="6" aria-label="查看雨中绣球" aria-pressed="false">07</button>
+            <button type="button" data-garden-dot="7" aria-label="查看雨中百合" aria-pressed="false">08</button>
+          </div>
+          <button type="button" data-garden-next aria-label="下一张照片">→</button>
+        </nav>
         <figcaption>
           <span data-garden-label>Tokyo · Blue hour 01</span>
           <span class="photo-meta" data-tokyo-meta>
-            Photograph · selected reference · 悬停或点击阅读<br />
+            Photograph · selected reference · 点击下方阅读<br />
             <a href="https://www.sina.cn/news/detail/5155104072140071.html">
               Text reference · _等待夏夜吹成烈焰 / 新浪 <span aria-hidden="true">↗</span>
             </a>
@@ -187,6 +174,15 @@ import { site } from '../../data/site';
           </span>
         </figcaption>
       </figure>
+        <details class="tokyo-story" data-tokyo-story>
+          <summary>东京的蓝调时刻</summary>
+          <blockquote>
+            <p>在天完全黑透之前，落日之后的蓝调时刻给港区的天际线覆上一层淡淡的克莱因蓝。</p>
+            <p>玻璃幕墙里开始一盏一盏地亮起灯，这与任何国际大都会的蓝调时刻并无二致，</p>
+            <p>直至东京塔的点亮。</p>
+            <p>一瞬间红白灯光的亮起在一片寂静的蓝色中形成了鲜明的冷暖对比。真正看到《东京教父》、《天气之子》等等无数影视作品中亮起的红白铁塔的这一刻，我心目中的东京才真正具像化。</p>
+          </blockquote>
+        </details>
     </section>
 
     <section class="misc-section" aria-labelledby="music-title">
@@ -255,6 +251,7 @@ import { site } from '../../data/site';
     const gardenLabel = document.querySelector<HTMLElement>('[data-garden-label]');
     const tokyoMeta = document.querySelector<HTMLElement>('[data-tokyo-meta]');
     const gardenMeta = document.querySelector<HTMLElement>('[data-garden-meta]');
+    const tokyoStory = document.querySelector<HTMLDetailsElement>('[data-tokyo-story]');
     const gardenLabels = [
       'Tokyo · Blue hour 01',
       'Tokyo · Blue hour 02',
@@ -281,6 +278,10 @@ import { site } from '../../data/site';
       if (gardenLabel) gardenLabel.textContent = gardenLabels[currentGardenSlide];
       if (tokyoMeta) tokyoMeta.hidden = currentGardenSlide >= tokyoSlideCount;
       if (gardenMeta) gardenMeta.hidden = currentGardenSlide < tokyoSlideCount;
+      if (tokyoStory) {
+        tokyoStory.hidden = currentGardenSlide >= tokyoSlideCount;
+        if (tokyoStory.hidden) tokyoStory.open = false;
+      }
     };
 
     gardenSlides.forEach((slide) => slide.addEventListener('click', () => showGardenSlide(currentGardenSlide + 1)));
