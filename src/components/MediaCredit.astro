@@ -1,0 +1,11 @@
+---
+import type { Credit } from '../data/misc';
+import Icon from './Icon.astro';
+interface Props { credit: Credit }
+const { credit } = Astro.props;
+---
+<span class="photo-meta">
+  <span>{credit.text}</span>
+  {credit.href && <a href={credit.href}>{credit.linkLabel || 'Source'} <Icon name="external" size={12} /></a>}
+  {credit.license && <a href={credit.license.href}>{credit.license.label}</a>}
+</span>

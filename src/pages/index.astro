@@ -1,32 +1,34 @@
 ---
+import { Picture } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import PostCard from '../components/PostCard.astro';
+import hero from '../assets/spike-profile-space.webp';
+import tokyo from '../assets/misc/tokyo-blue-hour-01.webp';
 import { site } from '../data/site';
+import { byNewest, publishedOnly } from '../utils/posts';
+const posts = (await getCollection('blog')).filter(publishedOnly).sort(byNewest).slice(0, 3);
 ---
-
-<BaseLayout image="/spike-profile-space.webp">
-  <section class="profile-home container" id="about" aria-labelledby="spike-name">
-    <aside class="profile-identity">
-      <figure class="profile-avatar">
-        <img
-          src="/spike-profile-space.webp"
-          alt="太空舱中的 Spike 演奏萨克斯"
-          width="1672"
-          height="941"
-          fetchpriority="high"
-          decoding="async"
-        />
-        <figcaption>AI study · France Olympic space saxophone, Spike adaptation</figcaption>
-      </figure>
-
-      <h1 id="spike-name">Spike</h1>
-      <a class="identity-link" href={site.github} rel="me">
-        GitHub <span aria-hidden="true">↗</span>
-      </a>
-    </aside>
-
-    <div class="profile-introduction">
-      <div class="about-label">About</div>
-      <p>我还在学习中，会慢慢更新的。</p>
+<BaseLayout>
+  <section class="space-hero container" id="about" aria-labelledby="spike-name">
+    <div class="space-hero-copy">
+      <p class="jam-line">3, 2, 1 — Let's jam.</p>
+      <h1 id="spike-name">Spike<span class="hero-period">.</span></h1>
+      <p class="hero-intro">{site.tagline}</p>
+      <div class="hero-buttons"><a class="button primary" href="/notes/">阅读笔记 <Icon name="arrow-right" /></a><a class="button secondary" href={site.github}>GitHub <Icon name="github" size={18} /></a></div>
     </div>
+    <figure class="space-hero-art">
+      <Picture src={hero} alt="太空舱中的 Spike 演奏萨克斯" formats={['avif', 'webp']} fallbackFormat="webp" widths={[640, 1024, 1672]} sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1152px) 62vw, 694px" loading="eager" fetchpriority="high" />
+      <figcaption>Spike in space · AI study</figcaption>
+    </figure>
+  </section>
+  <section class="home-notes container reveal" aria-labelledby="latest-notes">
+    <div class="section-heading"><h2 id="latest-notes">Latest notes<span>最近在学</span></h2><a class="text-link" href="/notes/">全部笔记 <Icon name="arrow-right" size={18} /></a></div>
+    {posts.length ? posts.map(post => <PostCard post={post} />) : <p class="empty-state">笔记正在整理中。</p>}
+  </section>
+  <section class="home-misc container reveal" aria-labelledby="misc-preview">
+    <a class="misc-preview-image" href="/misc/" aria-label="浏览摄影与音乐收藏"><Picture src={tokyo} alt="蓝调时刻的东京铁塔与城市天际线" widths={[480, 800]} formats={['avif', 'webp']} fallbackFormat="webp" sizes="(max-width: 767px) calc(100vw - 32px), 44vw" loading="lazy" /></a>
+    <div class="misc-preview-copy"><h2 id="misc-preview">A little offbeat.</h2><p>笔记之外，收着一些喜欢的文字、照片与音乐。</p><a class="text-link" href="/misc/">逛逛 Misc <Icon name="arrow-right" /></a></div>
   </section>
 </BaseLayout>

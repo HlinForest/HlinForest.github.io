@@ -15,6 +15,9 @@
     "@astrojs/mdx": "latest",
     "@astrojs/rss": "latest",
     "@astrojs/sitemap": "latest",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource-variable/source-serif-4": "^5.3.1",
     "astro": "latest",
     "astro-expressive-code": "latest",
     "katex": "latest",
@@ -24,6 +27,7 @@
     "rehype-slug": "latest",
     "remark-gfm": "latest",
     "remark-math": "latest",
+    "sharp": "0.35.3",
     "typescript": "^6.0.0"
   },
   "packageManager": "pnpm@11.19.0"

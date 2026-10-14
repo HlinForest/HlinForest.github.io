@@ -1,0 +1,47 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f5f5;
+  --surface: #fcfcfc;
+  --surface-soft: #eaecef;
+  --surface-tint: #e9edf6;
+  --text: #161b2b;
+  --text-soft: #535969;
+  --text-faint: #626776;
+  --line: #d8dce1;
+  --line-strong: #bfc4cc;
+  --accent: #002fa7;
+  --accent-strong: #00278b;
+  --highlight: var(--accent);
+  --highlight-text: var(--accent-strong);
+  --hero-highlight: #7f9cff;
+  --hover: #e9edf6;
+  --shadow: 0 12px 32px rgb(22 27 43 / .09);
+  --star: radial-gradient(1px 1px at 14% 22%, #7f9cff80 50%, transparent), radial-gradient(1px 1px at 72% 68%, #ffffff60 50%, transparent), radial-gradient(1px 1px at 42% 78%, #ffffff60 50%, transparent);
+  --sans: 'Inter Variable', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --body: 'Inter Variable', 'LXGW WenKai Screen', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --serif: 'Source Serif 4 Variable', 'LXGW WenKai Screen', Georgia, 'Microsoft YaHei', serif;
+  --mono: 'JetBrains Mono Variable', Consolas, monospace;
+  --header-h: 76px;
+  --content: 1120px;
+  --article: 760px;
+  --radius: 8px;
+  /* Layers: header/progress 20/21, back-to-top 30, skip-link 40. */
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0a0f1e;
+  --surface: #121a2e;
+  --surface-soft: #192238;
+  --surface-tint: #192a4b;
+  --text: #e8ebf4;
+  --text-soft: #b1bacd;
+  --text-faint: #99a5bc;
+  --line: #28324a;
+  --line-strong: #42506b;
+  --accent: #7f9cff;
+  --accent-strong: #a5baff;
+  --highlight: var(--accent);
+  --highlight-text: var(--accent);
+  --hover: #1c2946;
+  --shadow: 0 12px 32px rgb(4 7 16 / .3);
+}

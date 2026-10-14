@@ -1,0 +1,14 @@
+---
+import { Picture } from 'astro:assets';
+import type { MiscItem } from '../data/misc';
+import MediaCredit from './MediaCredit.astro';
+interface Props { item: MiscItem; index: number; kind: 'photo' | 'music' }
+const { item, index, kind } = Astro.props;
+---
+<figure class="carousel-slide" data-slide data-index={index} data-group={item.group} data-label={item.label}>
+  <div class="carousel-image">
+    <Picture src={item.src} alt={item.alt} formats={['avif', 'webp']} fallbackFormat="webp" widths={kind === 'music' ? [320, 640, 960] : [480, 800, 1200, 1600]} sizes={kind === 'music' ? '(max-width: 767px) calc(100vw - 64px), 360px' : '(max-width: 767px) calc(100vw - 32px), (max-width: 1152px) 80vw, 880px'} loading="lazy" />
+  </div>
+  {item.quote && <blockquote class="music-quote">{item.quote.map(line => <span>{line}</span>)}</blockquote>}
+  <figcaption><strong>{item.label}</strong><MediaCredit credit={item.credit} /></figcaption>
+</figure>

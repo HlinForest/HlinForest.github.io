@@ -1,0 +1,23 @@
+---
+import type { MiscItem } from '../data/misc';
+import CarouselSlide from './CarouselSlide.astro';
+import Icon from './Icon.astro';
+interface Props { items: MiscItem[]; kind?: 'photo' | 'music'; label: string }
+const { items, kind = 'photo', label } = Astro.props;
+const groups = [...new Set(items.map(item => item.group))];
+---
+<section class:list={['media-carousel', `carousel-${kind}`]} data-carousel tabindex="0" role="region" aria-roledescription="轮播" aria-label={label}>
+  <div class="carousel-stage" data-carousel-stage>
+    {items.map((item, index) => index === 0 ? <CarouselSlide item={item} index={index} kind={kind} /> : <template data-slide-template data-index={index} data-group={item.group} data-label={item.label}><CarouselSlide item={item} index={index} kind={kind} /></template>)}
+  </div>
+  <div class="carousel-controls" data-carousel-controls hidden>
+    <div class="carousel-groups" role="group" aria-label="选择分组">{groups.map((group, index) => <button type="button" data-carousel-group={group} aria-pressed={index === 0 ? 'true' : 'false'}>{group}</button>)}</div>
+    <div class="carousel-navigation">
+      <span class="carousel-count" data-carousel-count>01 / {String(items.length).padStart(2, '0')}</span>
+      <button type="button" class="icon-button" data-carousel-prev aria-label={kind === 'music' ? '上一位音乐人' : '上一张照片'}><Icon name="arrow-left" /></button>
+      <button type="button" class="icon-button" data-carousel-next aria-label={kind === 'music' ? '下一位音乐人' : '下一张照片'}><Icon name="arrow-right" /></button>
+    </div>
+  </div>
+  <p class="sr-only" aria-live="polite" aria-atomic="true" data-carousel-status></p>
+  <slot />
+</section>

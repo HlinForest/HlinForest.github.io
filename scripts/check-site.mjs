@@ -27,6 +27,10 @@ const resolveTarget = (from, raw) => {
 for (const file of htmlFiles) {
   const html = readFileSync(file, 'utf8');
   const refs = [...html.matchAll(/(?:href|src)=["']([^"']+)["']/g)].map((match) => match[1]);
+  // Picture sources also need validation, including those inside carousel templates.
+  for (const match of html.matchAll(/srcset=["']([^"']+)["']/g)) {
+    refs.push(...match[1].split(',').map((candidate) => candidate.trim().split(/\s+/)[0]));
+  }
   for (const ref of refs) {
     if (ref.includes('${') || /^(?:https?:|mailto:|tel:|data:|javascript:|#)/i.test(ref)) continue;
     const target = resolveTarget(file, ref);

@@ -1,49 +1,52 @@
 ---
+import { getImage } from 'astro:assets';
 import SiteHeader from '../components/SiteHeader.astro';
+import Icon from '../components/Icon.astro';
+import hero from '../assets/spike-profile-space.webp';
 import { site } from '../data/site';
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource-variable/source-serif-4/wght.css';
+import '@fontsource-variable/source-serif-4/wght-italic.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
-
-interface Props {
-  title?: string;
-  description?: string;
-  image?: string;
-  type?: 'website' | 'article';
-}
-
-const {
-  title = site.title,
-  description = site.description,
-  image = '',
-  type = 'website',
-} = Astro.props;
+interface Props { title?: string; description?: string; image?: string; type?: 'website' | 'article' }
+const { title = site.title, description = site.description, image, type = 'website' } = Astro.props;
+const og = await getImage({ src: hero, width: 1200, format: 'webp' });
 const canonical = new URL(Astro.url.pathname, site.url);
-const imageUrl = image ? new URL(image, site.url) : undefined;
+const imageUrl = new URL(image || og.src, site.url);
 ---
-
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonical} />
     <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css" /></noscript>
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {imageUrl && <meta property="og:image" content={imageUrl} />}
-    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content="太空舱中的 Spike 演奏萨克斯" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {imageUrl && <meta name="twitter:image" content={imageUrl} />}
-    <meta name="theme-color" content="#002fa7" />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="theme-color" content="#f4f5f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0a0f1e" media="(prefers-color-scheme: dark)" />
     <script is:inline>
       (() => {
-        const saved = localStorage.getItem('theme');
-        const theme = saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        let saved;
+        try { saved = localStorage.getItem('theme'); } catch {}
+        const theme = saved === 'light' || saved === 'dark' ? saved : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         document.documentElement.dataset.theme = theme;
+        document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.content = theme === 'dark' ? '#0a0f1e' : '#f4f5f5');
       })();
     </script>
     <title>{title}</title>
@@ -55,30 +58,12 @@ const imageUrl = image ? new URL(image, site.url) : undefined;
     <footer class="site-footer">
       <div class="container footer-inner">
         <span>© {new Date().getFullYear()} {site.author}</span>
-        <a href={site.github} rel="me">GitHub ↗</a>
+        <nav class="footer-links" aria-label="页脚导航"><a href="/notes/">Notes</a><a href="/misc/">Misc</a><a href="/rss.xml"><Icon name="rss" size={15} />RSS</a></nav>
+        <a class="icon-button" href={site.github} rel="me" aria-label="GitHub"><Icon name="github" /></a>
       </div>
+      <p class="footer-signoff">SEE YOU SPACE COWBOY…</p>
     </footer>
-    <script>
-      const root = document.documentElement;
-      document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
-        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-        root.dataset.theme = next;
-        localStorage.setItem('theme', next);
-      });
-
-      document.querySelectorAll('.heading-anchor').forEach((anchor) => {
-        anchor.addEventListener('click', async (event) => {
-          event.preventDefault();
-          const href = anchor.getAttribute('href');
-          if (!href) return;
-          history.replaceState(null, '', href);
-          try {
-            await navigator.clipboard.writeText(location.href);
-            anchor.textContent = '✓';
-            setTimeout(() => anchor.textContent = '#', 900);
-          } catch {}
-        });
-      });
-    </script>
+    <p class="sr-only" role="status" data-copy-status></p>
+    <script src="../scripts/site.ts"></script>
   </body>
 </html>

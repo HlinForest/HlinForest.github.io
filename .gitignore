@@ -8,3 +8,6 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Local visual review and verification artifacts
+walkthrough/

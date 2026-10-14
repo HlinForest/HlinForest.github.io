@@ -8,8 +8,10 @@
 
 | 要修改的内容 | 文件或目录 | 网站中的路径 |
 | --- | --- | --- |
-| 照片、插图等静态文件 | `public/`，新文件建议放进 `public/images/` | `/images/文件名.jpg` |
-| Misc 摄影与音乐页面 | `src/pages/misc/index.astro` | `/misc/` |
+| 首页 / Misc 照片 | `src/assets/` / `src/assets/misc/` | 由 Astro 自动生成多尺寸 AVIF / WebP |
+| 文章 SVG、Manim 图等静态文件 | `public/images/notes/` | `/images/notes/文件名` |
+| Misc 照片、音乐与署名数据 | `src/data/misc.ts` | `/misc/` |
+| Misc 页面布局 | `src/pages/misc/index.astro` | `/misc/` |
 | Notes 笔记 | `src/content/blog/` 中的 `.md` 或 `.mdx` | `/notes/文件名/` |
 
 重要规则：图片放在 `public/images/example.jpg` 后，网页里写的是 `/images/example.jpg`，不要写 `/public/images/example.jpg`。
@@ -35,9 +37,8 @@
 ```powershell
 git clone https://github.com/HlinForest/HlinForest.github.io.git
 cd HlinForest.github.io
-npm install -g pnpm@11.19.0
-pnpm install
-pnpm dev
+corepack.cmd pnpm install
+corepack.cmd pnpm dev
 ```
 
 浏览器打开终端显示的地址，通常是 <http://127.0.0.1:4321/>。
@@ -45,157 +46,77 @@ pnpm dev
 修改完成后检查并发布：
 
 ```powershell
-pnpm test
+corepack.cmd pnpm run build
+node scripts/check-site.mjs
 git status
 git add .
 git commit -m "Add a new note"
 git push origin main
 ```
 
-`pnpm test` 会构建网站，并检查生成页面中的站内链接与本地资源。
+构建先运行 Astro 类型检查，再生成站点；链接检查同时检查图片的响应式 srcset。PowerShell 使用 `corepack.cmd` 可避开 `.ps1` 执行策略限制。
 
 ## 3. 如何上传照片
 
-### 3.1 文件整理建议
-
-新照片建议按用途放置：
+### 3.1 文件位置
 
 ```text
-public/
-└─ images/
-   ├─ misc/       # Misc 页面照片
-   └─ notes/      # 笔记插图
+src/assets/spike-profile-space.webp  # 首页 Hero 原图
+src/assets/misc/                     # Misc 照片和音乐人原图
+src/data/misc.ts                      # 图片列表、分组、图注和出处
+public/images/notes/                 # 文章 SVG、Manim 图等，保持原路径
 ```
 
-文件名建议使用小写英文、数字与短横线：
+文件名使用小写英文、数字与短横线。保留高质量原图即可，Astro 的 `<Picture>` 在构建时生成 AVIF、WebP 和多种尺寸；不要手动提交 `dist/`。`src/assets` 文件必须通过 import 引用，不能把它写成网页 URL。
 
-```text
-tokyo-blue-hour.jpg
-garden-rain-01.webp
-attention-diagram.png
-```
+### 3.2 给相册增加照片
 
-不要使用空格，尽量避免中文文件名。GitHub Pages 区分大小写，`Photo.jpg` 与 `photo.jpg` 是两个不同文件。
-
-照片优先使用 `.jpg` 或 `.webp`；透明图和界面截图使用 `.png`。普通照片建议宽度约 1600–2400 像素、单张尽量控制在 1.5 MB 以内。
-
-只上传自己拍摄、获得授权或许可明确的图片。引用他人作品时保留水印、作者、原始链接与许可信息。
-
-### 3.2 把一张照片放进 Misc
-
-先把照片上传为：
-
-```text
-public/images/misc/my-photo.jpg
-```
-
-然后打开 `src/pages/misc/index.astro`，在 Photography 区域加入：
-
-```astro
-<figure class="photo-feature">
-  <div class="photo-feature-frame">
-    <img
-      src="/images/misc/my-photo.jpg"
-      alt="准确描述画面内容，用于无障碍访问"
-      width="1800"
-      height="1200"
-      loading="lazy"
-    />
-  </div>
-  <figcaption>
-    <span>照片标题</span>
-    <span class="photo-meta">地点 · 年份 · Photographer: Spike</span>
-  </figcaption>
-</figure>
-```
-
-`width` 和 `height` 填照片原始尺寸。`alt` 描述画面，不要写“图片”或文件名。
-
-### 3.3 给当前东京／言叶之庭相册增加照片
-
-当前合并相册的顺序是：东京蓝调时刻 01–04、湖面、草地、绣球、百合。若要继续增加同一组、同一来源的雨景：
-
-1. 在 `garden-album-stage` 中、相册控制栏之前复制一个 `data-garden-slide` 块并修改图片路径。
-2. 在 `garden-album-dots` 中增加下一个编号按钮。
-3. 在页面下方脚本的 `gardenLabels` 数组末尾增加对应标题。
-4. `data-garden-dot` 从 `0` 开始，必须与照片顺序一致。
-
-第 9 张照片的示例：
-
-```astro
-<button type="button" class="garden-album-slide" data-garden-slide hidden>
-  <img
-    src="/images/misc/garden-rain-05.jpg"
-    alt="雨中的庭院石阶"
-    width="1800"
-    height="1200"
-    loading="lazy"
-  />
-</button>
-```
-
-控制栏增加：
-
-```astro
-<button
-  type="button"
-  data-garden-dot="8"
-  aria-label="查看雨中石阶"
-  aria-pressed="false"
->09</button>
-```
-
-脚本数组增加：
+把照片放到 `src/assets/misc/my-photo.jpg`，然后在 `src/data/misc.ts` 增加导入：
 
 ```ts
-const gardenLabels = [
-  'Tokyo · Blue hour 01',
-  'Tokyo · Blue hour 02',
-  'Tokyo · Blue hour 03',
-  'Tokyo · Blue hour 04',
-  '言叶之庭 · 雨天湖面',
-  '言叶之庭 · 雨幕草地',
-  '言叶之庭 · 雨中绣球',
-  '言叶之庭 · 雨中百合',
-  '言叶之庭 · 雨中石阶',
-];
+import myPhoto from '../assets/misc/my-photo.jpg';
 ```
 
-注意：当前第 1–4 张显示 Tokyo blue hour 的摄影说明，第 5 张以后统一显示 Alan D. Haller 的署名与来源。自己的照片或其他作者的照片不要直接加进这组相册，应使用上一节的独立照片块并填写正确署名。
+在 `photos` 数组里增加一项：
 
-## 4. 如何给照片添加文字
-
-### 4.1 照片下方的标题与说明
-
-在 `figcaption` 中修改：
-
-```astro
-<figcaption>
-  <span>Tokyo · Blue hour</span>
-  <span class="photo-meta">
-    摄于东京 · 2026<br />
-    <a href="原始来源链接">Source · 作者或出处 ↗</a>
-  </span>
-</figcaption>
+```ts
+{ src: myPhoto, alt: '雨后街道上的树影', label: '雨后散步', group: '我的照片', credit: { text: 'Photography · Spike' } },
 ```
 
-没有外部来源时不要虚构链接，写自己的署名即可。
+`alt` 描述画面，`label` 是图注，`group` 是分组按钮文字。分组、计数、键盘操作和触屏切换都自动生成，不需要添加按钮或修改轮播脚本。原来的 `Tokyo Blue Hour` 和 `言叶之庭` 已各自保留出处；新照片填写自己的署名或真实来源，不要复用不相关的作者信息。
 
-### 4.2 修改东京蓝调照片的悬停文字
+有来源或许可时可以这样填写：
 
-在 `src/pages/misc/index.astro` 中搜索 `data-photo-overlay`，编辑其中的段落：
-
-```astro
-<div class="photo-reveal" data-photo-overlay>
-  <blockquote>
-    <p>第一段文字。</p>
-    <p>第二段文字。</p>
-    <p>第三段文字。</p>
-  </blockquote>
-</div>
+```ts
+credit: {
+  text: 'Photography · 作者名',
+  href: 'https://example.com/original',
+  linkLabel: 'Source · 原始作品',
+  license: { label: '许可名称', href: 'https://example.com/license' },
+}
 ```
 
-每个 `<p>...</p>` 是一段。不要删除外层的 `photo-reveal`、`blockquote` 或 `data-photo-overlay`，否则悬停效果会失效。
+相册一次显示一张，进入可视区域后只预加载下一张；其余图片保存在模板中，切换时才载入。没有 JavaScript 时仍显示第一张照片和出处。
+
+### 3.3 首页与音乐人
+
+首页 Hero 文件在 `src/assets/spike-profile-space.webp`。更换图片时保留文件名，或同时修改 `src/pages/index.astro` 与 `src/layouts/BaseLayout.astro` 的导入；默认社交分享图由 Hero 自动生成 1200px WebP。
+
+音乐人原图同样放入 `src/assets/misc/`，在 `musicians` 数组中增加一项；`quote` 是可选的文字数组，每项一行。保留原作作者、AI 转换说明和许可证信息。
+
+## 4. 如何修改文字与样式
+
+### 4.1 图注与出处
+
+修改 `src/data/misc.ts` 中对应记录的 `label`、`credit`。图注与出处跟随每张照片，不再依赖“第几张属于哪个作者”的硬编码。
+
+### 4.2 东京文字与全站字体
+
+东京的蓝调时刻文字在 `src/pages/misc/index.astro` 的 `<details class="tokyo-story">` 中。文字默认收起，只在 `Tokyo Blue Hour` 分组显示。
+
+中文正文使用霞鹜文楷屏幕阅读版，通过锁定版本的 jsDelivr 字符分片加载；不可用时回退到苹方 / 微软雅黑。英文界面用自托管 Inter，英文标题用 Source Serif 4，日期和代码用 JetBrains Mono。字体入口在 `BaseLayout.astro`，颜色与字体变量在 `src/styles/tokens.css`。
+
+全站样式按 `base / layout / home / notes / article / misc` 拆分，`global.css` 只负责导入。默认主题跟随系统，手动选择后会记住偏好。清除浏览器存储中的 `theme` 可恢复跟随系统。
 
 ### 4.3 在笔记中插入带说明的照片
 
@@ -345,7 +266,7 @@ import ComparisonTabs from '../../components/ComparisonTabs.astro';
 
 ## 6. 发布前检查清单
 
-- [ ] 图片路径以 `/` 开头，且没有写 `public`。
+- [ ] Misc 图片通过 import 引用；文章静态图片路径以 `/images/` 开头。
 - [ ] 文件名大小写与引用完全一致。
 - [ ] 每张图片都有准确的 `alt`。
 - [ ] 他人照片保留作者、来源、许可和水印。
@@ -358,7 +279,7 @@ import ComparisonTabs from '../../components/ComparisonTabs.astro';
 
 ### 图片显示 404
 
-检查路径、扩展名和大小写。`public/images/misc/a.jpg` 的引用必须是 `/images/misc/a.jpg`。
+检查路径、扩展名和大小写。Misc 图片检查 `src/assets/misc/` 与 `src/data/misc.ts` 的 import；文章图片 `public/images/notes/a.svg` 对应 `/images/notes/a.svg`。
 
 ### 新笔记没有出现在 Notes
 

@@ -1,23 +1,19 @@
 ---
 import { site } from '../data/site';
-
+import Icon from './Icon.astro';
 const path = Astro.url.pathname;
-const active = (href: string) => href === '/#about' ? path === '/' : path.startsWith(href);
+const active = (href: string) => href === '/' ? path === '/' : path.startsWith(href);
 ---
-
+<div class="header-sentinel" data-header-sentinel aria-hidden="true"></div>
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" href="/" aria-label={`${site.name} 首页`}>
-      <span class="brand-name">{site.author}</span>
-    </a>
+    <a class="brand" href="/" aria-label={`${site.name} 首页`}><span class="brand-dot" aria-hidden="true"></span><span class="brand-name">{site.author}</span></a>
     <div class="header-actions">
       <nav class="site-nav" aria-label="主导航">
-        {site.nav.map((item) => (
-          <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>
-        ))}
-        <a href={site.github} rel="me">GitHub ↗</a>
+        {site.nav.map(item => <a href={item.href} aria-current={active(item.href) ? 'page' : undefined}>{item.label}</a>)}
       </nav>
-      <button class="icon-button" type="button" data-theme-toggle aria-label="切换深浅主题" title="切换主题">◐</button>
+      <a class="icon-button" href={site.github} rel="me" aria-label="GitHub" title="GitHub"><Icon name="github" /></a>
+      <button class="icon-button" type="button" data-theme-toggle aria-label="切换深浅主题" title="切换主题"><Icon name="sun" class="theme-sun" /><Icon name="moon" class="theme-moon" /></button>
     </div>
   </div>
 </header>

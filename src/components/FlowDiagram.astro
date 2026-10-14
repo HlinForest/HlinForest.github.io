@@ -1,10 +1,11 @@
 ---
+import Icon from './Icon.astro';
 interface Props { nodes: string[]; note?: string }
 const { nodes, note } = Astro.props;
 ---
 <figure class="flow-diagram" aria-label={note || '流程图'}>
   <div class="flow-row">
-    {nodes.map((node) => <div class="flow-node">{node}</div>)}
+    {nodes.map((node, index) => <div class="flow-node">{index > 0 && <Icon name="arrow-right" class="flow-arrow" />}{node}</div>)}
   </div>
   {note && <figcaption class="flow-note">{note}</figcaption>}
 </figure>
